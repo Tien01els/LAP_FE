@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import AppRouter from "./AppRouter";
+import React, { Suspense } from 'react'
+import AppRouter from './AppRouter'
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         <AppRouter></AppRouter>
       </Suspense>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
