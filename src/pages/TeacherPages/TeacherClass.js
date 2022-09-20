@@ -1,49 +1,70 @@
 import React from 'react'
-import PageHeader from '../../components/PageHeader'
+import { useNavigate } from 'react-router-dom'
+import Button from '../../components/Button'
+import DetailsCard from '../../components/Teacher/DetailsCard'
 
 const TeacherClass = () => {
-  const img =
-    'https://cdn.elearningindustry.com/wp-content/uploads/2020/08/5-ways-to-improve-your-course-cover-design-1024x575.png'
+  const push = useNavigate()
+  const noti = 9
+  // const img =
+  //   'https://cdn.elearningindustry.com/wp-content/uploads/2020/08/5-ways-to-improve-your-course-cover-design-1024x575.png'
   return (
-    <div className="mb-10">
-      <PageHeader pageName={`Classes`}></PageHeader>
-      <div
-        className="bg-auto bg-center w-full h-[300px] flex flex-col-reverse shadow-sm"
-        style={{ backgroundImage: `url(${img})` }}
-      >
-        <div className="flex flex-col mb-4 ml-10 gap-5">
-          <div className="flex pl-3 ">
-            <span className="rounded-md pt-1 px-3 justify-center text-2xl font-semibold  text-white bg-[#75b9cc] flex">
-              Class Name
+    <div className="mt-8 mx-20 mb-10">
+      {/* <PageHeader pageName={`Classes`}></PageHeader> */}
+      <div className="flex flex-col gap-7">
+        {/* top */}
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex gap-2 items-center">
+            <i className="fas fa-caret-left text-xl font-bold"></i>
+            <span
+              className="underline underline-offset-4 font-semibold cursor-pointer"
+              onClick={() => {
+                push('/teacher/class')
+              }}
+            >
+              All Classes
             </span>
           </div>
-          <div className="flex pl-3">
-            <span className="rounded-md pt-1 px-3 bg-[#75b9cc] text-white">
-              2022-2023
+          <Button className="bg-white text-black border-none shadow-lg relative flex flex-row gap-3 items-center">
+            Request
+            <span
+              className="notification bg-red-700 rounded-full text-xs
+     text-white shadow-[#ff4242] w-[20px] h-[20px] flex justify-center items-center"
+            >
+              {noti > 9 ? '9+' : noti}
             </span>
-          </div>
+          </Button>
         </div>
-      </div>
 
-      <div className="mx-10 flex flex-row justify-between mt-10">
-        <div className="w-[780px] h-[500px] bg-white shadow-lg rounded-md">
-          TOPIC
+        {/* class infos */}
+        <div className="flex flex-col justify-center items-center">
+          <img
+            src="https://img.freepik.com/premium-vector/students-classroom-teacher-near-blackboard-auditorium-teaches-maths-lesson-children-study-subject-kids-group-studying-elementary-primary-school-class-interior-cartoon-vector-flat-concept_176411-2393.jpg?w=2000"
+            alt=""
+            className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl my-5"
+          />
+          <span className="font-bold text-3xl mb-2">Class Name</span>
+          <span className="">Date created : 66/99/6969</span>
         </div>
-        <div className="w-[400px] h-[200px] bg-white shadow-lg rounded-md">
-          <div className="flex flex-col mx-5 my-5 gap-3">
-            <div className="flex gap-3">
-              <span className="font-semibold">Grade :</span>
-              <span>40A</span>
-            </div>
-            <div className="flex gap-3">
-              <span className="font-semibold">Student :</span>
-              <span>30</span>
-            </div>
-            <div className="flex gap-3">
-              <span className="font-semibold">Student :</span>
-              <span>30</span>
-            </div>
-          </div>
+
+        {/* detail cards */}
+        <div className="px-16 flex flex-row gap-32 justify-center items-center">
+          <DetailsCard
+            title="Average Score"
+            isScore={true}
+            shadow="teacherdetails__AScore"
+            color={'text-[#00d4ff]'}
+          />
+          <DetailsCard
+            title="Topics"
+            shadow="teacherdetails__Topics"
+            color="text-[#9fff24]"
+          />
+          <DetailsCard
+            title="Students"
+            shadow="teacherdetails__Students"
+            color="text-[#ff24cf78]"
+          />
         </div>
       </div>
     </div>

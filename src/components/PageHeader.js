@@ -16,7 +16,7 @@ const PageHeader = ({ pageName }) => {
           ) : (
             ''
           )}
-          <i class="far fa-bell text-3xl"></i>
+          <i className="far fa-bell text-3xl"></i>
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ const TeacherSidebar = () => {
           <span className="text-xs">{user?.role}</span>
         </div>
         <div className="flex justify-center items-center divide-solid cursor-pointer hover:bg-gray-200 px-2 h-8 rounded-lg text-gray-600">
-          <i class="fas fa-sign-out-alt"></i>
+          <i className="fas fa-sign-out-alt"></i>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 const MainLayout = lazy(() => import('./layout/MainLayout'))
-// const HomePage = lazy(() => import('./pages/HomePage'))
 const TeacherDashBoard = lazy(() =>
   import('./pages/TeacherPages/TeacherDashBoard'),
 )
