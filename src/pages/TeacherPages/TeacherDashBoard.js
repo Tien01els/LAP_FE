@@ -72,7 +72,7 @@ const TeacherDashBoard = () => {
   }
 
   return (
-    <div className="flex flex-col h-[100%]">
+    <div className="flex flex-col pt-2 h-[100%]">
       {/* <PageHeader pageName={`Dashboard`}></PageHeader> */}
       <div className="flex flex-row mt-5 w-full divide-solid h-[80%]">
         <div className="w-[75%] h-[100%] overflow-hidden gap-2">
@@ -89,7 +89,7 @@ const TeacherDashBoard = () => {
           <div className="flex flex-row ml-10 mt-9 gap-10 mb-8">
             <div className="flex flex-col gap-5 pr-10">
               <div className="flex justify-between items-center w-full">
-                <span className="font-semibold text-xl">Recently accessed</span>
+                <span className="font-semibold text-xl">Classes</span>
                 <span
                   className="mr-3 text-sm duration-300 hover:cursor-pointer hover:underline underline-offset-4"
                   onClick={() => {
@@ -99,7 +99,7 @@ const TeacherDashBoard = () => {
                   View all
                 </span>
               </div>
-              <div className="flex flex-row gap-7 w-full">
+              <div className="flex flex-row gap-10 w-full">
                 <ClassCard classInfo={classInfo} />
                 <ClassCard classInfo={classInfo} />
                 <ClassCard classInfo={classInfo} />
