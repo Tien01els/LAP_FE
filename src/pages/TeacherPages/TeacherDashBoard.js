@@ -33,7 +33,8 @@ const TeacherDashBoard = () => {
   const [selectedDay, setSelectedDay] = useState(null)
 
   const options = {
-    responsive: 'true',
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: `'top' as const`,
@@ -45,11 +46,9 @@ const TeacherDashBoard = () => {
       scales: {
         yAxes: [
           {
-            display: true,
             ticks: {
               beginAtZero: true,
-              steps: 0,
-              stepValue: 0,
+              min: 0,
               max: 100,
             },
           },
@@ -73,18 +72,24 @@ const TeacherDashBoard = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5 h-[100%]">
+    <div className="flex flex-col pt-2 h-[100%]">
       {/* <PageHeader pageName={`Dashboard`}></PageHeader> */}
-      <div className="flex flex-row mt-8 w-full divide-solid h-[80%]">
-        <div className="w-[70%] overflow-hidden gap-2">
-          <div className="flex justify-center ml-[68px] bg-white  py-5 px-10 rounded-md shadow-lg w-[710px]">
-            <Bar className="" options={options} data={data} />
+      <div className="flex flex-row mt-5 w-full divide-solid h-[80%]">
+        <div className="w-[75%] h-[100%] overflow-hidden gap-2">
+          <div className="flex justify-center ml-10 w-[90%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
+            <Bar
+              height={175}
+              width={400}
+              className="chartJS"
+              options={options}
+              data={data}
+            />
           </div>
           {/*  */}
-          <div className="flex flex-row px-10 pt-12 gap-10 mb-5">
-            <div className="ml-7 flex flex-col gap-5 w-[100%]">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-xl">Recently accessed</span>
+          <div className="flex flex-row ml-10 mt-9 gap-10 mb-8">
+            <div className="flex flex-col gap-5 pr-10">
+              <div className="flex justify-between items-center w-full">
+                <span className="font-semibold text-xl">Classes</span>
                 <span
                   className="mr-3 text-sm duration-300 hover:cursor-pointer hover:underline underline-offset-4"
                   onClick={() => {
@@ -94,7 +99,7 @@ const TeacherDashBoard = () => {
                   View all
                 </span>
               </div>
-              <div className="flex flex-row gap-7">
+              <div className="flex flex-row gap-10 w-full">
                 <ClassCard classInfo={classInfo} />
                 <ClassCard classInfo={classInfo} />
                 <ClassCard classInfo={classInfo} />
@@ -114,11 +119,12 @@ const TeacherDashBoard = () => {
               renderFooter={() => (
                 <div
                   style={{
+                    height: '285px',
                     paddingBottom: '2rem',
                     paddingLeft: '2rem',
                     paddingRight: '2rem',
                   }}
-                  className="flex flex-col justify-center gap-3"
+                  className="flex flex-col gap-3"
                 >
                   <span className="text-base font-semibold">
                     Upcoming Assignments
@@ -126,7 +132,7 @@ const TeacherDashBoard = () => {
                   {new Array(3).fill(0).map((item, index) => {
                     return (
                       <div key={index} className="flex flex-col gap-4">
-                        <div className="shadow-md rounded-md flex items-center justify-between">
+                        <div className="shadow-md hover:shadow-lg transition-all rounded-md flex items-center justify-between">
                           <div
                             style={{
                               padding: '10px 1rem',

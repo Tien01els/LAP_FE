@@ -30,14 +30,16 @@ const DetailsCard = ({ title, isScore, shadow, color }) => {
           )}
         </span>
       </div>
-      <span
-        className="flex flex-row-reverse mx-3 cursor-pointer"
-        onClick={() => {
-          push('/class-details/score')
-        }}
-      >
-        View Details
-      </span>
+      <div className="flex flex-row-reverse mx-4 mb-3">
+        <span
+          className="cursor-pointer"
+          onClick={() => {
+            push('/class-details/score')
+          }}
+        >
+          View Details
+        </span>
+      </div>
     </div>
   )
 }

@@ -1,6 +1,9 @@
 import React from 'react'
+import { useState } from 'react'
 
 const PageHeader = ({ pageName }) => {
+  const [searchTerm, setSearchTerm] = useState('')
+
   const noti = '11'
   return (
     <div className="w-full py-3 flex bg-white justify-between items-center shadow-sm top-0">
