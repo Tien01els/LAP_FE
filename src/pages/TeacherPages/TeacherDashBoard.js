@@ -116,6 +116,14 @@ const TeacherDashBoard = () => {
               onChange={setSelectedDay}
               calendarClassName="custom-calendar"
               calendarTodayClassName="custom-today-day"
+              customDaysClassName={[
+                {
+                  year: 2022,
+                  month: 9,
+                  day: 26,
+                  className: 'deadline',
+                },
+              ]}
               renderFooter={() => (
                 <div
                   style={{
