@@ -7,7 +7,7 @@ module.exports = {
                 primary: ['Arial', 'sans-serif;'],
             },
             colors: {
-                primary: '#75b9cc',
+                primary: '#5199ad',
                 secondary: '#6F49FD',
                 text1: '#171725',
                 text2: '#4B5264',

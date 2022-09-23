@@ -1,8 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
+
+import Table from '../../components/Table';
+
+const values = [
+    { id: '1', name: 'zxc', numberSkill: '1', prerequisite: 'cxz' },
+    { id: '2', name: 'zxc', numberSkill: '2', prerequisite: 'cxz' },
+    { id: '3', name: 'zxc', numberSkill: '3', prerequisite: 'cxz' },
+    { id: '4', name: 'zxc', numberSkill: '4', prerequisite: 'cxz' },
+    { id: '5', name: 'zxc', numberSkill: '5', prerequisite: 'cxz' },
+    { id: '6', name: 'zxc', numberSkill: '6', prerequisite: 'cxz' },
+    { id: '7', name: 'zxc', numberSkill: '7', prerequisite: 'cxz' },
+    { id: '8', name: 'zxc', numberSkill: '8', prerequisite: 'cxz' },
+    { id: '9', name: 'zxc', numberSkill: '9', prerequisite: 'cxz' },
+    { id: '10', name: 'zxc', numberSkill: '10', prerequisite: 'cxz' },
+    { id: '11', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
+];
 
 const Topics = () => {
     const navigate = useNavigate();
+
+    const [topic, setTopic] = useState([]);
+
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+    useEffect(() => {
+        const endOffset = itemOffset + 5;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        setTopic(values.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(values.length / 5));
+    }, [itemOffset]);
+
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * 5) % values.length;
+        console.log(
+            `User requested page number ${event.selected}, which is offset ${newOffset}`
+        );
+        setItemOffset(newOffset);
+    };
+
+    const thead = ['TOPIC NAME', 'NO. SKILLS', 'PREREQUISITES', ''];
     return (
         <div className='mt-[40px] mx-[68px]'>
             <div className='flex gap-2 items-center'>
@@ -17,64 +56,24 @@ const Topics = () => {
                 </span>
             </div>
             <div className='w-full h-[100px] bg-primary flex items-center mt-[24px] rounded-xl'>
-                <h1 className='text-3xl font-medium ml-[32px]'>All topics</h1>
+                <h1 className='text-3xl font-medium ml-[64px] text-white'>
+                    All topics
+                </h1>
             </div>
 
-            <div className='overflow-x-auto relative shadow-md sm:rounded-lg mt-[32px]'>
-                <table className='w-full text-xl text-center text-gray-500 dark:text-gray-400'>
-                    <thead className='text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
-                        <tr>
-                            <th scope='col' className='py-3 px-6'>
-                                Product name
-                            </th>
-                            <th scope='col' className='py-3 px-6'>
-                                Color
-                            </th>
-                            <th scope='col' className='py-3 px-6'>
-                                Category
-                            </th>
-                            <th scope='col' className='py-3 px-6'></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className='bg-white border-b dark:bg-gray-900 dark:border-gray-700'>
-                            <th
-                                scope='row'
-                                className='py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white'
-                            >
-                                Apple MacBook Pro 17"
-                            </th>
-                            <td className='py-4 px-6'>Sliver</td>
-                            <td className='py-4 px-6'>Laptop</td>
-                            <td className='py-4 px-6'>
-                                <a
-                                    href='#'
-                                    className='font-medium text-blue-600 dark:text-blue-500 hover:underline'
-                                >
-                                    Edit
-                                </a>
-                            </td>
-                        </tr>
-                        <tr className='bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700'>
-                            <th
-                                scope='row'
-                                className='py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white'
-                            >
-                                Microsoft Surface Pro
-                            </th>
-                            <td className='py-4 px-6'>White</td>
-                            <td className='py-4 px-6'>Laptop PC</td>
-                            <td className='py-4 px-6'>
-                                <a
-                                    href='#'
-                                    className='font-medium text-blue-600 dark:text-blue-500 hover:underline'
-                                >
-                                    Edit
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div className='flex flex-col justify-between mb-[40px] min-h-fit-[500px]'>
+                <Table thead={thead} tbody={topic} />
+                <div className='mt-[24px]'>
+                    <ReactPaginate
+                        breakLabel='...'
+                        nextLabel='next >'
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={5}
+                        pageCount={pageCount}
+                        previousLabel='< previous'
+                        renderOnZeroPageCount={null}
+                    />
+                </div>
             </div>
         </div>
     );
