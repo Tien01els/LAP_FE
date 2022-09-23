@@ -6,6 +6,9 @@ const TeacherDashBoard = lazy(() =>
 )
 const TeacherClasses = lazy(() => import('./pages/TeacherPages/TeacherClasses'))
 const TeacherClass = lazy(() => import('./pages/TeacherPages/TeacherClass'))
+const TeacherCreateQuestion = lazy(() =>
+  import('./pages/TeacherPages/TeacherCreateQuestion'),
+)
 
 export default function AppRouter() {
   return (
@@ -15,6 +18,10 @@ export default function AppRouter() {
         <Route path="/teacher/dashboard" element={<TeacherDashBoard />}></Route>
         <Route path="/teacher/class" element={<TeacherClasses />}></Route>
         <Route path="/teacher/class/:id" element={<TeacherClass />} />
+        <Route
+          path="/teacher/createquestion"
+          element={<TeacherCreateQuestion />}
+        />
       </Route>
     </Routes>
   )

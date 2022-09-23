@@ -37,6 +37,17 @@ const TeacherMenu = () => {
         <i className="fas fa-home text-xl pb-1"></i>
         <span className="font-semibold text-sm">Test</span>
       </NavLink>
+      <NavLink
+        to={'/teacher/createquestion'}
+        className={({ isActive }) =>
+          isActive
+            ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'
+            : 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all hover:bg-gray-100 text-gray-600'
+        }
+      >
+        <i className="fas fa-home text-xl pb-1"></i>
+        <span className="font-semibold text-sm">Create Question</span>
+      </NavLink>
     </div>
   )
 }

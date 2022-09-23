@@ -51,7 +51,7 @@ const TeacherClasses = () => {
               }
             })
             .map((val, index) => {
-              return <ClassCard key={index} classInfo={val} />
+              return <ClassCard layout key={index} classInfo={val} />
             })}
         </div>
       </div>

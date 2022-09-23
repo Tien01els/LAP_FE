@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ClassCard from '../../components/Teacher/ClassCard'
+import { motion } from 'framer-motion'
 
 // import 'react-modern-calendar-datepicker/lib/DatePicker.css'
 // import { Calendar } from 'react-modern-calendar-datepicker'
@@ -76,8 +77,9 @@ const TeacherDashBoard = () => {
       {/* <PageHeader pageName={`Dashboard`}></PageHeader> */}
       <div className="flex flex-row mt-5 w-full divide-solid h-[80%]">
         <div className="w-[75%] h-[100%] overflow-hidden flex flex-col justify-center items-center">
-          <div className="flex justify-center ml-10 min-w-[90%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
+          <div className="flex justify-center ml-10 min-w-[92%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
             <Bar
+              responsive
               height={175}
               width={400}
               className="chartJS"
@@ -125,13 +127,17 @@ const TeacherDashBoard = () => {
                 },
               ]}
               renderFooter={() => (
-                <div
+                <motion.div
                   style={{
                     height: '285px',
                     paddingBottom: '2rem',
                     paddingLeft: '2rem',
                     paddingRight: '2rem',
                   }}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  layout
                   className="flex flex-col gap-3"
                 >
                   <span className="text-base font-semibold">
@@ -163,7 +169,7 @@ const TeacherDashBoard = () => {
                       </div>
                     )
                   })}
-                </div>
+                </motion.div>
               )}
             />
           </div>
