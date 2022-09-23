@@ -5,7 +5,7 @@ import DetailsCard from '../../components/Teacher/DetailsCard'
 
 const TeacherClass = () => {
   const navigate = useNavigate()
-  const noti = 9
+  const noti = 2
   return (
     <div className="mt-8 mx-20 mb-5">
       {/* <PageHeader pageName={`Classes`}></PageHeader> */}
@@ -26,8 +26,8 @@ const TeacherClass = () => {
           <Button className="bg-white text-black border-none shadow-lg relative flex flex-row justify-center items-center gap-3">
             Open Requests
             {noti !== 0 ? (
-              <div className=" shadow-md shadow-red-300 flex justify-center mb-1 bg-red-500 w-5 h-5 rounded-full">
-                <span className=" text-xs font-semibold text-white font-sans">
+              <div className="relative shadow-md shadow-red-300 flex justify-center mb-1 bg-red-500 w-6 h-6 rounded-full">
+                <span className="absolute translate-y-[3px] text-xs font-semibold text-white font-sans">
                   {noti <= 9 ? noti : '9+'}
                 </span>
               </div>
