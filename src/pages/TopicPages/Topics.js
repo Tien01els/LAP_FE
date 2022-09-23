@@ -93,7 +93,7 @@ const Topics = () => {
     setItemOffset(newOffset)
   }
 
-  const thead = ['TOPIC NAME', 'NO. SKILLS', 'PREREQUISITES', '']
+  const thead = ['Topic Name', 'NO. SKILLS', 'PREREQUISITES', '']
   return (
     <div className="mt-[40px] mx-[68px]">
       <div className="flex gap-2 items-center">
@@ -107,9 +107,9 @@ const Topics = () => {
           All Classes
         </span>
       </div>
-      <div className="w-full h-[100px] bg-primary flex items-center mt-[24px] rounded-xl">
-        <h1 className="text-3xl font-medium ml-[64px] text-white">
-          All topics
+      <div className="w-full h-[75px] bg-primary flex items-center mt-[24px] rounded-xl shadow-lg">
+        <h1 className="text-2xl font-medium ml-[50px] uppercase text-white">
+          Topics
         </h1>
       </div>
 
@@ -117,7 +117,7 @@ const Topics = () => {
         <Table thead={thead} tbody={topic} />
         <div className="mt-[24px] flex justify-between px-5">
           <div>
-            <span className="font-sm">
+            <span className="font-sm text-gray-500">
               Page {currentPage} / {pageCount}
             </span>
           </div>
@@ -129,7 +129,7 @@ const Topics = () => {
               </button>
             }
             onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
+            pageRangeDisplayed={1}
             marginPagesDisplayed={2}
             pageCount={pageCount}
             previousLabel={
@@ -138,8 +138,8 @@ const Topics = () => {
               </button>
             }
             renderOnZeroPageCount={null}
-            className="flex flex-row gap-7 justify-center font-semibold items-center"
-            activeClassName="bg-white flex justify-center items-center w-8 h-8 rounded-full shadow-lg"
+            className="flex flex-row text-gray-500 gap-7 justify-center font-semibold items-center"
+            activeClassName="bg-primary text-white flex justify-center items-center w-8 h-8 rounded-full shadow-lg"
           />
         </div>
       </div>
