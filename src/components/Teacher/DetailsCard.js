@@ -5,10 +5,10 @@ const DetailsCard = ({ title, isScore, shadow, color }) => {
   const { push } = useNavigate()
   return (
     <div
-      className={`w-[200px] h-[225px] bg-white rounded-md flex flex-col justify-between relative`}
+      className={`min-w-[200px] h-[225px] bg-white rounded-md flex flex-col justify-between relative`}
     >
       <div
-        className={`absolute w-[200px] h-[225px] -z-10 rounded-md -translate-x-3 -translate-y-2 ${shadow}`}
+        className={`absolute min-w-[200px] h-[225px] -z-10 rounded-md -translate-x-3 -translate-y-2 ${shadow}`}
       ></div>
       <div className="flex flex-col justify-center items-center gap-2 mt-16">
         <span

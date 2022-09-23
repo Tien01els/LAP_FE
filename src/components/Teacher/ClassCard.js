@@ -1,8 +1,15 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 
 const ClassCard = ({ classInfo }) => {
   return (
-    <div className="flex flex-col gap-2 bg-white shadow-lg hover:shadow-xl duration-300 w-[250px] h-[200px] rounded-lg">
+    <motion.div
+      animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      layout
+      className="flex flex-col gap-2 bg-white shadow-lg hover:shadow-xl duration-300 w-[250px] h-[200px] rounded-lg"
+    >
       <div className="flex justify-center pt-5">
         <img
           src={classInfo?.image}
@@ -23,7 +30,7 @@ const ClassCard = ({ classInfo }) => {
           Grade <span className="font-semibold">{classInfo?.grade}</span>
         </span>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
