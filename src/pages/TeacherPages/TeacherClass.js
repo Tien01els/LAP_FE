@@ -4,12 +4,10 @@ import Button from '../../components/Button'
 import DetailsCard from '../../components/Teacher/DetailsCard'
 
 const TeacherClass = () => {
-  const push = useNavigate()
-  const noti = 9
-  // const img =
-  //   'https://cdn.elearningindustry.com/wp-content/uploads/2020/08/5-ways-to-improve-your-course-cover-design-1024x575.png'
+  const navigate = useNavigate()
+  const noti = 2
   return (
-    <div className="mt-8 mx-20 mb-10">
+    <div className="mt-8 mx-20 mb-5">
       {/* <PageHeader pageName={`Classes`}></PageHeader> */}
       <div className="flex flex-col gap-7">
         {/* top */}
@@ -19,20 +17,23 @@ const TeacherClass = () => {
             <span
               className="underline underline-offset-4 font-semibold cursor-pointer"
               onClick={() => {
-                push('/teacher/class')
+                navigate('/teacher/class')
               }}
             >
               All Classes
             </span>
           </div>
-          <Button className="bg-white text-black border-none shadow-lg relative flex flex-row gap-3 items-center">
-            Request
-            <span
-              className="notification bg-red-700 rounded-full text-xs
-     text-white shadow-[#ff4242] w-[20px] h-[20px] flex justify-center items-center"
-            >
-              {noti > 9 ? '9+' : noti}
-            </span>
+          <Button className="bg-white text-black border-none shadow-lg relative flex flex-row justify-center items-center gap-3">
+            Open Requests
+            {noti !== 0 ? (
+              <div className="relative shadow-md shadow-red-300 flex justify-center mb-1 bg-red-500 w-6 h-6 rounded-full">
+                <span className="absolute translate-y-[3px] text-xs font-semibold text-white font-sans">
+                  {noti <= 9 ? noti : '9+'}
+                </span>
+              </div>
+            ) : (
+              ''
+            )}
           </Button>
         </div>
 
@@ -41,9 +42,9 @@ const TeacherClass = () => {
           <img
             src="https://img.freepik.com/premium-vector/students-classroom-teacher-near-blackboard-auditorium-teaches-maths-lesson-children-study-subject-kids-group-studying-elementary-primary-school-class-interior-cartoon-vector-flat-concept_176411-2393.jpg?w=2000"
             alt=""
-            className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl my-5"
+            className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5"
           />
-          <span className="font-bold text-3xl mb-2">Class Name</span>
+          <span className="font-bold text-3xl my-3">Class Name</span>
           <span className="">Date created : 66/99/6969</span>
         </div>
 
