@@ -13,13 +13,14 @@ const Topics = () => {
     const [result, setResult] = useState();
     const [values, setValues] = useState([]);
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [pageCount, setPageCount] = useState(1);
     const [itemOffset, setItemOffset] = useState(0);
 
     useEffect(() => {
         axios.get(API_URL + 'class-topic/1/1').then((res) => {
-            setResult(res.data);
+            const data = res.data;
+            setResult(data);
         });
     }, []);
 
@@ -30,15 +31,15 @@ const Topics = () => {
                 arrayResult = [
                     ...arrayResult,
                     {
-                        id: result[i].Topic.id,
-                        topicName: result[i].Topic.topicName,
-                        numberSkill: result[i].Topic.Skills.numberSkill,
-                        prerequisiteTopicName:
-                            result[i].Topic.Topic.prerequisiteTopicName,
+                        id: result[i].topicId,
+                        topicName: result[i].topicName,
+                        numberSkills: result[i].numberSkills,
+                        prerequisiteTopicName: result[i].prerequisiteTopicName,
                     },
                 ];
             }
             setValues(arrayResult);
+            setCurrentPage(arrayResult.length > 0 ? 1 : 0);
         }
     }, [result]);
 
@@ -47,6 +48,9 @@ const Topics = () => {
         console.log(`Loading items from ${itemOffset} to ${endOffset}`);
         setTopic(values.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(values.length / 5));
+
+        console.log(topic);
+        console.log(values.slice(itemOffset, endOffset));
     }, [itemOffset, values]);
 
     const handlePageClick = (event) => {
@@ -72,17 +76,17 @@ const Topics = () => {
                     All Classes
                 </span>
             </div>
-            <div className='w-full h-[75px] bg-primary flex items-center mt-[24px] rounded-xl shadow-lg'>
+            <div className='w-full h-[68px] bg-primary flex items-center mt-[20px] rounded-xl shadow-lg'>
                 <h1 className='text-2xl font-medium ml-[50px] uppercase text-white'>
                     Topics
                 </h1>
             </div>
 
-            <div className='flex flex-col justify-between mb-[40px] h-[70%]'>
+            <div className='flex flex-col justify-between mb-[40px] h-[77%]'>
                 <div className='grow'>
                     <Table thead={thead} tbody={topic} />
                 </div>
-                <div className='mt-[24px] flex justify-between px-5'>
+                <div className='mt-[16px] flex justify-between px-5'>
                     <span className='font-sm text-gray-500'>
                         Page {currentPage} / {pageCount}
                     </span>
