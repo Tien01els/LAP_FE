@@ -1,88 +1,52 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
+import axios from 'axios'
 
 import Table from '../../components/Table'
-
-const values = [
-  { id: '1', name: 'zxc', numberSkill: '1', prerequisite: 'cxz' },
-  { id: '2', name: 'zxc', numberSkill: '2', prerequisite: 'cxz' },
-  { id: '3', name: 'zxc', numberSkill: '3', prerequisite: 'cxz' },
-  { id: '4', name: 'zxc', numberSkill: '4', prerequisite: 'cxz' },
-  { id: '5', name: 'zxc', numberSkill: '5', prerequisite: 'cxz' },
-  { id: '6', name: 'zxc', numberSkill: '6', prerequisite: 'cxz' },
-  { id: '7', name: 'zxc', numberSkill: '7', prerequisite: 'cxz' },
-  { id: '8', name: 'zxc', numberSkill: '8', prerequisite: 'cxz' },
-  { id: '9', name: 'zxc', numberSkill: '9', prerequisite: 'cxz' },
-  { id: '10', name: 'zxc', numberSkill: '10', prerequisite: 'cxz' },
-  { id: '11', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '12', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '13', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '14', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '15', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '16', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '17', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '18', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '19', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '20', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '21', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '22', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '10', name: 'zxc', numberSkill: '10', prerequisite: 'cxz' },
-  { id: '11', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '12', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '13', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '14', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '15', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '16', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '17', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '18', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '19', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '20', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '21', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '22', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '10', name: 'zxc', numberSkill: '10', prerequisite: 'cxz' },
-  { id: '11', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '12', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '13', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '14', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '15', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '16', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '17', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '18', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '19', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '20', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '21', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '22', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '10', name: 'zxc', numberSkill: '10', prerequisite: 'cxz' },
-  { id: '11', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '12', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '13', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '14', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '15', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '16', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '17', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '18', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '19', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '20', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '21', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-  { id: '22', name: 'zxc', numberSkill: '11', prerequisite: 'cxz' },
-]
+import { API_URL } from '../../constant'
 
 const Topics = () => {
   const navigate = useNavigate()
 
   const [topic, setTopic] = useState([])
+  const [result, setResult] = useState()
+  const [values, setValues] = useState([])
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageCount, setPageCount] = useState(0)
+  const [pageCount, setPageCount] = useState(1)
   const [itemOffset, setItemOffset] = useState(0)
+
+  useEffect(() => {
+    axios.get(API_URL + 'class-topic/1/1').then((res) => {
+      setResult(res.data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (result) {
+      let arrayResult = []
+      for (let i = 0; i < result.length; ++i) {
+        arrayResult = [
+          ...arrayResult,
+          {
+            id: result[i].Topic.id,
+            topicName: result[i].Topic.topicName,
+            numberSkill: result[i].Topic.Skills.numberSkill,
+            prerequisiteTopicName: result[i].Topic.Topic.prerequisiteTopicName,
+          },
+        ]
+      }
+      setValues(arrayResult)
+    }
+  }, [result])
 
   useEffect(() => {
     const endOffset = itemOffset + 5
     console.log(`Loading items from ${itemOffset} to ${endOffset}`)
     setTopic(values.slice(itemOffset, endOffset))
     setPageCount(Math.ceil(values.length / 5))
-  }, [itemOffset])
+  }, [itemOffset, values])
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1)
@@ -95,7 +59,7 @@ const Topics = () => {
 
   const thead = ['Topic Name', 'NO. SKILLS', 'PREREQUISITES', '']
   return (
-    <div className="mt-[40px] mx-[68px]">
+    <div className="pt-[40px] px-[68px] h-screen">
       <div className="flex gap-2 items-center">
         <i className="fas fa-caret-left text-xl font-bold"></i>
         <span
@@ -113,19 +77,19 @@ const Topics = () => {
         </h1>
       </div>
 
-      <div className="flex flex-col justify-between mb-[40px] min-h-fit-[500px]">
-        <Table thead={thead} tbody={topic} />
+      <div className="flex flex-col justify-between mb-[40px] h-[70%]">
+        <div className="grow">
+          <Table thead={thead} tbody={topic} />
+        </div>
         <div className="mt-[24px] flex justify-between px-5">
-          <div>
-            <span className="font-sm text-gray-500">
-              Page {currentPage} / {pageCount}
-            </span>
-          </div>
+          <span className="font-sm text-gray-500">
+            Page {currentPage} / {pageCount}
+          </span>
           <ReactPaginate
             breakLabel="..."
             nextLabel={
               <button>
-                Next <i class="fas fa-angle-right"></i>
+                Next <i className="fas fa-angle-right"></i>
               </button>
             }
             onPageChange={handlePageClick}
@@ -134,7 +98,7 @@ const Topics = () => {
             pageCount={pageCount}
             previousLabel={
               <button>
-                <i class="fas fa-angle-left"></i> Previous
+                <i className="fas fa-angle-left"></i> Previous
               </button>
             }
             renderOnZeroPageCount={null}

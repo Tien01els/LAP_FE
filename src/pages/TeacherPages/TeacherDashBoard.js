@@ -9,6 +9,7 @@ import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css'
 import { Calendar } from '@hassanmojab/react-modern-calendar-datepicker'
 import { Bar } from 'react-chartjs-2'
 import { faker } from '@faker-js/faker'
+import { API_URL } from '../../constant'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,23 +19,29 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
+import axios from 'axios'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const TeacherDashBoard = () => {
-  const classInfo = {
-    name: 'MATH_11ASLDJ3ASDASDSAD',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzDRXFhE3aK7cERNPeEkefjyjTnQCqXLxxIBvi_h77ieGirPLbfO1D7I7km_BFVYFjGIA&usqp=CAU',
-    year: '2022-2023',
-    grade: '40A',
-  }
+  // const classInfo = {
+  //   name: 'MATH_11ASLDJ3ASDASDSAD',
+  //   image:
+  //     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzDRXFhE3aK7cERNPeEkefjyjTnQCqXLxxIBvi_h77ieGirPLbfO1D7I7km_BFVYFjGIA&usqp=CAU',
+  //   year: '2022-2023',
+  //   grade: '40A',
+  // }
 
   const navigate = useNavigate()
   const [selectedDay, setSelectedDay] = useState(null)
   const [Classes, setClasses] = useState([])
 
-  useEffect(() => {}, [])
+  const teacherId = 2
+  useEffect(() => {
+    axios.get(API_URL + `class/${teacherId}`).then((res) => {
+      setClasses(res.data)
+    })
+  }, [])
 
   const options = {
     responsive: true,
@@ -62,6 +69,9 @@ const TeacherDashBoard = () => {
   }
   // classes
   const labels = ['MATH_333', 'MATH_33323', 'MATH_113', 'MATH_44', 'MATH_AB32']
+  // const labels = Classes.map((val, index) => {
+  //   val?.className }
+  // })
 
   const data = {
     labels,
@@ -76,11 +86,11 @@ const TeacherDashBoard = () => {
   }
 
   return (
-    <div className="flex flex-col pt-2 min-h-[80%] h-[100%]">
+    <div className="flex flex-col min-h-[80%] h-[100%]">
       {/* <PageHeader pageName={`Dashboard`}></PageHeader> */}
-      <div className="flex flex-row mt-5 w-full divide-solid h-[80%]">
+      <div className="flex flex-row w-full divide-solid h-[80%]">
         <div className="w-[75%] h-[100%] overflow-hidden flex flex-col justify-center items-center">
-          <div className="flex justify-center ml-10 min-w-[92%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
+          <div className="flex justify-center min-w-[92%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
             <Bar
               responsive
               height={175}
@@ -91,8 +101,8 @@ const TeacherDashBoard = () => {
             />
           </div>
           {/*  */}
-          <div className="flex justify-center items-center min-w-[90%] ml-10 mt-10 gap-10 mb-8">
-            <div className="flex flex-col gap-5">
+          <div className="flex min-w-[90%] mt-10 gap-10 mb-8">
+            <div className="flex flex-col gap-5 w-full">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-xl">Classes</span>
                 <span
@@ -104,10 +114,10 @@ const TeacherDashBoard = () => {
                   View all
                 </span>
               </div>
-              <div className="flex flex-row gap-10 min-w-[90%]">
-                <ClassCard classInfo={classInfo} />
-                <ClassCard classInfo={classInfo} />
-                <ClassCard classInfo={classInfo} />
+              <div className="flex flex-row gap-7 w-full">
+                {Classes.map((val, index) => {
+                  return <ClassCard key={val?.id} classInfo={val} />
+                })}
               </div>
             </div>
           </div>

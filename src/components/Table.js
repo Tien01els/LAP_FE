@@ -2,8 +2,6 @@ import { v4 as uuidv4 } from 'uuid'
 import Button from './Button'
 
 const Table = ({ thead = [], tbody }) => {
-  console.log(thead)
-  console.log(tbody)
   console.log(uuidv4())
   return (
     <div>
