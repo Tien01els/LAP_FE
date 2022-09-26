@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ClassCard from '../../components/Teacher/ClassCard'
 import { motion } from 'framer-motion'
@@ -32,6 +32,9 @@ const TeacherDashBoard = () => {
 
   const navigate = useNavigate()
   const [selectedDay, setSelectedDay] = useState(null)
+  const [Classes, setClasses] = useState([])
+
+  useEffect(() => {}, [])
 
   const options = {
     responsive: true,
@@ -57,7 +60,7 @@ const TeacherDashBoard = () => {
       },
     },
   }
-
+  // classes
   const labels = ['MATH_333', 'MATH_33323', 'MATH_113', 'MATH_44', 'MATH_AB32']
 
   const data = {
