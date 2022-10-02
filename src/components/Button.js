@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 const Button = ({ children, className = '', ...rest }) => {
-  return (
-    <button className={`button ${className} `} {...rest}>
-      {children}
-    </button>
-  )
-}
+    return (
+        <button className={`button ${className} `} {...rest}>
+            {children}
+        </button>
+    );
+};
 
-export default Button
+export default Button;
