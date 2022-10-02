@@ -1,7 +1,8 @@
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Button from './Button';
 
-const Table = ({ thead = [], tbody }) => {
+const Table = ({ thead = [], tbody, actions = [] }) => {
     return (
         <div>
             <div className='overflow-x-auto relative shadow-lg rounded-xl mt-[20px]'>
@@ -37,7 +38,7 @@ const Table = ({ thead = [], tbody }) => {
                             });
                             return (
                                 <tr
-                                    key={uuidv4()}
+                                    key={body.id}
                                     className='odd:bg-white even:bg-gray-50 border-b dark:bg-gray-900 dark:border-gray-700'
                                 >
                                     {bodyKeys.map((bodyKey, index) => {
@@ -50,10 +51,26 @@ const Table = ({ thead = [], tbody }) => {
                                             </th>
                                         );
                                     })}
-                                    <td className='py-4 px-1 font-medium whitespace-nowrap text-white'>
-                                        <Button className='rounded-lg border-none text-sm font-semibold bg-primary px-3 py-1.5'>
-                                            View more
-                                        </Button>
+                                    <td className='py-4 px-1 font-medium whitespace-nowrap text-white flex justify-evenly'>
+                                        {actions.map((action, index) => {
+                                            return (
+                                                <React.Fragment
+                                                    key={action.name + body.id}
+                                                >
+                                                    <Button
+                                                        className='rounded-lg border-none text-sm font-semibold bg-primary px-3 py-1.5'
+                                                        onClick={() => {
+                                                            action.eventAction &&
+                                                                action.eventAction(
+                                                                    body.id
+                                                                );
+                                                        }}
+                                                    >
+                                                        {action.name}
+                                                    </Button>
+                                                </React.Fragment>
+                                            );
+                                        })}
                                     </td>
                                 </tr>
                             );
@@ -61,19 +78,6 @@ const Table = ({ thead = [], tbody }) => {
                     </tbody>
                 </table>
             </div>
-            {
-                // <div>
-                //     <ReactPaginate
-                //         breakLabel='...'
-                //         nextLabel='next >'
-                //         // onPageChange={handlePageClick}
-                //         pageRangeDisplayed={5}
-                //         // pageCount={pageCount}
-                //         previousLabel='< previous'
-                //         renderOnZeroPageCount={null}
-                //     />
-                // </div>
-            }
         </div>
     );
 };
