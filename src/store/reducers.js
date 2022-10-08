@@ -1,3 +1,3 @@
-const { combineReducers } = require("@reduxjs/toolkit");
+const { combineReducers } = require('@reduxjs/toolkit')
 
-export const reducer = combineReducers({});
+export const reducer = combineReducers({})

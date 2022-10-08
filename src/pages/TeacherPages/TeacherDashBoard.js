@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ClassCard from '../../components/Teacher/ClassCard'
 import { motion } from 'framer-motion'
+import moment from 'moment'
 
 // import 'react-modern-calendar-datepicker/lib/DatePicker.css'
 // import { Calendar } from 'react-modern-calendar-datepicker'
@@ -24,6 +25,7 @@ import axios from 'axios'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const TeacherDashBoard = () => {
+  moment().locale('en')
   // const classInfo = {
   //   name: 'MATH_11ASLDJ3ASDASDSAD',
   //   image:
@@ -35,13 +37,53 @@ const TeacherDashBoard = () => {
   const navigate = useNavigate()
   const [selectedDay, setSelectedDay] = useState(null)
   const [Classes, setClasses] = useState([])
-
+  const [assignments, setAssignments] = useState([])
+  const [assignmentDays, setAssignmentsDays] = useState([])
   const teacherId = 2
   useEffect(() => {
-    axios.get(API_URL + `class/${teacherId}`).then((res) => {
-      setClasses(res.data)
-    })
+    axios
+      .get(API_URL + `class/${teacherId}`)
+      .then((res) => {
+        setClasses(res.data)
+      })
+      .catch((err) => console.log(err))
+
+    axios
+      .get(API_URL + `assignment/${teacherId}`)
+      .then((res) => {
+        setAssignments(res.data)
+        handleDays(res.data)
+      })
+      .catch((err) => console.log(err))
+
+    // eslint-disable-next-line
   }, [])
+
+  const handleDays = async (assignments) => {
+    let days = []
+
+    // [
+    //   {
+    //     year: 2022,
+    //     month: 9,
+    //     day: 26,
+    //     className: 'deadline',
+    //   },
+    // ]
+
+    for (let i = 0; i < assignments.length; i++) {
+      days.push({
+        year: parseInt(moment(assignments[i]?.dateDue).format('YYYY')),
+        month: parseInt(moment(assignments[i]?.dateDue).format('MM')),
+        day: parseInt(moment(assignments[i]?.dateDue).format('DD')),
+        className: 'deadline',
+      })
+    }
+
+    console.log(days)
+
+    await setAssignmentsDays(days)
+  }
 
   const options = {
     responsive: true,
@@ -69,9 +111,6 @@ const TeacherDashBoard = () => {
   }
   // classes
   const labels = ['MATH_333', 'MATH_33323', 'MATH_113', 'MATH_44', 'MATH_AB32']
-  // const labels = Classes.map((val, index) => {
-  //   val?.className }
-  // })
 
   const data = {
     labels,
@@ -86,13 +125,13 @@ const TeacherDashBoard = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-[80%] h-[100%]">
+    <div className="flex flex-col h-[100vh]">
       {/* <PageHeader pageName={`Dashboard`}></PageHeader> */}
-      <div className="flex flex-row w-full divide-solid h-[80%]">
-        <div className="w-[75%] h-[100%] overflow-hidden flex flex-col justify-center items-center">
+      <div className="flex flex-row w-full divide-solid h-full pt-8">
+        <div className="w-[75%] h-[100%] overflow-hidden flex flex-col  items-center">
           <div className="flex justify-center min-w-[92%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
             <Bar
-              responsive
+              responsive="true"
               height={175}
               width={400}
               className="chartJS"
@@ -131,14 +170,7 @@ const TeacherDashBoard = () => {
               onChange={setSelectedDay}
               calendarClassName="custom-calendar"
               calendarTodayClassName="custom-today-day"
-              customDaysClassName={[
-                {
-                  year: 2022,
-                  month: 9,
-                  day: 26,
-                  className: 'deadline',
-                },
-              ]}
+              customDaysClassName={assignmentDays}
               renderFooter={() => (
                 <motion.div
                   style={{
@@ -156,32 +188,48 @@ const TeacherDashBoard = () => {
                   <span className="text-base font-semibold">
                     Upcoming Assignments
                   </span>
-                  {new Array(3).fill(0).map((item, index) => {
-                    return (
-                      <div key={index} className="flex flex-col gap-4">
-                        <div className="shadow-md hover:shadow-lg transition-all rounded-md flex items-center justify-between">
-                          <div
-                            style={{
-                              padding: '10px 1rem',
-                            }}
-                            className="flex flex-col"
-                          >
-                            <span className="text-sm">Assignment name</span>
-                            <span>Class</span>
-                          </div>
-                          <div
-                            style={{
-                              paddingRight: '1rem',
-                            }}
-                            className="flex flex-col justify-center items-center"
-                          >
-                            <span className="text-sm">19-Sep</span>
-                            <span className="text-sm">4pm</span>
+                  {assignments
+                    .filter(
+                      (item) =>
+                        parseInt(moment(item.dateDue).format('DD')) ===
+                        selectedDay?.day,
+                    )
+                    .map((item, index) => {
+                      return (
+                        <div key={index} className="flex flex-col gap-4">
+                          <div className="shadow-md hover:shadow-lg transition-all rounded-md flex items-center justify-between">
+                            <div
+                              style={{
+                                padding: '10px 1rem',
+                              }}
+                              className="flex flex-col"
+                            >
+                              <span className="text-sm">
+                                {item.assignmentName}
+                              </span>
+                              <span>Class</span>
+                            </div>
+                            <div
+                              style={{
+                                paddingRight: '1rem',
+                              }}
+                              className="flex flex-col justify-center items-center"
+                            >
+                              <span className="text-sm">
+                                {selectedDay.day +
+                                  '-' +
+                                  moment(selectedDay?.month.toString()).format(
+                                    'MMM',
+                                  )}
+                              </span>
+                              <span className="text-sm">
+                                {moment(item.dateDue).format('hh:mm:ss A')}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
                 </motion.div>
               )}
             />

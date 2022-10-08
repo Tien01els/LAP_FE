@@ -72,10 +72,4 @@ const TeacherClasses = () => {
   )
 }
 
-{
-  /* .map((val, index) => {
-              return <ClassCard layout key={index} classInfo={val} />
-            }) */
-}
-
 export default TeacherClasses
