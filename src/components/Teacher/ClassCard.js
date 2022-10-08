@@ -2,24 +2,27 @@ import React from 'react'
 import { motion } from 'framer-motion'
 
 const ClassCard = ({ classInfo }) => {
+  const image =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzDRXFhE3aK7cERNPeEkefjyjTnQCqXLxxIBvi_h77ieGirPLbfO1D7I7km_BFVYFjGIA&usqp=CAU'
   return (
     <motion.div
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
       layout
       className="flex flex-col gap-2 bg-white shadow-lg hover:shadow-xl duration-300 w-[250px] h-[200px] rounded-lg"
     >
       <div className="flex justify-center pt-5">
         <img
-          src={classInfo?.image}
+          src={classInfo?.classImg || image}
           alt=""
           className="rounded-md w-[200px] h-[100px] cursor-pointer"
         ></img>
       </div>
-      <div className="flex flex-col ml-6 mr-5 hover:underline underline-offset-4">
+      <div className="flex flex-col ml-6 mr-5">
         <span className="font-semibold text-lg cursor-pointer truncate">
-          {classInfo?.name}
+          {classInfo?.className}
         </span>
       </div>
       <div className="flex flex-row justify-between mx-6">

@@ -1,5 +1,8 @@
+import axios from 'axios'
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import ClassCard from '../../components/Teacher/ClassCard'
+import { API_URL } from '../../constant'
 
 const TeacherClasses = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -26,6 +29,17 @@ const TeacherClasses = () => {
       grade: '40A',
     },
   ]
+
+  const [Classes, setClasses] = useState([])
+
+  const teacherId = 2
+
+  useEffect(() => {
+    axios.get(API_URL + `class/${teacherId}`).then((res) => {
+      setClasses(res.data)
+    })
+  }, [])
+
   return (
     <div className="flex flex-col mt-10 gap-5 h-[100%]">
       <div className="flex flex-col px-10 ml-7 pt-2">
@@ -40,19 +54,18 @@ const TeacherClasses = () => {
           />
         </div>
         <div className="flex flex-row flex-wrap mt-5 gap-10 mb-10">
-          {classInfo
-            .filter((val) => {
-              if (searchTerm === '') {
-                return val
-              } else if (
-                val.name.toLowerCase().includes(searchTerm.toLowerCase())
-              ) {
-                return val
-              }
-            })
-            .map((val, index) => {
-              return <ClassCard layout key={index} classInfo={val} />
-            })}
+          {Classes.filter((val) => {
+            if (searchTerm === '') {
+              return val
+            } else if (
+              val.className.toLowerCase().includes(searchTerm.toLowerCase())
+            ) {
+              return val
+            }
+          }).map((val, index) => {
+            console.log(val)
+            return <ClassCard layout key={val?.id} classInfo={val} />
+          })}
         </div>
       </div>
     </div>
