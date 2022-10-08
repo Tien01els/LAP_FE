@@ -92,16 +92,58 @@ const TeacherCreateQuestion = () => {
             let index = questionList.findIndex(
                 (item) => item.id === currentQid
             );
-            questionList[index] = {
-                id: currentQid,
-                title: question,
-                questionType: selectedOption?.value,
+
+            const questionUpdate = {
+                content: question,
+                option: answers,
                 hint: hint,
                 score: score,
-                answers: answers,
+                questionTypeId: selectedOption?.value,
+                assignmentId: 1,
             };
-
-            setQuestionList([...questionList]);
+            axios
+                .put(API_URL + `question/${currentQid}`, questionUpdate)
+                .then((res) => {
+                    questionList[index] = {
+                        id: res?.data?.id,
+                        title: res?.data?.content,
+                        questionType: res?.data?.questionTypeId,
+                        hint: res?.data?.hint,
+                        score: res?.data?.score,
+                        answers: res?.data?.option,
+                    };
+                    setQuestionList([...questionList]);
+                    setCurrentQid('');
+                    setScore(0);
+                    setQuestion('');
+                    setHint('');
+                    setEnableHint(false);
+                    setSelectedOption('');
+                    setAnswers([]);
+                    forceUpdate();
+                });
+            return;
+        }
+        let questionNew = {
+            content: question,
+            option: answers,
+            hint: hint,
+            score: score,
+            questionTypeId: selectedOption?.value,
+            assignmentId: 1,
+        };
+        axios.post(API_URL + `question`, questionNew).then((res) => {
+            setQuestionList([
+                ...questionList,
+                {
+                    id: res?.data?.id,
+                    title: res?.data?.content,
+                    questionType: res?.data?.questionTypeId,
+                    hint: res?.data?.hint,
+                    score: res?.data?.score,
+                    answers: res?.data?.option,
+                },
+            ]);
             setCurrentQid('');
             setScore(0);
             setQuestion('');
@@ -110,34 +152,7 @@ const TeacherCreateQuestion = () => {
             setSelectedOption('');
             setAnswers([]);
             forceUpdate();
-            return;
-        }
-        const questionNew = {
-          content: question,
-          option: answers,
-          questionTypeId: selectedOption?.value,
-            hint: hint,
-            score: score,
-        };
-        setQuestionList([
-            ...questionList,
-            {
-                id: uuid(),
-                title: question,
-                questionType: selectedOption?.value,
-                hint: hint,
-                score: score,
-                answers: answers,
-            },
-        ]);
-        setCurrentQid('');
-        setScore(0);
-        setQuestion('');
-        setHint('');
-        setEnableHint(false);
-        setSelectedOption('');
-        setAnswers([]);
-        forceUpdate();
+        });
     };
 
     const removeQuestionItem = (id) => {
