@@ -71,52 +71,47 @@
         width: 100%;
         height: 100%;
 
-<<<<<<< HEAD
-    // height: 322px !important;
-    // width: 90% !important;
-  }
-
-  .teacherMathField {
-    padding: 4rem 2rem !important;
-  }
-
-  #formula::disabled {
-    color: black !important;
-    background: black !important;
-  }
-
-  ::-webkit-scrollbar {
-    width: 3px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  .daypicker {
-    @apply rounded-md font-semibold transition-all border border-gray-500 #{!important};
-  }
-
-  .daypicker:hover {
-    @apply border border-primary cursor-pointer duration-500 text-gray-500 #{!important};
-  }
-
-  .daypicker:focus {
-    @apply outline-primary #{!important};
-  }
-=======
         // height: 322px !important;
         // width: 90% !important;
+    }
+
+    .teacherMathField {
+        padding: 4rem 2rem !important;
+    }
+
+    #formula::disabled {
+        color: black !important;
+        background: black !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    .daypicker {
+        @apply rounded-md font-semibold transition-all border border-gray-500 #{!important};
+    }
+
+    .daypicker:hover {
+        @apply border border-primary cursor-pointer duration-500 text-gray-500 #{!important};
+    }
+
+    .daypicker:focus {
+        @apply outline-primary #{!important};
     }
 }
 
@@ -154,5 +149,4 @@
 
     /* Support for IE. */
     font-feature-settings: 'liga';
->>>>>>> LAP-1.0
 }
