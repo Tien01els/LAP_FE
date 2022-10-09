@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { motion } from 'framer-motion';
 import { useReducer } from 'react';
 import { utils } from 'react-modern-calendar-datepicker';
-import { v4 as uuid } from 'uuid';
 import moment from 'moment';
 import axios from 'axios';
 
