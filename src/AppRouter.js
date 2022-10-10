@@ -10,6 +10,9 @@ const TeacherCreateQuestion = lazy(() =>
   import('./pages/TeacherPages/TeacherCreateQuestion'),
 )
 const Topics = lazy(() => import('./pages/TopicPages/Topics'))
+const TeacherManageStudents = lazy(() =>
+  import('./pages/TeacherPages/TeacherManageStudents'),
+)
 
 export default function AppRouter() {
   return (
@@ -23,6 +26,10 @@ export default function AppRouter() {
         <Route
           path="/teacher/createquestion"
           element={<TeacherCreateQuestion />}
+        />
+        <Route
+          path="/teacher/manage-student"
+          element={<TeacherManageStudents />}
         />
       </Route>
     </Routes>
