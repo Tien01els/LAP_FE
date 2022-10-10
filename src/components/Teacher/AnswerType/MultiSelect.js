@@ -1,84 +1,95 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Button from '../../Button';
+import React, { useState, useEffect, useRef } from 'react'
+import Button from '../../Button'
 
 const MultiSelect = ({ answers, setAnswers }) => {
-    const [newAnswer, setNewAnswer] = useState([]);
-    const count = useRef(1);
+  const [newAnswer, setNewAnswer] = useState([])
+  const count = useRef(1)
 
-    const handleOnChangeIsTrue = (i) => {
-        const inputData = [...newAnswer];
-        inputData[i].isTrue = !inputData[i].isTrue;
-        setNewAnswer(inputData);
-    };
+  const preAnswer = useRef()
 
-    const handleOnChangeAnswer = (onChangeValue, i) => {
-        const inputData = [...newAnswer];
-        inputData[i].answer = onChangeValue.target.value;
-        setNewAnswer(inputData);
-    };
+  const handleOnChangeIsTrue = (i) => {
+    const inputData = [...newAnswer]
+    inputData[i].isTrue = !inputData[i].isTrue
+    setNewAnswer(inputData)
+  }
 
-    const handleAddAnswers = () => {
-        const newAnswers = [...newAnswer, { isTrue: false, answer: '' }];
-        count.current++;
-        setNewAnswer(newAnswers);
-    };
+  const handleOnChangeAnswer = (onChangeValue, i) => {
+    const inputData = [...newAnswer]
+    inputData[i].answer = onChangeValue.target.value
+    setNewAnswer(inputData)
+  }
 
-    const handleDelete = (id) => {
-        const newList = newAnswer.filter((item) => item.id !== id);
-        count.current--;
-        setNewAnswer(newList);
-    };
+  const handleAddAnswers = () => {
+    const newAnswers = [...newAnswer, { id: count, isTrue: false, answer: '' }]
+    count.current++
+    setNewAnswer(newAnswers)
+  }
 
-    useEffect(() => {
-        setAnswers(newAnswer);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [newAnswer]);
+  const handleDelete = (id) => {
+    const newList = newAnswer.filter((item) => item.id !== id)
+    count.current--
+    setNewAnswer(newList)
+  }
 
-    useEffect(() => {
-        handleAddAnswers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  useEffect(() => {
+    preAnswer.current = newAnswer
+    setNewAnswer(answers)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers])
 
-    return (
-        <div className='flex flex-col gap-5 justify-center items-center'>
-            {newAnswer.map((val, i) => {
-                return (
-                    <div key={i} className='flex flex-row gap-3'>
-                        <div className=' flex flex-row  gap-2 items-center px-5 py-3 pt-4 rounded-md w-[500px]'>
-                            <input
-                                type='checkbox'
-                                onChange={() => handleOnChangeIsTrue(i)}
-                            />
-                            <input
-                                placeholder='Enter answers'
-                                value={val?.answer}
-                                onChange={(e) => handleOnChangeAnswer(e, i)}
-                                className='outline-none w-full px-2 py-1 border-b duration-300 border-gray-200'
-                            />
-                        </div>
-                        <div className='flex items-center'>
-                            <i
-                                className='fas fa-times text-xl cursor-pointer text-gray-500 hover:text-red-400 duration-300'
-                                onClick={() => handleDelete(val?.id)}
-                            ></i>
-                        </div>
-                    </div>
-                );
-            })}
-            <div className=''>
-                {count.current === 7 ? (
-                    <></>
-                ) : (
-                    <Button
-                        className='border-none text-2xl'
-                        onClick={handleAddAnswers}
-                    >
-                        +
-                    </Button>
-                )}
+  useEffect(() => {
+    if (newAnswer && preAnswer.current !== newAnswer) {
+      setAnswers(newAnswer)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newAnswer])
+
+  useEffect(() => {
+    handleAddAnswers()
+    if (answers && answers.length > 0) {
+      setNewAnswer(answers)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <div className="flex flex-col gap-5 justify-center items-center">
+      {newAnswer.map((val, i) => {
+        return (
+          <div key={i} className="flex flex-row gap-3">
+            <div className=" flex flex-row  gap-2 items-center px-5 py-3 pt-4 rounded-md w-[500px]">
+              <input
+                type="checkbox"
+                defaultChecked={val.isTrue}
+                onChange={() => handleOnChangeIsTrue(i)}
+              />
+              <input
+                placeholder="Enter answers"
+                value={val?.answer}
+                onChange={(e) => handleOnChangeAnswer(e, i)}
+                className="outline-none w-full px-2 py-1 border-b duration-300 border-gray-200"
+              />
             </div>
-        </div>
-    );
-};
+            <div className="flex items-center">
+              <i
+                className="fas fa-times text-xl cursor-pointer text-gray-500 hover:text-red-400 duration-300"
+                onClick={() => handleDelete(val?.id)}
+              ></i>
+            </div>
+          </div>
+        )
+      })}
+      <div className="">
+        {count.current === 7 ? (
+          <></>
+        ) : (
+          <Button className="border-none text-2xl" onClick={handleAddAnswers}>
+            +
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+}
 
-export default MultiSelect;
+export default MultiSelect
