@@ -220,13 +220,13 @@ const Topics = () => {
             className="flex"
             onSubmit={handleSubmitAdd(handleCreateClassTopic)}
           >
-            <div className="flex flex-col gap-5 w-[500px] px-6">
-              <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-7 w-[500px] px-6">
+              <div className="flex flex-col gap-4">
                 <h2 className="text-2xl font-semibold">Add topic</h2>
                 <label htmlFor="topic">Topic</label>
                 <select
                   name="classes"
-                  className="border border-gray-500 rounded px-2"
+                  className="border outline-none border-gray-500 rounded px-2"
                   defaultValue="-1"
                   {...registerAdd('topicId')}
                 >
@@ -244,7 +244,7 @@ const Topics = () => {
                 <label htmlFor="classes">Class</label>
                 <select
                   name="classes"
-                  className="border border-gray-500 rounded px-2"
+                  className="border outline-none border-gray-500 rounded px-2"
                   defaultValue="-1"
                   {...registerAdd('classId')}
                 >
@@ -279,7 +279,7 @@ const Topics = () => {
                 </span>
               </div>
               <div className="flex justify-center">
-                <Button className="bg-primary border-none w-full">ADD</Button>
+                <Button className="bg-primary border-none w-[50%]">ADD</Button>
               </div>
             </div>
           </form>
