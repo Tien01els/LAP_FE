@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const imgsrc =
   'https://students.flinders.edu.au/_jcr_content/content/section_856874544_co/par_0/image_general.coreimg.png/1621207287287/waving-person.png'
 
 const StudentCard = () => {
+  const [openMoreOption, setOpenMoreOption] = useState(false)
+
   return (
     <div className="w-full h-[150px] flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
       <img src={imgsrc} alt="" className="object-fill h-32 w-36 rounded-lg" />
@@ -12,8 +14,19 @@ const StudentCard = () => {
           <span className="font-medium max-w-[380px] truncate">
             Nguyen Minh Nhat
           </span>
-          <div className="rounded-full h-[24px] w-[24px] cursor-pointer  select-none flex items-center justify-center hover:bg-gray-100">
-            <i className="fas fa-ellipsis-h font-xs"></i>
+          <div className="flex flex-col">
+            <div
+              className="rounded-full relative h-[24px] w-[24px] cursor-pointer  select-none flex items-center justify-center hover:bg-gray-100"
+              onClick={() => setOpenMoreOption(!openMoreOption)}
+            >
+              <i className="fas fa-ellipsis-h font-xs"></i>
+            </div>
+            {openMoreOption && (
+              <div className="sticky translate-y-3 bg-white flex flex-col px-2 py-1 text-xs border rounded-md">
+                <span>Remove</span>
+                <span>Remove</span>
+              </div>
+            )}
           </div>
         </div>
         <p className="text-sm line-clamp-3">
