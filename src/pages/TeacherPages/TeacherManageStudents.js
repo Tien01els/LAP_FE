@@ -42,8 +42,10 @@ const TeacherManageStudents = () => {
             className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5"
           />
           <div className="flex flex-col justify-center items-center">
-            <span className="font-bold text-3xl my-3">Nguyen Minh Nhat</span>
-            <span className="text-gray-500">Date of birth : 25/04/2001</span>
+            <span className="font-bold text-2xl my-3">Nguyen Minh Nhat</span>
+            <span className="text-gray-500 text-sm">
+              Date of birth : 25/04/2001
+            </span>
           </div>
           <div className="flex flex-col gap-3 w-full">
             <span className="text-2xl font-medium px-2">Bio</span>

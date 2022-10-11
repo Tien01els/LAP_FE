@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Button from '../../Button'
 
-const MultiSelect = ({ answers, setAnswers }) => {
+const MultiSelect = ({ questionType, answers, setAnswers }) => {
   const [newAnswer, setNewAnswer] = useState([])
   const count = useRef(1)
 
@@ -43,6 +43,12 @@ const MultiSelect = ({ answers, setAnswers }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newAnswer])
+
+  useEffect(() => {
+    if (questionType?.value !== 4) {
+      setNewAnswer([])
+    }
+  }, [questionType?.value])
 
   useEffect(() => {
     handleAddAnswers()

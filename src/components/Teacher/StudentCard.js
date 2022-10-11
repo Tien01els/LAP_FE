@@ -7,29 +7,31 @@ const StudentCard = () => {
   const [openMoreOption, setOpenMoreOption] = useState(false)
 
   return (
-    <div className="w-full h-[150px] flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
+    <div className="w-full h-[140px] flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
       <img src={imgsrc} alt="" className="object-fill h-32 w-36 rounded-lg" />
       <div className="flex flex-col justify-evenly h-full">
         <div className="flex flex-row justify-between items-center">
-          <span className="font-medium max-w-[380px] truncate">
+          <span className="font-medium max-w-[380px] truncate cursor-pointer">
             Nguyen Minh Nhat
           </span>
           <div className="flex flex-col">
             <div
-              className="rounded-full relative h-[24px] w-[24px] cursor-pointer  select-none flex items-center justify-center hover:bg-gray-100"
+              className={`rounded-full relative h-[24px] w-[24px] cursor-pointer  select-none flex items-center justify-center bg-${
+                openMoreOption ? `gray-100` : `white`
+              } hover:bg-gray-100`}
               onClick={() => setOpenMoreOption(!openMoreOption)}
             >
               <i className="fas fa-ellipsis-h font-xs"></i>
+              {openMoreOption && (
+                <div className="absolute translate-y-10 -translate-x-3 bg-gray-100 flex flex-col gap-2 px-2 py-1 text-xs rounded-md">
+                  <span className="cursor-pointer">Remove</span>
+                  <span className="cursor-pointer">Remove</span>
+                </div>
+              )}
             </div>
-            {openMoreOption && (
-              <div className="sticky translate-y-3 bg-white flex flex-col px-2 py-1 text-xs border rounded-md">
-                <span>Remove</span>
-                <span>Remove</span>
-              </div>
-            )}
           </div>
         </div>
-        <p className="text-sm line-clamp-3">
+        <p className="text-xs line-clamp-3">
           Lorem Ipsum is simply dummy text of the printing and
           typesettingindustry. Lorem Ipsum has been the industry's standard
           dummy text ever since the 1500s, when an unknown printer took a galley

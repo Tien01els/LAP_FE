@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import 'mathlive'
 import Select from 'react-select'
 import { motion } from 'framer-motion'
@@ -45,6 +45,10 @@ const TeacherCreateQuestion = () => {
     if (!selectedDay) return ''
     return `${selectedDay.month}/${selectedDay.day}/${selectedDay.year}`
   }
+
+  useLayoutEffect(() => {
+    setAnswers([])
+  }, [selectedOption])
 
   const handleScore = (e) => {
     const score = Math.max(0, Math.min(100, Number(e.target.value)))
@@ -160,16 +164,6 @@ const TeacherCreateQuestion = () => {
     const newList = questionList.filter((item) => item.id !== id)
     setQuestionList(newList)
   }
-
-  // useEffect(() => {
-  //   console.log(questionList)
-  // }, [questionList])
-
-  // useEffect(() => {
-  //   const mf = document.querySelector('#formula')
-  //   const latexField = document.querySelector('#latex')
-  //   latexField.addEventListener('input', () => mf.setValue(latexField.value))
-  // }, [])
 
   useEffect(() => {
     const mf = document.querySelector('#formula')
@@ -358,13 +352,29 @@ const TeacherCreateQuestion = () => {
           </div>
           <div className="my-10">
             {selectedOption?.value === 1 ? (
-              <MultiChoice setAnswers={setAnswers} answers={answers} />
+              <MultiChoice
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
             ) : selectedOption?.value === 2 ? (
-              <TrueFalse setAnswers={setAnswers} answers={answers} />
+              <TrueFalse
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
             ) : selectedOption?.value === 3 ? (
-              <InputAnswer setAnswers={setAnswers} answers={answers} />
+              <InputAnswer
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
             ) : selectedOption?.value === 4 ? (
-              <MultiSelect setAnswers={setAnswers} answers={answers} />
+              <MultiSelect
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
             ) : (
               ''
             )}
