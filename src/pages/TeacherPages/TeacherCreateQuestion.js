@@ -46,10 +46,6 @@ const TeacherCreateQuestion = () => {
     return `${selectedDay.month}/${selectedDay.day}/${selectedDay.year}`
   }
 
-  useLayoutEffect(() => {
-    setAnswers([])
-  }, [selectedOption])
-
   const handleScore = (e) => {
     const score = Math.max(0, Math.min(100, Number(e.target.value)))
     setScore(score)
