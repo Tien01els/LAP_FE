@@ -162,6 +162,10 @@ const TeacherCreateQuestion = () => {
   }
 
   useEffect(() => {
+    console.log(questionList)
+  }, [questionList])
+
+  useEffect(() => {
     const mf = document.querySelector('#formula')
     mf.setValue(question)
   }, [question])
