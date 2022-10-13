@@ -4,19 +4,14 @@ const InputAnswer = ({ questionType, answers, setAnswers }) => {
   const [answer, setAnswer] = useState('')
 
   useEffect(() => {
-    if (questionType?.value !== 3) {
-      setAnswer([])
-    }
-  }, [questionType?.value])
-
-  useEffect(() => {
     setAnswers([{ answer: answer }])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answer])
 
   useEffect(() => {
-    setAnswer(answers[0]?.answer || '')
-
+    if (answers && answers.length === 1) {
+      setAnswer(answers[0]?.answer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

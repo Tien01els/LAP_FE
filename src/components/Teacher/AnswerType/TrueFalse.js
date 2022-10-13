@@ -15,11 +15,14 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
   }
 
   useEffect(() => {
-    if (convert[trueAnswer] !== value) {
+    if (answers && answers.find((element) => element.answer === 'True')) {
       setValue(convert[`${trueAnswer}`])
     }
+    // if (convert[trueAnswer] !== value) {
+    //   setValue(convert[`${trueAnswer}`])
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [answers])
+  }, [])
 
   useEffect(() => {
     if (convert[trueAnswer] !== value && value) {
@@ -31,14 +34,8 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
-  useEffect(() => {
-    if (questionType?.value !== 2) {
-      setValue([])
-    }
-  }, [questionType?.value])
-
   return (
-    <div>
+    <div className="">
       <div className="hidden" onChange={handleOnChange}>
         <input type="radio" name="right-answer" value="True" id="option-True" />
         <input
@@ -48,7 +45,7 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
           id="option-False"
         />
       </div>
-      <div className="grid grid-cols-2 gap-5 my-5" onChange={handleOnChange}>
+      <div className="grid grid-cols-2 gap-5 my-5 " onChange={handleOnChange}>
         <label
           htmlFor="option-True"
           className="h-full w-full bg-primary px-3 py-4 rounded-md flex flex-row gap-5 items-center cursor-pointer select-none"
@@ -56,7 +53,7 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
           <input
             value="True"
             readOnly
-            className=" text-white outline-none bg-primary placeholder-gray-100 w-full"
+            className=" text-white outline-none bg-primary placeholder-gray-100 w-full select-none"
           />
           {value === 'True' ? (
             <div className="w-[23px] h-[20px] rounded-full bg-green-400 text-white  flex justify-center items-center">
@@ -72,7 +69,7 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
         >
           <input
             value="False"
-            className=" text-white outline-none bg-primary placeholder-gray-100 w-full "
+            className=" text-white outline-none bg-primary placeholder-gray-100 w-full select-none"
             readOnly
           />
           {value === 'False' ? (

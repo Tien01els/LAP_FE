@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-const MultiChoice = ({ questionType, answers, setAnswers }) => {
+const MultiChoice = ({ answers, setAnswers }) => {
   const [value, setValue] = useState('')
   const [answerA, setAnswerA] = useState('')
   const [answerB, setAnswerB] = useState('')
@@ -22,20 +22,20 @@ const MultiChoice = ({ questionType, answers, setAnswers }) => {
   }
 
   useEffect(() => {
-    if (questionType?.value !== 1) {
-      setValue([])
-    }
-  }, [questionType?.value])
-
-  useEffect(() => {
     preValue.current = value
-    setValue(convert[`${trueAnswer}`])
-    setAnswerA(answers[0]?.answer)
-    setAnswerB(answers[1]?.answer)
-    setAnswerC(answers[2]?.answer)
-    setAnswerD(answers[3]?.answer)
+    if (
+      answers &&
+      answers.length === 4 &&
+      answers.filter((item) => item.isTrue).length === 1
+    ) {
+      setValue(convert[`${trueAnswer}`])
+      setAnswerA(answers[0]?.answer)
+      setAnswerB(answers[1]?.answer)
+      setAnswerC(answers[2]?.answer)
+      setAnswerD(answers[3]?.answer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [answers])
+  }, [])
 
   useEffect(() => {
     if (value && preValue.current !== value) {
@@ -46,6 +46,7 @@ const MultiChoice = ({ questionType, answers, setAnswers }) => {
         { isTrue: value === 'd' ? true : false, answer: answerD },
       ])
     }
+    console.log(answers)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerA, answerB, answerC, answerD, value])
 

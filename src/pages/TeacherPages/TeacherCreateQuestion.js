@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import 'mathlive'
 import Select from 'react-select'
 import { motion } from 'framer-motion'
@@ -162,8 +162,9 @@ const TeacherCreateQuestion = () => {
   }
 
   useEffect(() => {
-    console.log(questionList)
-  }, [questionList])
+    setAnswers([])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOption])
 
   useEffect(() => {
     const mf = document.querySelector('#formula')
@@ -238,6 +239,7 @@ const TeacherCreateQuestion = () => {
           </Button>
         </div>
       </div>
+
       <div className="flex flex-row gap-10 pt-2 justify-center mb-7 w-full h-full">
         <div
           className="w-[750px] bg-white rounded-lg shadow-lg
@@ -274,6 +276,7 @@ const TeacherCreateQuestion = () => {
               }}
               readonly
             ></math-field>
+
             <motion.div
               layout
               animate={{ opacity: 1 }}
@@ -340,6 +343,7 @@ const TeacherCreateQuestion = () => {
               )}
             </div>
           </div>
+
           <div className="flex flex-row mt-7 items-center justify-between">
             <span className="font-medium text-xl">Answers</span>
             <Select
