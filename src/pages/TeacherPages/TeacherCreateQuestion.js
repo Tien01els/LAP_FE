@@ -177,146 +177,169 @@ const TeacherCreateQuestion = () => {
         setAnswers([]);
     }, [selectedOption]);
 
-    useEffect(() => {
-        const mf = document.querySelector('#formula');
-        mf.setValue(question);
-    }, [question]);
+  return (
+    <div className="flex flex-col items-center gap-7 justify-center h-full">
+      <div className="w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between">
+        <div className="flex flex-row gap-5 items-center">
+          {enableEdit ? (
+            <input
+              className="text-2xl min-w-[250px] transition-all max-w-[500px] font-medium outline-none border-b-2 resize-x py-2 px-1"
+              value={assignmentName}
+              maxLength={45}
+              ref={assignmenNameRef}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  assignmentName === 'Assignment Name'
+                    ? setAssignmentName('')
+                    : setAssignmentName(assignmentName)
+                  setEnableEdit(!enableEdit)
+                  assignmenNameRef.current.focus()
+                }
+              }}
+              onChange={(e) => {
+                setAssignmentName(e.target.value)
+              }}
+              style={{ width: `${assignmentName.length}ch` }}
+            />
+          ) : (
+            <input
+              className="text-2xl min-w-[250px] transition-all max-w-[500px] font-medium resize-x outline-none py-2 px-1"
+              value={assignmentName}
+              ref={assignmenNameRef}
+              maxLength={45}
+              style={{ width: `${assignmentName.length}ch` }}
+              readOnly
+            />
+          )}
+          <i
+            className="fas fa-edit cursor-pointer hover:text-primary transition-all"
+            onClick={() => {
+              assignmentName === 'Assignment Name'
+                ? setAssignmentName('')
+                : setAssignmentName(assignmentName)
+              setEnableEdit(!enableEdit)
+              assignmenNameRef.current.focus()
+            }}
+          ></i>
+        </div>
+        <div className="flex flex-row gap-5 items-center">
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => {
+              setTime(e.target.value)
+            }}
+            className="outline-none border transition-all border-gray-500 px-2 py-1 rounded-md "
+          />
+          <DatePicker
+            colorPrimary="#75b9cc"
+            value={selectedDay}
+            onChange={setSelectedDay}
+            inputPlaceholder="Select a date"
+            formatInputText={formatInputValue}
+            minimumDate={utils().getToday()}
+            inputClassName="daypicker"
+          />
+          <Button className="border-none" onClick={handleCreateAssignment}>
+            Save
+          </Button>
+        </div>
+      </div>
 
-    return (
-        <div className='flex flex-col items-center gap-7 justify-center h-full'>
-            <div className='w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between'>
-                <div className='flex flex-row gap-5 items-center'>
-                    {enableEdit ? (
-                        <input
-                            className='text-2xl min-w-[250px] transition-all max-w-[500px] font-medium outline-none border-b-2 resize-x py-2 px-1'
-                            value={assignmentName}
-                            maxLength={45}
-                            ref={assignmenNameRef}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    assignmentName === 'Assignment Name'
-                                        ? setAssignmentName('')
-                                        : setAssignmentName(assignmentName);
-                                    setEnableEdit(!enableEdit);
-                                    assignmenNameRef.current.focus();
-                                }
-                            }}
-                            onChange={(e) => {
-                                setAssignmentName(e.target.value);
-                            }}
-                            style={{ width: `${assignmentName.length}ch` }}
-                        />
-                    ) : (
-                        <input
-                            className='text-2xl min-w-[250px] transition-all max-w-[500px] font-medium resize-x outline-none py-2 px-1'
-                            value={assignmentName}
-                            ref={assignmenNameRef}
-                            maxLength={45}
-                            style={{ width: `${assignmentName.length}ch` }}
-                            readOnly
-                        />
-                    )}
-                    <i
-                        className='fas fa-edit cursor-pointer hover:text-primary transition-all'
-                        onClick={() => {
-                            assignmentName === 'Assignment Name'
-                                ? setAssignmentName('')
-                                : setAssignmentName(assignmentName);
-                            setEnableEdit(!enableEdit);
-                            assignmenNameRef.current.focus();
-                        }}
-                    ></i>
+      <div className="flex flex-row gap-10 pt-2 justify-center mb-7 w-full h-full">
+        <div
+          className="w-[750px] bg-white rounded-lg shadow-lg
+      flex flex-col justify-between px-10 py-7"
+        >
+          <div className="flex flex-col gap-7">
+            <div className="flex flex-row justify-between items-center">
+              <span className="font-medium text-xl">Question</span>
+              <div className="flex flex-row gap-10 items-center">
+                <div className="flex gap-2 items-center">
+                  <span>Score</span>
+                  <input
+                    className="outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all"
+                    value={score}
+                    onChange={handleScore}
+                  />
+                  <span>pt</span>
                 </div>
-                <div className='flex flex-row gap-5 items-center'>
-                    <input
-                        type='time'
-                        value={time}
-                        onChange={(e) => {
-                            setTime(e.target.value);
-                        }}
-                        className='outline-none border transition-all border-gray-500 px-2 py-1 rounded-md '
-                    />
-                    <DatePicker
-                        colorPrimary='#75b9cc'
-                        value={selectedDay}
-                        onChange={setSelectedDay}
-                        inputPlaceholder='Select a date'
-                        formatInputText={formatInputValue}
-                        minimumDate={utils().getToday()}
-                        inputClassName='daypicker'
-                    />
-                    <Button
-                        className='border-none'
-                        onClick={handleCreateAssignment}
-                    >
-                        Save
-                    </Button>
+              </div>
+            </div>
+            <math-field
+              // id={`question-${idQuestion}` || `1`}
+              id="formula"
+              style={{
+                whiteSpace: 'initial',
+                fontSize: '20px',
+                outline: 'none',
+                padding: '0.5rem 1.5rem',
+                userSelect: 'none',
+                width: '100%',
+                maxHeight: '150px',
+                overflowWrap: 'break-word',
+                fontFamily: 'Poppins',
+              }}
+              readonly
+            ></math-field>
+
+            <motion.div
+              layout
+              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="duration-300 h-[48px]"
+            >
+              {enableHint && (
+                <div className="px-6 py-3 text-white flex flex-row gap-4 items-center bg-primary rounded-md overflow-hidden w-full break-words">
+                  <i className="far fa-lightbulb"></i>
+                  <span className=" whitespace-pre-line">
+                    {hint ? hint : 'Hint'}
+                  </span>
                 </div>
             </div>
-            <div className='flex flex-row gap-10 pt-2 justify-center mb-7 w-full h-full'>
-                <div
-                    className='w-[750px] bg-white rounded-lg shadow-lg
-      flex flex-col justify-between px-10 py-7'
-                >
-                    <div className='flex flex-col gap-7'>
-                        <div className='flex flex-row justify-between items-center'>
-                            <span className='font-medium text-xl'>
-                                Question
-                            </span>
-                            <div className='flex flex-row gap-10 items-center'>
-                                <div className='flex gap-2 items-center'>
-                                    <span>Score</span>
-                                    <input
-                                        className='outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all'
-                                        value={score}
-                                        onChange={handleScore}
-                                    />
-                                    <span>pt</span>
-                                </div>
-                            </div>
-                        </div>
-                        <math-field
-                            // id={`question-${idQuestion}` || `1`}
-                            id='formula'
-                            style={{
-                                whiteSpace: 'initial',
-                                fontSize: '20px',
-                                outline: 'none',
-                                padding: '0.5rem 1.5rem',
-                                userSelect: 'none',
-                                width: '100%',
-                                maxHeight: '150px',
-                                overflowWrap: 'break-word',
-                                fontFamily: 'Poppins',
-                            }}
-                            readonly
-                        ></math-field>
-                        <motion.div
-                            layout
-                            animate={{ opacity: 1 }}
-                            initial={{ opacity: 0 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className='duration-300 h-[48px]'
-                        >
-                            {enableHint && (
-                                <div className='px-6 py-3 text-white flex flex-row gap-4 items-center bg-primary rounded-md overflow-hidden w-full break-words'>
-                                    <i className='far fa-lightbulb'></i>
-                                    <span className=' whitespace-pre-line'>
-                                        {hint ? hint : 'Hint'}
-                                    </span>
-                                </div>
-                            )}
-                        </motion.div>
-                        <textarea
-                            id='latex'
-                            className='outline-none focus:shadow-md duration-300 shadow-sm bg-gray-100 rounded-lg resize-none px-4 py-[0.5rem] h-36'
-                            onChange={(e) => {
-                                setQuestion(e.target.value);
-                            }}
-                            value={question || ''}
-                            placeholder='Type your question'
-                        />
+          </div>
+
+          <div className="flex flex-row mt-7 items-center justify-between">
+            <span className="font-medium text-xl">Answers</span>
+            <Select
+              value={selectedOption || ''}
+              defaultValue={Selectoptions[0]}
+              onChange={setSelectedOption}
+              options={Selectoptions}
+              className="w-44 transition-all"
+            />
+          </div>
+          <div className="my-10">
+            {selectedOption?.value === 1 ? (
+              <MultiChoice
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
+            ) : selectedOption?.value === 2 ? (
+              <TrueFalse
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
+            ) : selectedOption?.value === 3 ? (
+              <InputAnswer
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
+            ) : selectedOption?.value === 4 ? (
+              <MultiSelect
+                setAnswers={setAnswers}
+                answers={answers}
+                questionType={selectedOption}
+              />
+            ) : (
+              ''
+            )}
+          </div>
 
                         <div className='flex flex-row gap-5 items-baseline duration-500'>
                             <div className='flex flex-row items-baseline gap-5 h-[72px]'>

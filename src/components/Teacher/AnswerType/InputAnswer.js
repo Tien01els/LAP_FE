@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const InputAnswer = ({ answers, setAnswers }) => {
+const InputAnswer = ({ questionType, answers, setAnswers }) => {
   const [answer, setAnswer] = useState('')
 
   useEffect(() => {
@@ -9,7 +9,9 @@ const InputAnswer = ({ answers, setAnswers }) => {
   }, [answer])
 
   useEffect(() => {
-    setAnswer(answers[0]?.answer || '')
+    if (answers && answers.length === 1) {
+      setAnswer(answers[0]?.answer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
