@@ -23,9 +23,13 @@ const StudentCard = () => {
             >
               <i className="fas fa-ellipsis-h font-xs"></i>
               {openMoreOption && (
-                <div className="absolute translate-y-10 -translate-x-3 bg-gray-100 flex flex-col gap-2 px-2 py-1 text-xs rounded-md">
-                  <span className="cursor-pointer">Remove</span>
-                  <span className="cursor-pointer">Remove</span>
+                <div className="absolute translate-y-12 -translate-x-5 border-t-2 text-sm border-primary bg-[#ffffff] flex flex-col divide-y shadow-lg rounded-b">
+                  <div className="cursor-pointer px-2 py-1 hover:bg-[#ffffff] transition-all">
+                    <span>Remove</span>
+                  </div>
+                  <div className="cursor-pointer px-2 py-1 hover:bg-[#ffffff] transition-all">
+                    <span>Remove</span>
+                  </div>
                 </div>
               )}
             </div>
