@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+    useEffect,
+    useReducer,
+    useRef,
+    useState,
+    useCallback,
+} from 'react';
 import 'mathlive';
 import Select from 'react-select';
 import { motion } from 'framer-motion';
-import { useReducer } from 'react';
 import { utils } from 'react-modern-calendar-datepicker';
 import moment from 'moment';
 import axios from 'axios';
+import Modal from 'react-modal';
 
 import { API_URL } from '../../constant';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
@@ -16,6 +22,7 @@ import MultiChoice from '../../components/Teacher/AnswerType/MultiChoice';
 import TrueFalse from '../../components/Teacher/AnswerType/TrueFalse';
 import InputAnswer from '../../components/Teacher/AnswerType/InputAnswer';
 import MultiSelect from '../../components/Teacher/AnswerType/MultiSelect';
+import QuestionBank from '../../components/Teacher/QuestionBank';
 
 const Selectoptions = [
     { value: 1, label: 'Multi Choice' },
@@ -40,6 +47,32 @@ const TeacherCreateQuestion = () => {
     const [currentQid, setCurrentQid] = useState('');
     const [selectedDay, setSelectedDay] = useState(null);
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
+    const [modalBankIsOpen, setBankIsOpen] = React.useState(false);
+    const [questionBanks, setQuestionBanks] = React.useState([]);
+
+    const handleOpenModalBank = () => {
+        setBankIsOpen(true);
+    };
+
+    const handleCloseModalBank = useCallback(() => {
+        setBankIsOpen(false);
+    }, []);
+
+    const handleAddQuestionBank = (questionBank) => {
+        setQuestionBanks((prevQuestionBanks) => [
+            ...prevQuestionBanks,
+            questionBank,
+        ]);
+    };
+
+    const handleDeleteQuestionBank = (questionBank) => {
+        setQuestionBanks((prevQuestionBanks) =>
+            prevQuestionBanks.filter(
+                (prevQuestionBank) => prevQuestionBank.id !== questionBank.id
+            )
+        );
+    };
 
     const formatInputValue = () => {
         if (!selectedDay) return '';
@@ -138,12 +171,12 @@ const TeacherCreateQuestion = () => {
                 setQuestionList([
                     ...questionList,
                     {
-                        id: res?.data?.id,
-                        title: res?.data?.content,
-                        questionType: res?.data?.questionTypeId,
-                        hint: res?.data?.hint,
-                        score: res?.data?.score,
-                        answers: res?.data?.option,
+                        id: res.data?.id,
+                        title: res.data?.content,
+                        questionType: res.data?.questionTypeId,
+                        hint: res.data?.hint,
+                        score: res.data?.score,
+                        answers: res.data?.option,
                     },
                 ]);
                 setCurrentQid('');
@@ -255,6 +288,37 @@ const TeacherCreateQuestion = () => {
                             <span className='font-medium text-xl'>
                                 Question
                             </span>
+                            <div>
+                                <button
+                                    className='btn btn-primary'
+                                    onClick={handleOpenModalBank}
+                                >
+                                    Bank question
+                                </button>
+                                <Modal
+                                    isOpen={modalBankIsOpen}
+                                    style={{
+                                        top: '50%',
+                                        left: '50%',
+                                        right: 'auto',
+                                        bottom: 'auto',
+                                        marginRight: '-50%',
+                                        transform: 'translate(-50%, -50%)',
+                                    }}
+                                    contentLabel='Example Modal'
+                                    ariaHideApp={false}
+                                >
+                                    <QuestionBank
+                                        onAddQuestionBank={
+                                            handleAddQuestionBank
+                                        }
+                                        onDeleteQuestionBank={
+                                            handleDeleteQuestionBank
+                                        }
+                                        onCloseModalBank={handleCloseModalBank}
+                                    />
+                                </Modal>
+                            </div>
                             <div className='flex flex-row gap-10 items-center'>
                                 <div className='flex gap-2 items-center'>
                                     <span>Score</span>

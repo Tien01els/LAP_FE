@@ -113,6 +113,13 @@
     .daypicker:focus {
         @apply outline-primary #{!important};
     }
+
+    .dropdown-content {
+        position: absolute;
+        inset: 0px auto auto 0px;
+        margin: 0px;
+        transform: translate3d(0px, 533.333px, 0px);
+    }
 }
 
 // @font-face {
