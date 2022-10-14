@@ -22,7 +22,7 @@ import MultiChoice from '../../components/Teacher/AnswerType/MultiChoice'
 import TrueFalse from '../../components/Teacher/AnswerType/TrueFalse'
 import InputAnswer from '../../components/Teacher/AnswerType/InputAnswer'
 import MultiSelect from '../../components/Teacher/AnswerType/MultiSelect'
-import QuestionBank from '../../components/Teacher/QuestionBank'
+// import QuestionBank from '../../components/Teacher/QuestionBank'
 
 const Selectoptions = [
   { value: 1, label: 'Multi Choice' },
@@ -301,11 +301,11 @@ const TeacherCreateQuestion = () => {
                   contentLabel="Example Modal"
                   ariaHideApp={false}
                 >
-                  <QuestionBank
+                  {/* <QuestionBank
                     onAddQuestionBank={handleAddQuestionBank}
                     onDeleteQuestionBank={handleDeleteQuestionBank}
                     onCloseModalBank={handleCloseModalBank}
-                  />
+                  /> */}
                 </Modal>
               </div>
               <div className="flex flex-row gap-10 items-center">
