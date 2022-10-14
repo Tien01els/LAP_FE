@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-const MultiChoice = ({ answers, setAnswers }) => {
+const MultiChoice = ({ answers, setAnswers, Preview }) => {
   const [value, setValue] = useState('')
   const [answerA, setAnswerA] = useState('')
   const [answerB, setAnswerB] = useState('')
@@ -13,7 +13,6 @@ const MultiChoice = ({ answers, setAnswers }) => {
     setValue(e.target.value)
   }
 
-  const trueAnswer = answers.findIndex((element) => element.isTrue === true)
   const convert = {
     0: 'a',
     1: 'b',
@@ -28,6 +27,7 @@ const MultiChoice = ({ answers, setAnswers }) => {
       answers.length === 4 &&
       answers.filter((item) => item.isTrue).length === 1
     ) {
+      const trueAnswer = answers.findIndex((element) => element.isTrue === true)
       setValue(convert[`${trueAnswer}`])
       setAnswerA(answers[0]?.answer)
       setAnswerB(answers[1]?.answer)
@@ -67,6 +67,7 @@ const MultiChoice = ({ answers, setAnswers }) => {
             value={answerA}
             onChange={(e) => setAnswerA(e.target.value)}
             placeholder="Type in answer"
+            readOnly={Preview ? true : false}
             className=" text-white outline-none bg-primary placeholder-gray-100 w-full border-b border-primary duration-300 focus:border-gray-100 pb-1 px-1"
           />
           {value === 'a' ? (
@@ -85,6 +86,7 @@ const MultiChoice = ({ answers, setAnswers }) => {
             value={answerB}
             onChange={(e) => setAnswerB(e.target.value)}
             placeholder="Type in answer"
+            readOnly={Preview ? true : false}
             className=" text-white outline-none bg-primary placeholder-gray-100 w-full border-b border-primary duration-300 focus:border-gray-100 pb-1 px-1"
           />
           {value === 'b' ? (
@@ -103,6 +105,7 @@ const MultiChoice = ({ answers, setAnswers }) => {
             value={answerC}
             onChange={(e) => setAnswerC(e.target.value)}
             placeholder="Type in answer"
+            readOnly={Preview ? true : false}
             className=" text-white outline-none bg-primary placeholder-gray-100 w-full border-b border-primary duration-300 focus:border-gray-100 pb-1 px-1"
           />
           {value === 'c' ? (
@@ -121,6 +124,7 @@ const MultiChoice = ({ answers, setAnswers }) => {
             value={answerD}
             onChange={(e) => setAnswerD(e.target.value)}
             placeholder="Type in answer"
+            readOnly={Preview ? true : false}
             className=" text-white outline-none bg-primary placeholder-gray-100 w-full border-b border-primary duration-300 focus:border-gray-100 pb-1 px-1"
           />
           {value === 'd' ? (
