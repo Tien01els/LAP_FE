@@ -206,7 +206,7 @@ const TeacherCreateQuestion = () => {
 
   return (
     <div className="flex flex-col items-center gap-7 justify-center h-full">
-      <div className="w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between">
+      {/* <div className="w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between">
         <div className="flex flex-row gap-5 items-center">
           {enableEdit ? (
             <input
@@ -271,7 +271,7 @@ const TeacherCreateQuestion = () => {
             Save
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex flex-row gap-10 pt-2 justify-center mb-7 w-full h-full">
         <div
@@ -291,8 +291,8 @@ const TeacherCreateQuestion = () => {
                 <Modal
                   isOpen={modalBankIsOpen}
                   style={{
-                    top: '50%',
-                    left: '50%',
+                    top: '0',
+                    left: '0',
                     right: 'auto',
                     bottom: 'auto',
                     marginRight: '-50%',

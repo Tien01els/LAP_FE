@@ -20,6 +20,9 @@ const QuestionBank = ({
   const [pageCount, setPageCount] = useState(0)
   const [itemOffset, setItemOffset] = useState(0)
   const [values, setValues] = useState([])
+  const [test, setTest] = useState('')
+
+  const [level, setLevel] = useState('Pro')
 
   const topics = [
     { value: 1, label: 'high' },
@@ -37,7 +40,14 @@ const QuestionBank = ({
 
   useEffect(() => {
     getQuestionBank()
+    document.body.style.overflow = 'hidden'
+    return () => (document.body.style.overflow = 'unset')
   }, [])
+
+  useEffect(() => {
+    const mf = document.querySelector('#Bank-modal-formula')
+    mf.setValue(test)
+  }, [test])
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1)
@@ -76,8 +86,28 @@ const QuestionBank = ({
         onClick={onCloseModalBank}
       ></i>
 
-      <div className="flex flex-row gap-7 pt-10 h-full w-full">
+      <div className="flex flex-row justify-between pt-10 h-full w-full">
         <div className="w-[45%] flex flex-col justify-between">
+          <div className="flex flex-row gap-7">
+            <span className="text-xl font-medium flex gap-2">
+              Level :
+              <span
+                className={` ${
+                  level === 'Pro'
+                    ? `text-red-400`
+                    : level === 'Normal'
+                    ? `text-green-400`
+                    : ''
+                }`}
+              >
+                Pro
+              </span>
+            </span>
+            <span className="text-xl font-medium">
+              Score :{' '}
+              <span className="font-normal">{test.point || ''} .pt</span>
+            </span>
+          </div>
           <math-field
             id="Bank-modal-formula"
             style={{
@@ -92,9 +122,12 @@ const QuestionBank = ({
               fontFamily: 'Poppins',
             }}
             readonly
-          >
-            Preview question
-          </math-field>
+          ></math-field>
+          <input
+            type="text"
+            placeholder="Hello"
+            onChange={(e) => setTest(e.target.value)}
+          />
 
           <motion.div
             layout
@@ -120,8 +153,8 @@ const QuestionBank = ({
         </div>
         <div className="flex flex-col w-[50%] h-full">
           <div className="flex flex-col h-[152px] justify-center align-center">
-            <div className="flex flex-col w-full items-center p-[4px]">
-              <div className="flex justify-between w-full p-[4px]">
+            <div className="flex flex-col w-full items-center px-[4px] pb-[4px]">
+              <div className="flex justify-between w-full px-[4px] pb-[4px]">
                 <Select
                   className="w-[48%]"
                   options={topics}
