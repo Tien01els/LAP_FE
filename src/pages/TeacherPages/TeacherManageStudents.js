@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Button from '../../components/Button'
 import StudentCard from '../../components/Teacher/StudentCard'
 import { buildStyles } from 'react-circular-progressbar'
@@ -13,10 +13,97 @@ import 'swiper/css/navigation'
 
 // import required modules
 import { Navigation } from 'swiper'
+import axios from 'axios'
+import { API_URL } from '../../constant'
+import moment from 'moment'
+import Modal from 'react-modal'
+
+const customStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(165, 165, 165, 0.6)',
+  },
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    border: 'none',
+    borderRadius: '8px',
+  },
+}
 
 const TeacherManageStudents = () => {
   const [averageScore, setAverageScore] = useState(56)
   const [filterStudent, setFilterStudent] = useState('All')
+  const [filteredStudentList, setFilteredStudentList] = useState([])
+  const [studentList, setStudentList] = useState([])
+  const [studentInfo, setStudentInfo] = useState({})
+  const [addStudentModal, setAddStudentModal] = useState(false)
+  const [addStatus, setAddStatus] = useState('')
+  const [studentEmail, setStudentEmail] = useState('')
+
+  const toggleModal = () => {
+    setAddStudentModal(!addStudentModal)
+  }
+
+  useLayoutEffect(() => {
+    // load students
+    axios
+      .get(API_URL + 'student/1')
+      .then((res) => {
+        res.data[0].averageScore = 100
+        res.data[1].averageScore = 49
+        setStudentList(res.data)
+        console.log(res.data)
+        setStudentInfo(res.data[0])
+        setFilteredStudentList(res.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  const handleScoreFilter = (filterStudent) => {
+    if (filterStudent === 'All') {
+      setFilteredStudentList(studentList)
+    }
+
+    if (filterStudent === 'Good') {
+      setFilteredStudentList(
+        studentList.filter((student) => student.averageScore > 50),
+      )
+    }
+
+    if (filterStudent === 'Below Average') {
+      setFilteredStudentList(
+        studentList.filter((student) => student.averageScore < 50),
+      )
+    }
+  }
+
+  const handleAddStudent = async () => {
+    console.log(studentEmail)
+    await axios
+      .put(API_URL + 'student/1', {
+        studentEmail: studentEmail,
+      })
+      .then((res) => {
+        setStudentList(res.data)
+        setStudentInfo(res.data[0])
+        setAddStatus(res.data.text)
+        console.log(res.data.text)
+        if (res.data.text === 'Ok') {
+          toggleModal()
+        }
+      })
+      .catch((err) => console.log(err, 'hehe'))
+    window.location.reload()
+  }
 
   return (
     <div className="flex flex-row h-screen">
@@ -34,7 +121,10 @@ const TeacherManageStudents = () => {
         <div className="flex flex-row justify-between items-center pl-6 pr-4 text-lg">
           <div className="flex flex-row h-[30px] gap-5 items-center">
             <span
-              onClick={() => setFilterStudent('All')}
+              onClick={() => {
+                setFilterStudent('All')
+                handleScoreFilter('All')
+              }}
               className={`cursor-pointer transition-all ${
                 filterStudent === 'All' ? 'font-medium ' : 'text-base'
               }`}
@@ -42,7 +132,10 @@ const TeacherManageStudents = () => {
               All
             </span>
             <span
-              onClick={() => setFilterStudent('Good')}
+              onClick={() => {
+                setFilterStudent('Good')
+                handleScoreFilter('Good')
+              }}
               className={`cursor-pointer transition-all ${
                 filterStudent === 'Good' ? 'font-medium ' : 'text-base'
               }`}
@@ -50,7 +143,10 @@ const TeacherManageStudents = () => {
               Good
             </span>
             <span
-              onClick={() => setFilterStudent('Below Average')}
+              onClick={() => {
+                setFilterStudent('Below Average')
+                handleScoreFilter('Below Average')
+              }}
               className={`cursor-pointer transition-all ${
                 filterStudent === 'Below Average' ? 'font-medium ' : 'text-base'
               }`}
@@ -59,13 +155,60 @@ const TeacherManageStudents = () => {
             </span>
           </div>
           <div>
-            <Button className="text-xs border-none">Add a student</Button>
+            <Button className="text-xs border-none" onClick={toggleModal}>
+              Add a student
+            </Button>
+            <Modal
+              isOpen={addStudentModal}
+              onRequestClose={toggleModal}
+              style={customStyles}
+              ariaHideApp={false}
+            >
+              <div className="w-[500px] h-[200px] flex flex-col relative">
+                <div
+                  className="absolute text-xl cursor-pointer translate-x-[490px] -translate-y-[10px]"
+                  onClick={toggleModal}
+                >
+                  <i className="fas fa-times text-gray-700"></i>
+                </div>
+                <div className="flex flex-col justify-between gap-5 h-full">
+                  {/* title */}
+                  <div>
+                    <span className="text-2xl font-medium">Add a student</span>
+                  </div>
+                  {/* username */}
+                  <div className="flex flex-col gap-3">
+                    {addStatus === 'No ok' && (
+                      <span className="text-red-500">Can't add student.</span>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="Type in student email"
+                      onChange={(e) => setStudentEmail(e.target.value)}
+                      className="w-full outline-none border transition-all focus:border-primary rounded p-2"
+                    />
+                  </div>
+                  {/* button add*/}
+                  <div className="flex flex-row-reverse">
+                    <Button className="border-none" onClick={handleAddStudent}>
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
         {/* cards */}
         <div className="flex flex-col gap-7 px-4 pb-4 overflow-auto scroll-smooth">
-          {new Array(4).fill(0).map((val, i) => {
-            return <StudentCard key={i} />
+          {filteredStudentList.map((val, i) => {
+            return (
+              <StudentCard
+                key={i}
+                student={val}
+                setStudentInfo={setStudentInfo}
+              />
+            )
           })}
         </div>
       </div>
@@ -78,13 +221,16 @@ const TeacherManageStudents = () => {
             className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5"
           />
           <div className="flex flex-col justify-center items-center">
-            <span className="font-bold text-2xl my-3">Nguyen Minh Nhat</span>
+            <span className="font-bold text-2xl my-3">
+              {studentInfo?.fullName}
+            </span>
             <span className="text-gray-500 text-sm">
-              Date of birth : 25/04/2001
+              Date of birth :{' '}
+              {moment(studentInfo?.dateOfBirth).format('DD/MM/YYYY')}
             </span>
           </div>
           {/* swiper */}
-          <div className="flex flex-col justify-center items-center select-none w-[750px] select-none">
+          <div className="flex flex-col z-0 justify-center items-center select-none w-[750px] select-none">
             <Swiper
               navigation={true}
               modules={[Navigation]}
