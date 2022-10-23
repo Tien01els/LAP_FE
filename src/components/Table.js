@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Button from './Button';
 
 const Table = ({
     checkboxTable = false,
+    customCssTr = '',
     thead = [],
     tbody = [],
     actions = [],
+    onClickTh = null,
+    checked = [],
 }) => {
     return (
         <div>
             <div className='overflow-x-auto relative shadow-lg rounded-xl mt-[8px]'>
-                <table className='w-full text-xl text-center text-gray-500 dark:text-gray-400'>
+                <table className='w-full text-xl text-center text-gray-500 dark:text-gray-400 border-separate'>
                     <thead className='text-base text-gray-700 uppercase font-semibold bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
                         <tr>
                             {checkboxTable && (
@@ -33,7 +36,10 @@ const Table = ({
                             )}
                             {thead &&
                                 thead.map((head, index, arr) => {
-                                    if (index === arr.length - 1) {
+                                    if (
+                                        index === arr.length - 1 &&
+                                        !head.title
+                                    ) {
                                         return (
                                             <th
                                                 key={uuidv4()}
@@ -58,51 +64,85 @@ const Table = ({
                     </thead>
                     <tbody className='text-base'>
                         {tbody &&
-                            tbody.map((body, indexBody) => {
+                            tbody.map((body) => {
                                 const bodyKeys = Object.keys(body).filter(
                                     (key) => {
                                         return key !== 'id';
                                     }
                                 );
+                                console.log(tbody);
                                 return (
                                     <tr
-                                        key={body.id}
-                                        className='odd:bg-white even:bg-gray-50 border-b dark:bg-gray-900 dark:border-gray-700'
+                                        key={uuidv4()}
+                                        className={
+                                            'odd:bg-white even:bg-gray-50 border-b dark:bg-gray-900 dark:border-gray-700 ' +
+                                            customCssTr
+                                        }
                                     >
+                                        {checkboxTable && (
+                                            <td
+                                                className='p-4'
+                                                style={{ width: '5%' }}
+                                            >
+                                                <div className='flex items-center'>
+                                                    <input
+                                                        type='checkbox'
+                                                        checked={checked.includes(
+                                                            body.id
+                                                        )}
+                                                        className='w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                                                        onChange={() =>
+                                                            onClickTh(body.id)
+                                                        }
+                                                    />
+                                                    <label className='sr-only'>
+                                                        checkbox
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        )}
                                         {bodyKeys.map((bodyKey, index) => {
                                             return (
-                                                <th
+                                                <td
                                                     key={uuidv4()}
-                                                    className='py-4 px-6 font-medium whitespace-nowrap dark:text-white'
+                                                    className={`py-4 px-6 font-medium dark:text-white truncate`}
+                                                    style={{
+                                                        maxWidth:
+                                                            thead[index][
+                                                                'max-width'
+                                                            ],
+                                                    }}
+                                                    onClick={() =>
+                                                        onClickTh(body.id)
+                                                    }
                                                 >
                                                     {body[bodyKey]}
-                                                </th>
+                                                </td>
                                             );
                                         })}
-                                        <td className='py-4 px-1 font-medium whitespace-nowrap text-white flex justify-evenly'>
-                                            {actions.map((action, index) => {
-                                                return (
-                                                    <React.Fragment
-                                                        key={
-                                                            action.name +
-                                                            body.id
-                                                        }
-                                                    >
-                                                        <Button
-                                                            className='rounded-lg border-none text-sm font-semibold bg-primary px-3 py-1.5'
-                                                            onClick={() => {
-                                                                action.eventAction &&
-                                                                    action.eventAction(
-                                                                        body.id
-                                                                    );
-                                                            }}
+                                        {!!actions.length && (
+                                            <td className='py-4 px-1 font-medium whitespace-nowrap text-white flex justify-evenly'>
+                                                {actions.map((action) => {
+                                                    return (
+                                                        <React.Fragment
+                                                            key={uuidv4()}
                                                         >
-                                                            {action.name}
-                                                        </Button>
-                                                    </React.Fragment>
-                                                );
-                                            })}
-                                        </td>
+                                                            <Button
+                                                                className='rounded-lg border-none text-sm font-semibold bg-primary px-3 py-1.5'
+                                                                onClick={() => {
+                                                                    action.eventAction &&
+                                                                        action.eventAction(
+                                                                            body.id
+                                                                        );
+                                                                }}
+                                                            >
+                                                                {action.name}
+                                                            </Button>
+                                                        </React.Fragment>
+                                                    );
+                                                })}
+                                            </td>
+                                        )}
                                     </tr>
                                 );
                             })}
@@ -113,4 +153,4 @@ const Table = ({
     );
 };
 
-export default Table;
+export default memo(Table);

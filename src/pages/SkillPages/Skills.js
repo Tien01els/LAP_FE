@@ -7,19 +7,15 @@ import Table from '../../components/Table';
 import { API_URL } from '../../constant';
 import ModalAddTopic from './ModalAddTopic';
 
-const Topics = () => {
+const Skills = () => {
     const thead = [
         {
-            width: '25%',
-            title: 'TOPIC',
+            width: '50%',
+            title: 'SKILL',
         },
         {
             width: '25%',
-            title: 'NO. SKILLS',
-        },
-        {
-            width: '25%',
-            title: 'PREREQUISITES',
+            title: 'STANDARD',
         },
         {
             width: '25%',
@@ -27,65 +23,50 @@ const Topics = () => {
         },
     ];
     const navigate = useNavigate();
-    const { classId } = useParams();
-    const teacherId = 1;
+    const { topicId } = useParams();
+
+    const [topic, setTopic] = useState([]);
+    const [skills, setSkills] = useState([]);
+
+    useEffect(() => {
+        axios.get(API_URL + `topic/${topicId}`).then((res) => {
+            console.log(res.data);
+            setTopic(res.data);
+        });
+    }, [topicId]);
 
     const [topics, setTopics] = useState([]);
-    const [valueTopics, setValueTopics] = useState([]);
     const [values, setValues] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const [modalIsOpen, setIsOpen] = useState(false);
 
-    const handleDeleteClassTopic = (id) => {
+    function handleDeleteClassTopic(id) {
         axios.delete(API_URL + `class-topic/${id}`).then((res) => {
             getTopicOfClass();
         });
-    };
+    }
 
-    const handleViewDetailTopic = (id) => {
-        const topic = valueTopics.find(
-            (valueTopic) => valueTopic.classTopicId === id
-        );
-        navigate(`/teacher/class/${classId}/topic/${topic?.id}`, {
-            state: topic,
+    function getTopicOfClass() {
+        axios.get(API_URL + `class-topic/1/1`).then((res) => {
+            let result = res.data;
+            let arrayResult = [];
+            for (let i = 0; i < result.length; ++i) {
+                arrayResult = [
+                    ...arrayResult,
+                    {
+                        id: result[i].id,
+                        topicName: result[i].topicName,
+                        numberSkills: result[i].numberSkills,
+                        prerequisiteTopicName: result[i].prerequisiteTopicName,
+                    },
+                ];
+            }
+            setValues(arrayResult);
+            setCurrentPage(arrayResult.length > 0 ? 1 : 0);
         });
-    };
-
-    const getTopicOfClass = () => {
-        axios
-            .get(API_URL + `class-topic/teacher/${teacherId}/class/${classId}`)
-            .then((res) => {
-                let result = res.data;
-                let arrayResult = [];
-                let arrayValueTopic = [];
-                for (let i = 0; i < result.length; ++i) {
-                    arrayResult = [
-                        ...arrayResult,
-                        {
-                            id: result[i].id,
-                            topicName: result[i].topicName,
-                            numberSkills: result[i].numberSkills,
-                            prerequisiteTopicName:
-                                result[i].prerequisiteTopicName,
-                        },
-                    ];
-                    arrayValueTopic = [
-                        ...arrayValueTopic,
-                        {
-                            id: result[i].topicId,
-                            topicName: result[i].topicName,
-                            description: result[i].description,
-                            classTopicId: result[i].id,
-                        },
-                    ];
-                }
-                setValueTopics(arrayValueTopic);
-                setValues(arrayResult);
-                setCurrentPage(arrayResult.length > 0 ? 1 : 0);
-            });
-    };
+    }
 
     function handleOpenModalAddTopic() {
         setIsOpen(true);
@@ -105,6 +86,7 @@ const Topics = () => {
         setTopics(values.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(values.length / 5));
     }, [itemOffset, values]);
+    console.log(values);
 
     return (
         <div className='pt-[40px] px-[68px] h-screen'>
@@ -113,15 +95,15 @@ const Topics = () => {
                 <span
                     className='underline underline-offset-4 font-semibold cursor-pointer'
                     onClick={() => {
-                        navigate('/teacher/class');
+                        navigate('/teacher/class/:classId/topic/');
                     }}
                 >
-                    All Classes
+                    All Topics
                 </span>
             </div>
             <div className='w-full h-[68px] bg-primary flex items-center justify-between mt-[20px] rounded-xl shadow-lg px-12'>
                 <h1 className='text-2xl font-medium uppercase text-white'>
-                    Topics
+                    {topic.topicName}
                 </h1>
                 <button
                     className='h-7 w-24 px-2 flex items-center justify-center text-white rounded-xl border-[1px]'
@@ -152,7 +134,7 @@ const Topics = () => {
                             },
                             {
                                 name: 'View detail',
-                                eventAction: handleViewDetailTopic,
+                                //eventAction: ,
                             },
                         ]}
                     />
@@ -187,4 +169,4 @@ const Topics = () => {
     );
 };
 
-export default Topics;
+export default Skills;

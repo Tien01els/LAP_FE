@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+
 import classroomBackground from './../../assets/image/classroom-background.jpg';
 
 const ClassCard = ({ classInfo }) => {
+    const navigate = useNavigate();
     const image = classroomBackground;
     // 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzDRXFhE3aK7cERNPeEkefjyjTnQCqXLxxIBvi_h77ieGirPLbfO1D7I7km_BFVYFjGIA&usqp=CAU'
     return (
@@ -13,6 +16,9 @@ const ClassCard = ({ classInfo }) => {
             transition={{ duration: 0.3 }}
             layout
             className='flex flex-col gap-2 bg-white shadow-lg hover:shadow-xl duration-300 w-[250px] h-[200px] rounded-lg'
+            onClick={() => {
+                navigate(`/teacher/class/${classInfo.id}`);
+            }}
         >
             <div className='flex justify-center pt-5'>
                 <img
