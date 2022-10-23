@@ -1,31 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'mathlive';
 import Select from 'react-select';
 import { motion } from 'framer-motion';
-import { useReducer } from 'react';
 import { utils } from 'react-modern-calendar-datepicker';
 import moment from 'moment';
 import axios from 'axios';
+import Modal from 'react-modal';
+import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 
 import { API_URL } from '../../constant';
-import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 import Button from '../../components/Button';
+import QuestionOption from '../../components/Teacher/QuestionOption';
 import QuestionItem from '../../components/Teacher/QuestionItem';
 import MultiChoice from '../../components/Teacher/AnswerType/MultiChoice';
 import TrueFalse from '../../components/Teacher/AnswerType/TrueFalse';
 import InputAnswer from '../../components/Teacher/AnswerType/InputAnswer';
 import MultiSelect from '../../components/Teacher/AnswerType/MultiSelect';
-
-const Selectoptions = [
-    { value: 1, label: 'Multi Choice' },
-    { value: 2, label: 'True False' },
-    { value: 3, label: 'Input' },
-    { value: 4, label: 'Multi Select' },
-];
+import QuestionBank from '../../components/Teacher/QuestionBank';
 
 const TeacherCreateQuestion = () => {
-    const assignmenNameRef = useRef(null);
+    const teacherId = 1;
+    const Selectoptions = [
+        { value: 1, label: 'Multi Choice' },
+        { value: 2, label: 'True False' },
+        { value: 3, label: 'Input' },
+        { value: 4, label: 'Multi Select' },
+    ];
 
     const [question, setQuestion] = useState('');
     const [questionList, setQuestionList] = useState([]);
@@ -37,14 +38,37 @@ const TeacherCreateQuestion = () => {
     const [enableHint, setEnableHint] = useState(false);
     const [hint, setHint] = useState('');
     const [answers, setAnswers] = useState([]);
+    const [level, setLevel] = useState('');
     const [currentQid, setCurrentQid] = useState('');
     const [selectedDay, setSelectedDay] = useState(null);
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-    const formatInputValue = () => {
-        if (!selectedDay) return '';
-        return `${selectedDay.month}/${selectedDay.day}/${selectedDay.year}`;
+    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [selectedLevel, setSelectedLevel] = useState('');
+
+    const [modalBankIsOpen, setBankIsOpen] = useState(false);
+    const [questionsBank, setQuestionsBank] = useState([]);
+    const [questionsNew, setQuestionsNew] = useState([]);
+
+    // const assignmenNameRef = useRef(null);
+
+    const handleOpenModalBank = () => {
+        setBankIsOpen(true);
     };
+
+    const handleCloseModalBank = () => {
+        setBankIsOpen(false);
+    };
+
+    const handleUpdateQuestionBank = (questionBank) => {
+        setQuestionsBank(questionBank);
+        setQuestionList([...questionsNew, ...questionBank]);
+    };
+
+    // const formatInputValue = () => {
+    //     if (!selectedDay) return '';
+    //     return `${selectedDay.month}/${selectedDay.day}/${selectedDay.year}`;
+    // };
 
     const handleScore = (e) => {
         const score = Math.max(0, Math.min(100, Number(e.target.value)));
@@ -76,14 +100,15 @@ const TeacherCreateQuestion = () => {
 
     const handleReviewQuestion = (data) => {
         setCurrentQid(data?.id);
-        setQuestion(data?.title);
+        setQuestion(data?.content);
         if (data?.hint !== '') {
             setEnableHint(true);
             setHint(data?.hint);
         }
-        setAnswers(data?.answers);
-        setSelectedOption(Selectoptions[data?.questionType - 1]);
-        console.log(data);
+        setAnswers(data?.option);
+        setScore(data?.score);
+        setSelectedLevel(data?.level);
+        setSelectedOption(Selectoptions[data?.questionTypeId - 1]);
     };
 
     const addQuestionItem = () => {
@@ -91,26 +116,34 @@ const TeacherCreateQuestion = () => {
             let index = questionList.findIndex(
                 (item) => item.id === currentQid
             );
-
+            let indexNew = questionsNew.findIndex(
+                (itemNew) => itemNew.id === currentQid
+            );
             const questionUpdate = {
                 content: question,
                 option: answers,
                 hint: hint,
                 score: score,
+                level: selectedLevel,
+                skillIds: selectedSkills,
                 questionTypeId: selectedOption?.value,
-                assignmentId: 1,
+                teacherId,
             };
             axios
                 .put(API_URL + `question/${currentQid}`, questionUpdate)
                 .then((res) => {
                     questionList[index] = {
-                        id: res?.data?.id,
-                        title: res?.data?.content,
-                        questionType: res?.data?.questionTypeId,
-                        hint: res?.data?.hint,
-                        score: res?.data?.score,
-                        answers: res?.data?.option,
+                        id: res.data?.id,
+                        content: res.data?.content,
+                        hint: res.data?.hint,
+                        score: res.data?.score,
+                        option: res.data?.option,
+                        level: res.data?.level,
+                        questionTypeId: res.data?.questionTypeId,
+                        teacherId: res.data?.teacherId,
                     };
+                    questionsNew[indexNew] = questionList[index];
+                    setQuestionsNew([...questionsNew]);
                     setQuestionList([...questionList]);
                     setCurrentQid('');
                     setScore(0);
@@ -124,28 +157,31 @@ const TeacherCreateQuestion = () => {
                 .catch((err) => console.log(err));
             return;
         }
-        let questionNew = {
+        let questionCreate = {
             content: question,
             option: answers,
             hint: hint,
             score: score,
+            level: selectedLevel,
+            skillIds: selectedSkills,
             questionTypeId: selectedOption?.value,
-            assignmentId: 1,
+            teacherId,
         };
         axios
-            .post(API_URL + `question`, questionNew)
+            .post(API_URL + `question`, questionCreate)
             .then((res) => {
-                setQuestionList([
-                    ...questionList,
-                    {
-                        id: res?.data?.id,
-                        title: res?.data?.content,
-                        questionType: res?.data?.questionTypeId,
-                        hint: res?.data?.hint,
-                        score: res?.data?.score,
-                        answers: res?.data?.option,
-                    },
-                ]);
+                const questionNewCreate = {
+                    id: res.data?.id,
+                    content: res.data?.content,
+                    hint: res.data?.hint,
+                    score: res.data?.score,
+                    option: res.data?.option,
+                    level: res.data?.level,
+                    questionTypeId: res.data?.questionTypeId,
+                    teacherId: res.data?.teacherId,
+                };
+                setQuestionList([...questionList, questionNewCreate]);
+                setQuestionsNew([...questionsNew, questionNewCreate]);
                 setCurrentQid('');
                 setScore(0);
                 setQuestion('');
@@ -154,6 +190,7 @@ const TeacherCreateQuestion = () => {
                 setSelectedOption('');
                 setAnswers([]);
                 forceUpdate();
+                setSelectedLevel('');
             })
             .catch((err) => console.log(err));
     };
@@ -164,9 +201,17 @@ const TeacherCreateQuestion = () => {
     };
 
     useEffect(() => {
-        setAnswers([]);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedOption]);
+        if (selectedLevel) {
+            if (selectedLevel.toLowerCase() === 'easy') setScore(5);
+            if (selectedLevel.toLowerCase() === 'medium') setScore(10);
+            if (selectedLevel.toLowerCase() === 'hard') setScore(20);
+        }
+    }, [selectedLevel, score]);
+
+    // useEffect(() => {
+    //     console.log(selectedOption);
+    //     setAnswers([]);
+    // }, [selectedOption]);
 
     useEffect(() => {
         const mf = document.querySelector('#formula');
@@ -175,83 +220,80 @@ const TeacherCreateQuestion = () => {
 
     return (
         <div className='flex flex-col items-center gap-7 justify-center h-full'>
-            <div className='w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between'>
-                <div className='flex flex-row gap-5 items-center'>
-                    {enableEdit ? (
-                        <input
-                            className='text-2xl min-w-[250px] transition-all max-w-[500px] font-medium outline-none border-b-2 resize-x py-2 px-1'
-                            value={assignmentName}
-                            maxLength={45}
-                            ref={assignmenNameRef}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    assignmentName === 'Assignment Name'
-                                        ? setAssignmentName('')
-                                        : setAssignmentName(assignmentName);
-                                    setEnableEdit(!enableEdit);
-                                    assignmenNameRef.current.focus();
-                                }
-                            }}
-                            onChange={(e) => {
-                                setAssignmentName(e.target.value);
-                            }}
-                            style={{ width: `${assignmentName.length}ch` }}
-                        />
-                    ) : (
-                        <input
-                            className='text-2xl min-w-[250px] transition-all max-w-[500px] font-medium resize-x outline-none py-2 px-1'
-                            value={assignmentName}
-                            ref={assignmenNameRef}
-                            maxLength={45}
-                            style={{ width: `${assignmentName.length}ch` }}
-                            readOnly
-                        />
-                    )}
-                    <i
-                        className='fas fa-edit cursor-pointer hover:text-primary transition-all'
-                        onClick={() => {
-                            assignmentName === 'Assignment Name'
-                                ? setAssignmentName('')
-                                : setAssignmentName(assignmentName);
-                            setEnableEdit(!enableEdit);
-                            assignmenNameRef.current.focus();
-                        }}
-                    ></i>
-                </div>
-                <div className='flex flex-row gap-5 items-center'>
-                    <input
-                        type='time'
-                        value={time}
-                        onChange={(e) => {
-                            setTime(e.target.value);
-                        }}
-                        className='outline-none border transition-all border-gray-500 px-2 py-1 rounded-md '
-                    />
-                    <DatePicker
-                        colorPrimary='#75b9cc'
-                        value={selectedDay}
-                        onChange={setSelectedDay}
-                        inputPlaceholder='Select a date'
-                        formatInputText={formatInputValue}
-                        minimumDate={utils().getToday()}
-                        inputClassName='daypicker'
-                    />
-                    <Button
-                        className='border-none'
-                        onClick={handleCreateAssignment}
-                    >
-                        Save
-                    </Button>
-                </div>
-            </div>
+            {/* <div className="w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between">
+        <div className="flex flex-row gap-5 items-center">
+          {enableEdit ? (
+            <input
+              className="text-2xl min-w-[250px] transition-all max-w-[500px] font-medium outline-none border-b-2 resize-x py-2 px-1"
+              value={assignmentName}
+              maxLength={45}
+              ref={assignmenNameRef}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  assignmentName === 'Assignment Name'
+                    ? setAssignmentName('')
+                    : setAssignmentName(assignmentName)
+                  setEnableEdit(!enableEdit)
+                  assignmenNameRef.current.focus()
+                }
+              }}
+              onChange={(e) => {
+                setAssignmentName(e.target.value)
+              }}
+              style={{ width: `${assignmentName.length}ch` }}
+            />
+          ) : (
+            <input
+              className="text-2xl min-w-[250px] transition-all max-w-[500px] font-medium resize-x outline-none py-2 px-1"
+              value={assignmentName}
+              ref={assignmenNameRef}
+              maxLength={45}
+              style={{ width: `${assignmentName.length}ch` }}
+              readOnly
+            />
+          )}
+          <i
+            className="fas fa-edit cursor-pointer hover:text-primary transition-all"
+            onClick={() => {
+              assignmentName === 'Assignment Name'
+                ? setAssignmentName('')
+                : setAssignmentName(assignmentName)
+              setEnableEdit(!enableEdit)
+              assignmenNameRef.current.focus()
+            }}
+          ></i>
+        </div>
+        <div className="flex flex-row gap-5 items-center">
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => {
+              setTime(e.target.value)
+            }}
+            className="outline-none border transition-all border-gray-500 px-2 py-1 rounded-md "
+          />
+          <DatePicker
+            colorPrimary="#75b9cc"
+            value={selectedDay}
+            onChange={setSelectedDay}
+            inputPlaceholder="Select a date"
+            formatInputText={formatInputValue}
+            minimumDate={utils().getToday()}
+            inputClassName="daypicker"
+          />
+          <Button className="border-none" onClick={handleCreateAssignment}>
+            Save
+          </Button>
+        </div>
+      </div> */}
 
-            <div className='flex flex-row gap-10 pt-2 justify-center mb-7 w-full h-full'>
+            <div className='flex flex-row gap-7 justify-center w-full h-full'>
                 <div
-                    className='w-[750px] bg-white rounded-lg shadow-lg
-      flex flex-col justify-between px-10 py-7'
+                    className='w-[800px] bg-white rounded-lg shadow-lg
+      flex flex-col justify-between my-4 px-10 py-5'
                 >
-                    <div className='flex flex-col gap-7'>
-                        <div className='flex flex-row justify-between items-center'>
+                    <div className='flex flex-col gap-4'>
+                        <div className='flex justify-between items-center'>
                             <span className='font-medium text-xl'>
                                 Question
                             </span>
@@ -267,6 +309,7 @@ const TeacherCreateQuestion = () => {
                                 </div>
                             </div>
                         </div>
+
                         <math-field
                             // id={`question-${idQuestion}` || `1`}
                             id='formula'
@@ -351,7 +394,7 @@ const TeacherCreateQuestion = () => {
                         </div>
                     </div>
 
-                    <div className='flex flex-row mt-7 items-center justify-between'>
+                    <div className='flex flex-row items-center justify-between'>
                         <span className='font-medium text-xl'>Answers</span>
                         <Select
                             value={selectedOption || ''}
@@ -361,7 +404,7 @@ const TeacherCreateQuestion = () => {
                             className='w-44 transition-all'
                         />
                     </div>
-                    <div className='my-10'>
+                    <div className='flex flex-col justify-center content-center min-h-[184px] my-2'>
                         {selectedOption?.value === 1 ? (
                             <MultiChoice
                                 setAnswers={setAnswers}
@@ -402,31 +445,74 @@ const TeacherCreateQuestion = () => {
                         </Button>
                     </div>
                 </div>
-                <div className=' bg-white h-[100%] w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
-                    <div>
-                        <div className='px-10 pt-8'>
-                            <span className='font-medium text-xl'>
-                                Question list
-                            </span>
-                        </div>
-                        <div className='h-[325px] rounded-sm mx-5 my-5 px-2 py-2 flex flex-col gap-4 overflow-y-auto duration-1000'>
-                            {questionList.map((val, i) => (
-                                <QuestionItem
-                                    question={val}
-                                    key={val.id}
-                                    index={i}
-                                    removeQuestionItem={() => {
-                                        removeQuestionItem(val.id);
-                                    }}
-                                    handleReviewQuestion={handleReviewQuestion}
-                                />
-                            ))}
-                        </div>
+                <div className='flex flex-col my-4 gap-3'>
+                    <div className='bg-white h-[34vh] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between'>
+                        <QuestionOption
+                            selectedSkills={selectedSkills}
+                            setSelectedSkills={setSelectedSkills}
+                            selectedLevel={selectedLevel}
+                            setSelectedLevel={setSelectedLevel}
+                        />
                     </div>
-                    <div className='flex justify-center items-center'>
-                        <Button className='px-28 border-none shadow-lg'>
-                            Save
-                        </Button>
+                    <div className='h-[60vh] bg-white w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
+                        <div>
+                            <div className='flex justify-between px-10 pt-8'>
+                                <span className='font-medium text-xl'>
+                                    Question list
+                                </span>
+                                <div>
+                                    <button
+                                        className='btn btn-primary'
+                                        onClick={handleOpenModalBank}
+                                    >
+                                        Bank question
+                                    </button>
+                                    <Modal
+                                        isOpen={modalBankIsOpen}
+                                        style={{
+                                            top: '0',
+                                            left: '0',
+                                            right: 'auto',
+                                            bottom: 'auto',
+                                            marginRight: '-50%',
+                                            transform: 'translate(-50%, -50%)',
+                                        }}
+                                        contentLabel='Example Modal'
+                                        ariaHideApp={false}
+                                    >
+                                        <QuestionBank
+                                            questionsBank={questionsBank}
+                                            onUpdateQuestionBank={
+                                                handleUpdateQuestionBank
+                                            }
+                                            onCloseModalBank={
+                                                handleCloseModalBank
+                                            }
+                                        />
+                                    </Modal>
+                                </div>
+                            </div>
+                            <div className='h-[300px] rounded-sm mx-5 my-5 px-2 py-2 flex flex-col gap-4 overflow-y-auto duration-1000'>
+                                {questionList.map((val, i) => (
+                                    <QuestionItem
+                                        question={val}
+                                        key={val.id}
+                                        index={i}
+                                        removeQuestionItem={() => {
+                                            removeQuestionItem(val.id);
+                                        }}
+                                        handleReviewQuestion={
+                                            handleReviewQuestion
+                                        }
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className='flex justify-center items-center'>
+                            <Button className='px-28 border-none shadow-lg'>
+                                Save
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

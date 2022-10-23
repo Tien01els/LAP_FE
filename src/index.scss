@@ -2,117 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 @layer base {
-    body {
-        @apply font-primary text-base bg-[#f4f7f9];
-    }
+  body {
+    @apply font-primary text-base bg-[#f4f7f9];
+  }
 }
 @layer components {
-    .page-container {
-        max-width: 1440px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .text-1-line {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-    }
+  .page-container {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .text-1-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+  }
 
-    .button {
-        @apply bg-primary py-2 px-5 rounded-lg border-2 text-white transition-all active:scale-90 cursor-pointer select-none hover:bg-opacity-90 text-center;
-    }
+  .button {
+    @apply bg-primary py-2 px-5 rounded-lg border-2 text-white transition-all active:scale-90 cursor-pointer select-none hover:bg-opacity-90 text-center;
+  }
 
-    .teacherdetails__AScore {
-        background-image: linear-gradient(
-            0deg,
-            rgba(246, 246, 246, 1) 0%,
-            rgba(0, 212, 255, 1) 100%
-        );
-    }
+  .teacherdetails__AScore {
+    background-image: linear-gradient(
+      0deg,
+      rgba(246, 246, 246, 1) 0%,
+      rgba(0, 212, 255, 1) 100%
+    );
+  }
 
-    .teacherdetails__Topics {
-        background-image: linear-gradient(
-            213.44deg,
-            #9fff24 67.39%,
-            rgba(178, 222, 122, 0) 108.35%
-        );
-    }
+  .teacherdetails__Topics {
+    background-image: linear-gradient(
+      213.44deg,
+      #9fff24 67.39%,
+      rgba(178, 222, 122, 0) 108.35%
+    );
+  }
 
-    .teacherdetails__Students {
-        background-image: linear-gradient(
-            213.44deg,
-            rgba(255, 36, 207, 0.47) 67.39%,
-            rgba(203, 156, 211, 0) 108.35%
-        );
-    }
+  .teacherdetails__Students {
+    background-image: linear-gradient(
+      213.44deg,
+      rgba(255, 36, 207, 0.47) 67.39%,
+      rgba(203, 156, 211, 0) 108.35%
+    );
+  }
 
-    .custom-today-day {
-        color: #75b9cc !important;
-        border: 1px solid #75b9cc !important;
-    }
+  .custom-today-day {
+    color: #75b9cc !important;
+    border: 1px solid #75b9cc !important;
+  }
 
-    .deadline:not(.-selectedStart):not(.-selectedBetween):not(.-selectedEnd):not(.-selected) {
-        color: red !important;
-        border: 1px solid red !important;
-    }
+  .deadline:not(.-selectedStart):not(.-selectedBetween):not(.-selectedEnd):not(.-selected) {
+    color: red !important;
+    border: 1px solid red !important;
+  }
 
-    .custom-today-day::after {
-        visibility: hidden; /* hide small border under the text */
-    }
+  .custom-today-day::after {
+    visibility: hidden; /* hide small border under the text */
+  }
 
-    .Calendar__footer {
-        padding-bottom: 3rem !important;
-    }
+  .Calendar__footer {
+    padding-bottom: 3rem !important;
+  }
 
-    .chartJS {
-        padding: 1rem 2rem !important;
-        width: 100%;
-        height: 100%;
+  .chartJS {
+    padding: 1rem 2rem !important;
+    width: 100%;
+    height: 100%;
 
-        // height: 322px !important;
-        // width: 90% !important;
-    }
+    // height: 322px !important;
+    // width: 90% !important;
+  }
 
-    .teacherMathField {
-        padding: 4rem 2rem !important;
-    }
+  .teacherMathField {
+    padding: 4rem 2rem !important;
+  }
 
-    #formula::disabled {
-        color: black !important;
-        background: black !important;
-    }
+  #formula::disabled {
+    color: black !important;
+    background: black !important;
+  }
 
-    ::-webkit-scrollbar {
-        width: 3px;
-    }
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
 
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
 
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-    }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
 
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-    .daypicker {
-        @apply rounded-md font-semibold transition-all border border-gray-500 #{!important};
-    }
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .daypicker {
+    @apply rounded-md font-semibold transition-all border border-gray-500 #{!important};
+  }
 
-    .daypicker:hover {
-        @apply border border-primary cursor-pointer duration-500 text-gray-500 #{!important};
-    }
+  .daypicker:hover {
+    @apply border border-primary cursor-pointer duration-500 text-gray-500 #{!important};
+  }
 
-    .daypicker:focus {
-        @apply outline-primary #{!important};
-    }
+  .daypicker:focus {
+    @apply outline-primary #{!important};
+  }
+
+  .dropdown-content {
+    position: absolute;
+    inset: 0px auto auto 0px;
+    margin: 0px;
+    transform: translate3d(0px, 533.333px, 0px);
+  }
 }
 
 // @font-face {
@@ -127,26 +134,30 @@
 // }
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px; /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
 
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
 
-    /* Support for IE. */
-    font-feature-settings: 'liga';
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+#Bank-modal-formula {
+  @apply border max-h-[200px] rounded-md mt-2;
 }

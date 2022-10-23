@@ -49,14 +49,14 @@ const TeacherDashBoard = () => {
     const teacherId = 1;
     useEffect(() => {
         axios
-            .get(API_URL + `class/${teacherId}`)
+            .get(API_URL + `class/teacher/${teacherId}`)
             .then((res) => {
                 setClasses(res.data);
             })
             .catch((err) => console.log(err));
 
         axios
-            .get(API_URL + `assignment/${teacherId}`)
+            .get(API_URL + `assignment/teacher/${teacherId}`)
             .then((res) => {
                 setAssignments(res.data);
                 handleDays(res.data);
