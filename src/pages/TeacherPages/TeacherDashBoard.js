@@ -34,27 +34,27 @@ const TeacherDashBoard = () => {
   //   grade: '40A',
   // }
 
-  const navigate = useNavigate()
-  const [selectedDay, setSelectedDay] = useState(null)
-  const [Classes, setClasses] = useState([])
-  const [assignments, setAssignments] = useState([])
-  const [assignmentDays, setAssignmentsDays] = useState([])
-  const teacherId = 1
-  useEffect(() => {
-    axios
-      .get(API_URL + `class/${teacherId}`)
-      .then((res) => {
-        setClasses(res.data)
-      })
-      .catch((err) => console.log(err))
+    const navigate = useNavigate();
+    const [selectedDay, setSelectedDay] = useState(null);
+    const [Classes, setClasses] = useState([]);
+    const [assignments, setAssignments] = useState([]);
+    const [assignmentDays, setAssignmentsDays] = useState([]);
+    const teacherId = 1;
+    useEffect(() => {
+        axios
+            .get(API_URL + `class/teacher/${teacherId}`)
+            .then((res) => {
+                setClasses(res.data);
+            })
+            .catch((err) => console.log(err));
 
-    axios
-      .get(API_URL + `assignment/${teacherId}`)
-      .then((res) => {
-        setAssignments(res.data)
-        handleDays(res.data)
-      })
-      .catch((err) => console.log(err))
+        axios
+            .get(API_URL + `assignment/teacher/${teacherId}`)
+            .then((res) => {
+                setAssignments(res.data);
+                handleDays(res.data);
+            })
+            .catch((err) => console.log(err));
 
     // eslint-disable-next-line
   }, [])

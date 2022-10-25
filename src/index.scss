@@ -6,7 +6,7 @@
     @apply font-primary text-base bg-[#f4f7f9];
   }
 }
-@layer components {
+@layer components 
   .page-container {
     max-width: 1440px;
     margin-left: auto;
@@ -116,6 +116,17 @@
   .achievementSwiper {
     @apply py-5 #{!important};
   }
+
+  .dropdown-content {
+      position: absolute;
+      inset: 0px auto auto 0px;
+      margin: 0px;
+      transform: translate3d(0px, 533.333px, 0px);
+  }
+
+  .DatePicker {
+      z-index: 0 !important;
+  }
 }
 
 // @font-face {
@@ -189,4 +200,8 @@
 .swiper-button-prev,
 .swiper-button-next {
   @apply text-primary #{!important};
+}
+
+#Bank-modal-formula {
+    @apply border max-h-[200px] rounded-md mt-2;
 }
