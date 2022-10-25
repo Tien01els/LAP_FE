@@ -113,6 +113,9 @@
   .daypicker:focus {
     @apply outline-primary #{!important};
   }
+  .achievementSwiper {
+    @apply py-5 #{!important};
+  }
 }
 
 // @font-face {

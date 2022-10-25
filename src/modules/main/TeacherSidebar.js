@@ -10,7 +10,7 @@ const TeacherSidebar = () => {
     role: 'Teacher',
   }
   return (
-    <div className="w-[240px] items-center h-full fixed top-0 left-0 bg-white shadow-sm flex flex-col p-5 items-start gap-10 justify-between">
+    <div className="w-[240px] items-center h-full fixed top-0 left-0 bg-white shadow-sm flex flex-col p-5 gap-10 justify-between">
       {/* logo */}
       <div className="flex flex-col justify-center items-center gap-20">
         <img src={logo} alt="" className="w-[200px] h-[100px] bg-cover"></img>

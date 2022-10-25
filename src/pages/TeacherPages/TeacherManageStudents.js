@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Button from '../../components/Button'
 import StudentCard from '../../components/Teacher/StudentCard'
 import { buildStyles } from 'react-circular-progressbar'
@@ -47,13 +47,13 @@ const TeacherManageStudents = () => {
   const [studentInfo, setStudentInfo] = useState({})
   const [addStudentModal, setAddStudentModal] = useState(false)
   const [addStatus, setAddStatus] = useState('')
-  const [studentEmail, setStudentEmail] = useState('')
+  const studentEmail = useRef()
 
   const toggleModal = () => {
     setAddStudentModal(!addStudentModal)
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // load students
     axios
       .get(API_URL + 'student/1')
@@ -87,10 +87,9 @@ const TeacherManageStudents = () => {
   }
 
   const handleAddStudent = async () => {
-    console.log(studentEmail)
     await axios
       .put(API_URL + 'student/1', {
-        studentEmail: studentEmail,
+        studentEmail: studentEmail.current.value,
       })
       .then((res) => {
         setStudentList(res.data)
@@ -102,7 +101,7 @@ const TeacherManageStudents = () => {
         }
       })
       .catch((err) => console.log(err, 'hehe'))
-    window.location.reload()
+    // window.location.reload()
   }
 
   return (
@@ -182,9 +181,9 @@ const TeacherManageStudents = () => {
                       <span className="text-red-500">Can't add student.</span>
                     )}
                     <input
+                      ref={studentEmail}
                       type="text"
                       placeholder="Type in student email"
-                      onChange={(e) => setStudentEmail(e.target.value)}
                       className="w-full outline-none border transition-all focus:border-primary rounded p-2"
                     />
                   </div>
