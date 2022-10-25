@@ -71,7 +71,7 @@ const AnswerQuestion = () => {
                 01 : 10
               </span>
               <div className="flex flex-wrap gap-5 max-h-[300px] px-5 overflow-y-auto py-3">
-                {new Array(50).fill(0).map((item, i) => {
+                {new Array(20).fill(0).map((item, i) => {
                   return (
                     <div className="h-[40px] w-[30px] flex flex-col outline outline-2 outline-gray-500 hover:outline-green-500 rounded overflow-hidden transition-all cursor-pointer select-none">
                       <div className="flex justify-center items-center">
