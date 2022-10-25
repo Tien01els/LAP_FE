@@ -3,8 +3,13 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      backgroundImage: {
+        achievement: "url('../src/assets/image/achievement.png')",
+      },
       fontFamily: {
         primary: ['Poppins', 'sans-serif'],
+        opensan: ['Open Sans'],
+        inter: ['Inter', 'sans-serif'],
       },
       colors: {
         primary: '#5199ad',

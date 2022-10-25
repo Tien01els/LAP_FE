@@ -1,18 +1,35 @@
+import axios from 'axios'
 import React, { useState } from 'react'
+import { API_URL } from '../../constant'
 
 const imgsrc =
   'https://students.flinders.edu.au/_jcr_content/content/section_856874544_co/par_0/image_general.coreimg.png/1621207287287/waving-person.png'
 
-const StudentCard = () => {
+const StudentCard = ({ student, setStudentInfo }) => {
   const [openMoreOption, setOpenMoreOption] = useState(false)
+
+  const handleViewStudent = () => {
+    setStudentInfo(student)
+  }
+
+  const handleRemoveStudent = async (id) => {
+    await axios
+      .put(API_URL + 'student/remove/' + id)
+      .then()
+      .catch((err) => console.log(err))
+    window.location.reload()
+  }
 
   return (
     <div className="w-full h-[140px] flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
       <img src={imgsrc} alt="" className="object-fill h-32 w-36 rounded-lg" />
       <div className="flex flex-col justify-evenly h-full">
         <div className="flex flex-row justify-between items-center">
-          <span className="font-medium max-w-[380px] truncate cursor-pointer">
-            Nguyen Minh Nhat
+          <span
+            className="font-medium max-w-[380px] truncate cursor-pointer"
+            onClick={() => handleViewStudent()}
+          >
+            {student?.fullName}
           </span>
           <div className="flex flex-col">
             <div
@@ -23,9 +40,16 @@ const StudentCard = () => {
             >
               <i className="fas fa-ellipsis-h font-xs"></i>
               {openMoreOption && (
-                <div className="absolute translate-y-10 -translate-x-3 bg-gray-100 flex flex-col gap-2 px-2 py-1 text-xs rounded-md">
-                  <span className="cursor-pointer">Remove</span>
-                  <span className="cursor-pointer">Remove</span>
+                <div className="absolute translate-y-12 -translate-x-5 border-t-2 text-sm border-primary bg-[#ffffff] flex flex-col divide-y shadow-lg rounded-b">
+                  <div
+                    className="cursor-pointer px-2 py-1 hover:bg-[#ffffff] transition-all"
+                    onClick={() => handleRemoveStudent(student?.id)}
+                  >
+                    <span>Remove</span>
+                  </div>
+                  <div className="cursor-pointer px-2 py-1 hover:bg-[#ffffff] transition-all">
+                    <span>Remove</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -44,9 +68,15 @@ const StudentCard = () => {
         </p>
         <div className="flex flex-row justify-between items-center pr-1 text-xs">
           <span>
-            Average Score : <span className="text-primary">80</span>
+            Average Score :{' '}
+            <span className="text-primary">{student?.averageScore}</span>
           </span>
-          <span className="text-primary cursor-pointer">View</span>
+          <span
+            className="text-primary cursor-pointer"
+            onClick={() => handleViewStudent()}
+          >
+            View
+          </span>
         </div>
       </div>
     </div>
