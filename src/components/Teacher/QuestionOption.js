@@ -7,7 +7,6 @@ import { API_URL } from '../../constant';
 const QuestionOption = ({
     selectedSkills,
     setSelectedSkills,
-    selectedLevel,
     setSelectedLevel,
 }) => {
     const teacherId = 1;

@@ -16,6 +16,9 @@ const Skills = lazy(() => import('./pages/SkillPages/Skills'));
 const TeacherManageStudents = lazy(() =>
     import('./pages/TeacherPages/TeacherManageStudents')
 );
+const TeacherAssignment = lazy(() =>
+    import('./pages/TeacherPages/TeacherAssignment')
+);
 
 export default function AppRouter() {
     return (
@@ -49,6 +52,10 @@ export default function AppRouter() {
                 <Route
                     path='/teacher/manage-student'
                     element={<TeacherManageStudents />}
+                />
+                <Route
+                    path='/teacher/skill/:skillId/assignment/:assignmentId'
+                    element={<TeacherAssignment />}
                 />
             </Route>
         </Routes>

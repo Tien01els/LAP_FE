@@ -16,7 +16,6 @@ const TeacherClass = () => {
     useEffect(() => {
         axios.get(API_URL + `class/${classId}}`).then((res) => {
             setClassInfo(res.data);
-            console.log(res.data);
         });
     }, [classId]);
 

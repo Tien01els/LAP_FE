@@ -40,9 +40,6 @@ const QuestionItem = ({
             className='flex relative flex-row gap-2 px-4 py-3 hover:bg-gray-50 transition-all items-center border rounded-md shadow-sm cursor-pointer'
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
-            onClick={() => {
-                handleReviewQuestion(passedQuestion);
-            }}
         >
             {isHovering && (
                 <div
@@ -55,7 +52,12 @@ const QuestionItem = ({
             <div className='pr-1'>
                 <span className='text-3xl text-primary'>{index + 1}</span>
             </div>
-            <div className='flex flex-col overflow-hidden w-full overflow-y-hidden'>
+            <div
+                className='flex flex-col overflow-hidden w-full overflow-y-hidden'
+                onClick={() => {
+                    handleReviewQuestion(passedQuestion);
+                }}
+            >
                 <div className='mr-7 pointer-events-none'>
                     <math-field readOnly id={`formula-${index}`}></math-field>
                 </div>

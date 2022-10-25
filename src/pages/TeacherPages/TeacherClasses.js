@@ -1,6 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ClassCard from '../../components/Teacher/ClassCard';
 import { API_URL } from '../../constant';
 
@@ -63,7 +62,6 @@ const TeacherClasses = () => {
                             return val;
                         return '';
                     }).map((val, index) => {
-                        console.log(val);
                         return (
                             <ClassCard layout key={val?.id} classInfo={val} />
                         );
