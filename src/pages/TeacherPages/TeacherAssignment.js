@@ -1,18 +1,18 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState, useRef } from 'react';
 import 'mathlive';
 import Select from 'react-select';
 import { motion } from 'framer-motion';
+import { useParams } from 'react-router-dom';
 // import { utils } from 'react-modern-calendar-datepicker';
 // import moment from 'moment';
+// import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 import axios from 'axios';
 import Modal from 'react-modal';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
-import { v4 as uuidv4 } from 'uuid';
 
 import { API_URL } from '../../constant';
-// import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 import Button from '../../components/Button';
-import QuestionOption from '../../components/Teacher/QuestionOption';
+import AssignmentInfo from '../../components/Teacher/AssignmentInfo';
 import QuestionItem from '../../components/Teacher/QuestionItem';
 import MultiChoice from '../../components/Teacher/AnswerType/MultiChoice';
 import TrueFalse from '../../components/Teacher/AnswerType/TrueFalse';
@@ -20,7 +20,7 @@ import InputAnswer from '../../components/Teacher/AnswerType/InputAnswer';
 import MultiSelect from '../../components/Teacher/AnswerType/MultiSelect';
 import QuestionBank from '../../components/Teacher/QuestionBank';
 
-const TeacherCreateQuestion = () => {
+const TeacherAssignment = () => {
     const teacherId = 1;
     const Selectoptions = [
         { value: 1, label: 'Multi Choice' },
@@ -28,29 +28,33 @@ const TeacherCreateQuestion = () => {
         { value: 3, label: 'Input' },
         { value: 4, label: 'Multi Select' },
     ];
+    const levelOption = [
+        { value: 'Easy', label: 'Easy' },
+        { value: 'Medium', label: 'Medium' },
+        { value: 'Hard', label: 'Hard' },
+    ];
+    const { skillId } = useParams();
+    const selectLevel = useRef('');
 
     const [question, setQuestion] = useState('');
     const [questionList, setQuestionList] = useState([]);
     const [score, setScore] = useState(0);
     const [selectedOption, setSelectedOption] = useState(Selectoptions[0]);
-    // const [assignmentName, setAssignmentName] = useState('Assignment Name');
-    // const [enableEdit, setEnableEdit] = useState(false);
-    // const [time, setTime] = useState('');
+
     const [enableHint, setEnableHint] = useState(false);
     const [hint, setHint] = useState('');
     const [answers, setAnswers] = useState([]);
     const [currentQid, setCurrentQid] = useState('');
-    // const [selectedDay, setSelectedDay] = useState(null);
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [selectedSkills, setSelectedSkills] = useState(() =>
+        skillId ? [skillId] : []
+    );
     const [selectedLevel, setSelectedLevel] = useState('');
 
     const [modalBankIsOpen, setBankIsOpen] = useState(false);
     const [questionsBank, setQuestionsBank] = useState([]);
     const [questionsNew, setQuestionsNew] = useState([]);
-
-    // const assignmenNameRef = useRef(null);
 
     const handleOpenModalBank = () => {
         setBankIsOpen(true);
@@ -64,12 +68,6 @@ const TeacherCreateQuestion = () => {
         setQuestionsBank(questionBank);
         setQuestionList([...questionsNew, ...questionBank]);
     };
-
-    // const formatInputValue = () => {
-    //     if (!selectedDay) return '';
-    //     return `${selectedDay.month}/${selectedDay.day}/${selectedDay.year}`;
-    // };
-
     const handleScore = (e) => {
         const score = Math.max(0, Math.min(100, Number(e.target.value)));
         setScore(score);
@@ -78,25 +76,25 @@ const TeacherCreateQuestion = () => {
     const handleEnableHint = () => {
         setEnableHint(!enableHint);
     };
+    const resetValue = () => {
+        setCurrentQid('');
+        setScore(0);
+        setQuestion('');
+        setHint('');
+        setEnableHint(false);
+        setSelectedOption(Selectoptions[0]);
+        setAnswers([]);
+        forceUpdate();
+        setSelectedLevel('');
+        selectLevel.current.setValue('');
+    };
 
-    // const handleCreateAssignment = () => {
-    //     const due = new Date(
-    //         `${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${time}`
-    //     );
-    //     console.log(due);
-    //     const assignment = {
-    //         assignmentName,
-    //         dateDue: moment(due).format('YYYY-MM-DD HH:mm:ss'),
-    //         time: 90,
-    //         totalScore: 100,
-    //         redo: 3,
-    //         teacherId: 1,
-    //     };
-    //     console.log(assignment);
-    //     axios.post(API_URL + `assignment`, assignment).then((res) => {
-    //         console.log(res);
-    //     });
-    // };
+    const convertResToOption = (value, label) => {
+        return {
+            value: value,
+            label: label,
+        };
+    };
 
     const handleReviewQuestion = (data) => {
         setCurrentQid(data?.id);
@@ -145,14 +143,7 @@ const TeacherCreateQuestion = () => {
                     questionsNew[indexNew] = questionList[index];
                     setQuestionsNew([...questionsNew]);
                     setQuestionList([...questionList]);
-                    setCurrentQid('');
-                    setScore(0);
-                    setQuestion('');
-                    setHint('');
-                    setEnableHint(false);
-                    setSelectedOption('');
-                    setAnswers([]);
-                    forceUpdate();
+                    resetValue();
                 })
                 .catch((err) => console.log(err));
             return;
@@ -182,31 +173,19 @@ const TeacherCreateQuestion = () => {
                 };
                 setQuestionList([...questionList, questionNewCreate]);
                 setQuestionsNew([...questionsNew, questionNewCreate]);
-                setCurrentQid('');
-                setScore(0);
-                setQuestion('');
-                setHint('');
-                setEnableHint(false);
-                setSelectedOption('');
-                setAnswers([]);
-                forceUpdate();
-                setSelectedLevel('');
+                resetValue();
             })
             .catch((err) => console.log(err));
     };
 
     const removeQuestionItem = (id) => {
         const newList = questionList.filter((item) => item.id !== id);
+        const currentQuestionBank = questionsBank.filter(
+            (item) => item.id !== id
+        );
         setQuestionList(newList);
-        setCurrentQid('');
-        setScore(0);
-        setQuestion('');
-        setHint('');
-        setEnableHint(false);
-        setSelectedOption(Selectoptions[0]);
-        setAnswers([]);
-        forceUpdate();
-        setSelectedLevel('');
+        setQuestionsBank(currentQuestionBank);
+        resetValue();
     };
 
     useEffect(() => {
@@ -214,13 +193,11 @@ const TeacherCreateQuestion = () => {
             if (selectedLevel.toLowerCase() === 'easy') setScore(5);
             if (selectedLevel.toLowerCase() === 'medium') setScore(10);
             if (selectedLevel.toLowerCase() === 'hard') setScore(20);
+            selectLevel.current.setValue(
+                convertResToOption(selectedLevel, selectedLevel)
+            );
         }
     }, [selectedLevel, score]);
-
-    // useEffect(() => {
-    //     console.log(selectedOption);
-    //     setAnswers([]);
-    // }, [selectedOption]);
 
     useEffect(() => {
         const mf = document.querySelector('#formula');
@@ -229,73 +206,6 @@ const TeacherCreateQuestion = () => {
 
     return (
         <div className='flex flex-col items-center gap-7 justify-center h-full'>
-            {/* <div className="w-[1190px] h-[100px] px-10 bg-white rounded-lg shadow-lg flex flex-row items-center justify-between">
-        <div className="flex flex-row gap-5 items-center">
-          {enableEdit ? (
-            <input
-              className="text-2xl min-w-[250px] transition-all max-w-[500px] font-medium outline-none border-b-2 resize-x py-2 px-1"
-              value={assignmentName}
-              maxLength={45}
-              ref={assignmenNameRef}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  assignmentName === 'Assignment Name'
-                    ? setAssignmentName('')
-                    : setAssignmentName(assignmentName)
-                  setEnableEdit(!enableEdit)
-                  assignmenNameRef.current.focus()
-                }
-              }}
-              onChange={(e) => {
-                setAssignmentName(e.target.value)
-              }}
-              style={{ width: `${assignmentName.length}ch` }}
-            />
-          ) : (
-            <input
-              className="text-2xl min-w-[250px] transition-all max-w-[500px] font-medium resize-x outline-none py-2 px-1"
-              value={assignmentName}
-              ref={assignmenNameRef}
-              maxLength={45}
-              style={{ width: `${assignmentName.length}ch` }}
-              readOnly
-            />
-          )}
-          <i
-            className="fas fa-edit cursor-pointer hover:text-primary transition-all"
-            onClick={() => {
-              assignmentName === 'Assignment Name'
-                ? setAssignmentName('')
-                : setAssignmentName(assignmentName)
-              setEnableEdit(!enableEdit)
-              assignmenNameRef.current.focus()
-            }}
-          ></i>
-        </div>
-        <div className="flex flex-row gap-5 items-center">
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => {
-              setTime(e.target.value)
-            }}
-            className="outline-none border transition-all border-gray-500 px-2 py-1 rounded-md "
-          />
-          <DatePicker
-            colorPrimary="#75b9cc"
-            value={selectedDay}
-            onChange={setSelectedDay}
-            inputPlaceholder="Select a date"
-            formatInputText={formatInputValue}
-            minimumDate={utils().getToday()}
-            inputClassName="daypicker"
-          />
-          <Button className="border-none" onClick={handleCreateAssignment}>
-            Save
-          </Button>
-        </div>
-      </div> */}
-
             <div className='flex flex-row gap-7 justify-center w-full h-full'>
                 <div className='w-[800px] bg-white rounded-lg shadow-lg flex flex-col justify-between my-4 px-10 py-5'>
                     <div className='flex flex-col gap-4'>
@@ -303,7 +213,14 @@ const TeacherCreateQuestion = () => {
                             <span className='font-medium text-xl'>
                                 Question
                             </span>
-                            <div className='flex flex-row gap-10 items-center'>
+                            <div className='flex flex-row gap-3 items-center'>
+                                <Select
+                                    ref={selectLevel}
+                                    options={levelOption}
+                                    placeholder='Level'
+                                    onChange={(e) => setSelectedLevel(e.value)}
+                                    className='w-[125px]'
+                                />
                                 <div className='flex gap-2 items-center'>
                                     <span>Score</span>
                                     <input
@@ -317,7 +234,6 @@ const TeacherCreateQuestion = () => {
                         </div>
 
                         <math-field
-                            // id={`question-${idQuestion}` || `1`}
                             id='formula'
                             style={{
                                 whiteSpace: 'initial',
@@ -453,12 +369,7 @@ const TeacherCreateQuestion = () => {
                 </div>
                 <div className='flex flex-col my-4 gap-3'>
                     <div className='bg-white h-[34vh] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between'>
-                        <QuestionOption
-                            selectedSkills={selectedSkills}
-                            setSelectedSkills={setSelectedSkills}
-                            selectedLevel={selectedLevel}
-                            setSelectedLevel={setSelectedLevel}
-                        />
+                        <AssignmentInfo />
                     </div>
                     <div className='h-[60vh] bg-white w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
                         <div>
@@ -502,7 +413,7 @@ const TeacherCreateQuestion = () => {
                                 {questionList.map((val, i) => (
                                     <QuestionItem
                                         question={val}
-                                        key={uuidv4()}
+                                        key={val.id}
                                         index={i}
                                         removeQuestionItem={() => {
                                             removeQuestionItem(val.id);
@@ -526,4 +437,4 @@ const TeacherCreateQuestion = () => {
     );
 };
 
-export default TeacherCreateQuestion;
+export default TeacherAssignment;

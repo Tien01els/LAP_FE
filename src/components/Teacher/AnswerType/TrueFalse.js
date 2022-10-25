@@ -27,7 +27,7 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
     }, [answers, convert, trueAnswer]);
 
     useEffect(() => {
-        if (convert[trueAnswer] !== value && value) {
+        if (value && convert[trueAnswer] !== value) {
             setAnswers([
                 { isTrue: value === 'True' ? true : false, answer: 'True' },
                 { isTrue: value === 'False' ? true : false, answer: 'False' },

@@ -27,7 +27,7 @@ const ModalCreateTopic = ({
         });
     }
     function getPrerequisiteTopicOfGrade() {
-        axios.get(API_URL + `topic/1/1`).then((res) => {
+        axios.get(API_URL + `topic/teacher/1/grade/1`).then((res) => {
             setPrerequisiteTopicGrades(res.data);
         });
     }

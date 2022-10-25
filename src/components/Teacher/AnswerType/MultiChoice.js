@@ -7,21 +7,22 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
     const [answerC, setAnswerC] = useState('');
     const [answerD, setAnswerD] = useState('');
 
-    const preValue = useRef();
-
     const handleOnChange = (e) => {
         setValue(e.target.value);
     };
 
-    const convert = useMemo(() => ({
-        0: 'a',
-        1: 'b',
-        2: 'c',
-        3: 'd',
-    }), []);
+    const convert = useMemo(
+        () => ({
+            0: 'a',
+            1: 'b',
+            2: 'c',
+            3: 'd',
+        }),
+        []
+    );
+    console.log(value);
 
     useEffect(() => {
-        preValue.current = value;
         if (
             answers &&
             answers.length === 4 &&
@@ -36,20 +37,23 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
             setAnswerC(answers[2]?.answer);
             setAnswerD(answers[3]?.answer);
         }
-    }, [answers, value, convert]);
+        if (answers.length === 0) {
+            setValue('');
+            setAnswerA('');
+            setAnswerB('');
+            setAnswerC('');
+            setAnswerD('');
+        }
+    }, [answers, convert]);
 
     useEffect(() => {
-        if (value && preValue.current !== value) {
-            setAnswers([
-                { isTrue: value === 'a' ? true : false, answer: answerA },
-                { isTrue: value === 'b' ? true : false, answer: answerB },
-                { isTrue: value === 'c' ? true : false, answer: answerC },
-                { isTrue: value === 'd' ? true : false, answer: answerD },
-            ]);
-        }
-        console.log(answers);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [answerA, answerB, answerC, answerD, value]);
+        setAnswers([
+            { isTrue: value === 'a' ? true : false, answer: answerA },
+            { isTrue: value === 'b' ? true : false, answer: answerB },
+            { isTrue: value === 'c' ? true : false, answer: answerC },
+            { isTrue: value === 'd' ? true : false, answer: answerD },
+        ]);
+    }, [answerA, answerB, answerC, answerD, value, setAnswers]);
 
     return (
         <div className='w-full'>

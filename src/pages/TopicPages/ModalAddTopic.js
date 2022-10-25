@@ -48,12 +48,12 @@ const ModalAddTopic = ({ modalIsOpen, setIsOpen, getTopicOfClass }) => {
     const [modalTopicIsOpen, setTopicIsOpen] = useState(false);
 
     function getTopicOfGrade() {
-        axios.get(API_URL + `topic/1/1`).then((res) => {
+        axios.get(API_URL + `topic/teacher/1/grade/1`).then((res) => {
             setTopicGrades(res.data);
         });
     }
     function getClassOfGrade() {
-        axios.get(API_URL + `class/1/1`).then((res) => {
+        axios.get(API_URL + `class/teacher/1/grade/1`).then((res) => {
             setClasses(res.data);
         });
     }

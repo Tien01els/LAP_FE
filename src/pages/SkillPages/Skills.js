@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
 import Table from '../../components/Table';
 import { API_URL } from '../../constant';
-import ModalAddTopic from './ModalAddTopic';
+import ModalCreateSkill from './ModalCreateSkill';
+import ModalAssign from './ModalAssign';
 
 const Skills = () => {
     const thead = [
@@ -27,29 +28,26 @@ const Skills = () => {
 
     const [topic, setTopic] = useState([]);
     const [skills, setSkills] = useState([]);
+    const [valueSkills, setValueSkills] = useState([]);
 
-    useEffect(() => {
-        axios.get(API_URL + `topic/${topicId}`).then((res) => {
-            console.log(res.data);
-            setTopic(res.data);
-        });
-    }, [topicId]);
-
-    const [topics, setTopics] = useState([]);
     const [values, setValues] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
-    const [modalIsOpen, setIsOpen] = useState(false);
+    const [modalCreateSkillIsOpen, setCreateSkillIsOpen] = useState(false);
+    const [modalAssignIsOpen, setAssignIsOpen] = useState(false);
+    const [currentSkill, setCurrentSkill] = useState();
 
-    function handleDeleteClassTopic(id) {
-        axios.delete(API_URL + `class-topic/${id}`).then((res) => {
-            getTopicOfClass();
+    const [assignmentName, setAssignmentName] = useState('');
+
+    const handleDeleteSkill = (id) => {
+        axios.delete(API_URL + `skill/${id}`).then((res) => {
+            getSkillsOfTopic();
         });
-    }
+    };
 
-    function getTopicOfClass() {
-        axios.get(API_URL + `class-topic/1/1`).then((res) => {
+    const getSkillsOfTopic = useCallback(() => {
+        axios.get(API_URL + `skill/topic/${topicId}`).then((res) => {
             let result = res.data;
             let arrayResult = [];
             for (let i = 0; i < result.length; ++i) {
@@ -57,20 +55,28 @@ const Skills = () => {
                     ...arrayResult,
                     {
                         id: result[i].id,
-                        topicName: result[i].topicName,
-                        numberSkills: result[i].numberSkills,
-                        prerequisiteTopicName: result[i].prerequisiteTopicName,
+                        topicName: result[i].skillName,
+                        standardName: result[i].standardName,
                     },
                 ];
             }
+            setValueSkills(result);
             setValues(arrayResult);
             setCurrentPage(arrayResult.length > 0 ? 1 : 0);
         });
-    }
+    }, [topicId]);
 
-    function handleOpenModalAddTopic() {
-        setIsOpen(true);
-    }
+    const handleOpenModalCreateSkill = () => {
+        setCreateSkillIsOpen(true);
+    };
+
+    const handleOpenModalAssign = (skillId) => {
+        setAssignIsOpen(true);
+        setCurrentSkill(skillId);
+        const skill = valueSkills.find((value) => value.id === skillId);
+        setAssignmentName(skill.skillName);
+    };
+
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1);
         const newOffset = (event.selected * 5) % values.length;
@@ -78,15 +84,20 @@ const Skills = () => {
     };
 
     useEffect(() => {
-        getTopicOfClass();
-    }, []);
+        axios.get(API_URL + `topic/${topicId}`).then((res) => {
+            setTopic(res.data);
+        });
+    }, [topicId]);
+
+    useEffect(() => {
+        getSkillsOfTopic();
+    }, [getSkillsOfTopic]);
 
     useEffect(() => {
         const endOffset = itemOffset + 5;
-        setTopics(values.slice(itemOffset, endOffset));
+        setSkills(values.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(values.length / 5));
     }, [itemOffset, values]);
-    console.log(values);
 
     return (
         <div className='pt-[40px] px-[68px] h-screen'>
@@ -107,18 +118,19 @@ const Skills = () => {
                 </h1>
                 <button
                     className='h-7 w-24 px-2 flex items-center justify-center text-white rounded-xl border-[1px]'
-                    onClick={handleOpenModalAddTopic}
+                    onClick={handleOpenModalCreateSkill}
                 >
                     {/* material-icons */}
                     <span className=' flex items-center justify-center mr-1'>
                         Add
                     </span>
-                    <span>topic</span>
+                    <span>skill</span>
                 </button>
-                <ModalAddTopic
-                    modalIsOpen={modalIsOpen}
-                    setIsOpen={setIsOpen}
-                    getTopicOfClass={getTopicOfClass}
+                <ModalCreateSkill
+                    modalCreateSkillIsOpen={modalCreateSkillIsOpen}
+                    setCreateSkillIsOpen={setCreateSkillIsOpen}
+                    getSkillsOfTopic={getSkillsOfTopic}
+                    topicId={topicId}
                 />
             </div>
 
@@ -126,17 +138,23 @@ const Skills = () => {
                 <div className='grow'>
                     <Table
                         thead={thead}
-                        tbody={topics}
+                        tbody={skills}
                         actions={[
                             {
-                                name: 'Delete',
-                                eventAction: handleDeleteClassTopic,
+                                name: 'Assign',
+                                eventAction: handleOpenModalAssign,
                             },
                             {
-                                name: 'View detail',
-                                //eventAction: ,
+                                name: 'Delete',
+                                eventAction: handleDeleteSkill,
                             },
                         ]}
+                    />
+                    <ModalAssign
+                        modalAssignIsOpen={modalAssignIsOpen}
+                        setAssignIsOpen={setAssignIsOpen}
+                        assignId={currentSkill}
+                        assignmentName={assignmentName}
                     />
                 </div>
                 <div className='mt-[16px] flex justify-between px-5'>

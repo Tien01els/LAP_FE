@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '../../Button';
 import { v4 as uuidv4 } from 'uuid';
 
