@@ -8,7 +8,9 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
     setValue(e.target.value)
   }
 
-  const trueAnswer = answers?.findIndex((element) => element.isTrue === true)
+  const trueAnswer = answers?.trueFalse.findIndex(
+    (element) => element.isTrue === true,
+  )
   const convert = useMemo(
     () => ({
       0: 'True',
@@ -18,7 +20,10 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
   )
 
   useEffect(() => {
-    if (answers && answers.find((element) => element.answer === 'True')) {
+    if (
+      answers &&
+      answers?.trueFalse.find((element) => element.answer === 'True')
+    ) {
       setValue(convert[`${trueAnswer}`])
     }
     // if (convert[trueAnswer] !== value) {
@@ -28,10 +33,13 @@ const TrueFalse = ({ questionType, answers, setAnswers }) => {
 
   useEffect(() => {
     if (value && convert[trueAnswer] !== value) {
-      setAnswers([
-        { isTrue: value === 'True' ? true : false, answer: 'True' },
-        { isTrue: value === 'False' ? true : false, answer: 'False' },
-      ])
+      setAnswers({
+        ...answers,
+        trueFalse: [
+          { isTrue: value === 'True' ? true : false, answer: 'True' },
+          { isTrue: value === 'False' ? true : false, answer: 'False' },
+        ],
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])

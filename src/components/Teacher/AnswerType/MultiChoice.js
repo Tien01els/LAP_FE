@@ -24,18 +24,19 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
   useEffect(() => {
     if (
       answers &&
-      answers.length === 4 &&
-      answers.filter((item) => item.isTrue).length === 1
+      answers?.multiChoice?.length === 4 &&
+      answers?.multiChoice.filter((item) => item.isTrue).length === 1
     ) {
-      console.log(answers)
-      const trueAnswer = answers.findIndex((element) => element.isTrue === true)
+      const trueAnswer = answers?.multiChoice?.findIndex(
+        (element) => element.isTrue === true,
+      )
       setValue(convert[`${trueAnswer}`])
-      setAnswerA(answers[0]?.answer)
-      setAnswerB(answers[1]?.answer)
-      setAnswerC(answers[2]?.answer)
-      setAnswerD(answers[3]?.answer)
+      setAnswerA(answers.multiChoice[0]?.answer)
+      setAnswerB(answers.multiChoice[1]?.answer)
+      setAnswerC(answers.multiChoice[2]?.answer)
+      setAnswerD(answers.multiChoice[3]?.answer)
     }
-    if (answers.length === 0) {
+    if (answers?.length === 0) {
       setValue('')
       setAnswerA('')
       setAnswerB('')
@@ -47,14 +48,15 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
   useEffect(() => {
     setAnswers({
       ...answers,
-      multichoice: [
+      multiChoice: [
         { isTrue: value === 'a' ? true : false, answer: answerA },
         { isTrue: value === 'b' ? true : false, answer: answerB },
         { isTrue: value === 'c' ? true : false, answer: answerC },
         { isTrue: value === 'd' ? true : false, answer: answerD },
       ],
     })
-  }, [answerA, answerB, answerC, answerD, value, setAnswers])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answerA, answerB, answerC, answerD, value])
 
   return (
     <div className="w-full">
@@ -79,7 +81,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
               onChange={(e) => setAnswerA(e.target.value)}
               placeholder="Type in answer"
               readOnly={Preview ? true : false}
-              className={`text-white outline-none bg-primary placeholder-gray-100 border-b border-primary duration-300 focus:border-gray-100 pb-1 px-1`}
+              className={`text-white outline-none w-full bg-primary placeholder-gray-100 border-b border-primary duration-300 focus:border-gray-100 pb-1 px-1`}
             />
           )}
           {value === 'a' ? (
