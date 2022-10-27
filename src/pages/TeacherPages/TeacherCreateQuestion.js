@@ -110,7 +110,10 @@ const TeacherCreateQuestion = () => {
         setSelectedLevel(data?.level);
         setSelectedOption(Selectoptions[data?.questionTypeId - 1]);
     };
-
+    const handleSelectedOption = (e) => {
+        setAnswers([])
+        setSelectedOption(e);
+    };
     const addQuestionItem = () => {
         if (questionList.find((item) => item.id === currentQid)) {
             let index = questionList.findIndex(
@@ -405,7 +408,7 @@ const TeacherCreateQuestion = () => {
                         <Select
                             value={selectedOption || ''}
                             defaultValue={Selectoptions[0]}
-                            onChange={setSelectedOption}
+                            onChange={handleSelectedOption}
                             options={Selectoptions}
                             className='w-44 transition-all'
                         />
@@ -502,7 +505,7 @@ const TeacherCreateQuestion = () => {
                                 {questionList.map((val, i) => (
                                     <QuestionItem
                                         question={val}
-                                        key={uuidv4()}
+                                        key={val + i}
                                         index={i}
                                         removeQuestionItem={() => {
                                             removeQuestionItem(val.id);

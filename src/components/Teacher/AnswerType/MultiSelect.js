@@ -35,16 +35,29 @@ const MultiSelect = ({ questionType, answers, setAnswers }) => {
     };
 
     console.log(newAnswer);
+    console.log(answers);
 
     useEffect(() => {
-        preAnswer.current = newAnswer;
-        setNewAnswer(answers);
+        if (answers.length > 0 && newAnswer !== answers) {
+            console.log(newAnswer);
+            console.log(answers);
+
+            preAnswer.current = newAnswer;
+
+            const listAnswer = [];
+            for (let i = 0; i < answers.length; i++) {
+                if (answers[i].id) {
+                    listAnswer.push({ ...answers[i], id: uuidv4() });
+                }
+            }
+            setNewAnswer(listAnswer);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [answers]);
 
     useEffect(() => {
         if (
-            newAnswer &&
+            newAnswer.length > 0 &&
             newAnswer !== answers &&
             preAnswer.current !== newAnswer
         ) {

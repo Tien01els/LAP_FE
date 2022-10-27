@@ -6,7 +6,7 @@ const MainLayout = ({ children }) => {
   return (
     <>
       {/* <Header></Header> */}
-      <TeacherSidebar></TeacherSidebar>
+      <TeacherSidebar/>
       <div className="pl-60">
         <Outlet></Outlet>
       </div>
