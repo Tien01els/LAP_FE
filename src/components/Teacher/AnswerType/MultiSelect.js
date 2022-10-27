@@ -34,20 +34,17 @@ const MultiSelect = ({ questionType, answers, setAnswers }) => {
     setNewAnswer(newList)
   }
 
-  console.log(newAnswer)
-  console.log(answers)
-
   useEffect(() => {
-    if (answers.length > 0 && newAnswer !== answers) {
-      console.log(newAnswer)
-      console.log(answers)
-
+    if (
+      answers?.multiSelect?.length > 0 &&
+      newAnswer !== answers?.multiSelect
+    ) {
       preAnswer.current = newAnswer
 
       const listAnswer = []
-      for (let i = 0; i < answers.length; i++) {
-        if (answers[i].id) {
-          listAnswer.push({ ...answers[i], id: uuidv4() })
+      for (let i = 0; i < answers?.multiSelect?.length; i++) {
+        if (answers?.multiSelect[i].id) {
+          listAnswer.push({ ...answers?.multiSelect[i], id: uuidv4() })
         }
       }
       setNewAnswer(listAnswer)
@@ -58,21 +55,14 @@ const MultiSelect = ({ questionType, answers, setAnswers }) => {
   useEffect(() => {
     if (
       newAnswer.length > 0 &&
-      newAnswer !== answers &&
+      newAnswer !== answers?.multiSelect &&
       preAnswer.current !== newAnswer
     ) {
-      setAnswers(newAnswer)
+      setAnswers({ ...answers, multiSelect: newAnswer })
+      console.log(answers)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newAnswer])
-
-  // useLayoutEffect(() => {
-  //     if (answers) {
-  //         setNewAnswer(answers);
-  //     }
-  //     handleAddAnswers();
-  //     // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <div className="flex flex-col gap-5 justify-center items-center">
