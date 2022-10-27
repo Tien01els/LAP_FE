@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 // import { utils } from 'react-modern-calendar-datepicker';
-// import moment from 'moment';
+import moment from 'moment';
 // import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -33,7 +33,7 @@ const TeacherAssignment = () => {
         { value: 'Medium', label: 'Medium' },
         { value: 'Hard', label: 'Hard' },
     ];
-    const { skillId } = useParams();
+    const { skillId, assignmentId } = useParams();
     const selectLevel = useRef('');
 
     const [question, setQuestion] = useState('');
@@ -51,6 +51,12 @@ const TeacherAssignment = () => {
         skillId ? [skillId] : []
     );
     const [selectedLevel, setSelectedLevel] = useState('');
+    const [selectedAssignmentName, setSelectedAssignmentName] = useState('');
+    const [selectedTotalScore, setSelectedTotalScore] = useState('');
+    const [selectedTimeDo, setSelectedTimeDo] = useState('');
+    const [selectedRedo, setSelectedRedo] = useState('');
+    const [selectedTimeDue, setSelectedTimeDue] = useState('');
+    const [selectedDayDue, setSelectedDayDue] = useState('');
 
     const [modalBankIsOpen, setBankIsOpen] = useState(false);
     const [questionsBank, setQuestionsBank] = useState([]);
@@ -187,7 +193,32 @@ const TeacherAssignment = () => {
         setQuestionsBank(currentQuestionBank);
         resetValue();
     };
-
+    const handleSaveAssignment = () => {
+        const due = new Date(
+            `${selectedDayDue.year}-${selectedDayDue.month}-${selectedDayDue.day} ${selectedTimeDue}`
+        );
+        const assignment = {
+            assignmentName: selectedAssignmentName,
+            time: selectedTimeDo,
+            totalScore: selectedTotalScore,
+            redo: selectedRedo,
+            dateDue: moment(due).format('YYYY-MM-DD HH:mm:ss'),
+            teacherId: 1,
+        };
+        axios
+            .put(API_URL + `assignment/${assignmentId}`, assignment)
+            .then((res) => {
+                const assignmentQuestions = questionList.map((question) => ({
+                    assignmentId,
+                    questionId: question.id,
+                }));
+                axios
+                    .post(API_URL + `assignment-question`, assignmentQuestions)
+                    .then((res) => {
+                        console.log(res.data);
+                    });
+            });
+    };
     useEffect(() => {
         if (selectedLevel) {
             if (selectedLevel.toLowerCase() === 'easy') setScore(5);
@@ -369,7 +400,16 @@ const TeacherAssignment = () => {
                 </div>
                 <div className='flex flex-col my-4 gap-3'>
                     <div className='bg-white h-[34vh] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between'>
-                        <AssignmentInfo />
+                        <AssignmentInfo
+                            setSelectedAssignmentName={
+                                setSelectedAssignmentName
+                            }
+                            setSelectedTotalScore={setSelectedTotalScore}
+                            setSelectedTimeDo={setSelectedTimeDo}
+                            setSelectedRedo={setSelectedRedo}
+                            setSelectedTimeDue={setSelectedTimeDue}
+                            setSelectedDayDue={setSelectedDayDue}
+                        />
                     </div>
                     <div className='h-[60vh] bg-white w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
                         <div>
@@ -410,10 +450,11 @@ const TeacherAssignment = () => {
                                 </div>
                             </div>
                             <div className='h-[300px] rounded-sm mx-5 my-5 px-2 py-2 flex flex-col gap-4 overflow-y-auto duration-1000'>
+                                {console.log(questionList)}
                                 {questionList.map((val, i) => (
                                     <QuestionItem
                                         question={val}
-                                        key={val.id}
+                                        key={val + i}
                                         index={i}
                                         removeQuestionItem={() => {
                                             removeQuestionItem(val.id);
@@ -426,7 +467,10 @@ const TeacherAssignment = () => {
                             </div>
                         </div>
                         <div className='flex justify-center items-center'>
-                            <Button className='px-28 border-none shadow-lg'>
+                            <Button
+                                className='px-28 border-none shadow-lg'
+                                onClick={handleSaveAssignment}
+                            >
                                 Save
                             </Button>
                         </div>

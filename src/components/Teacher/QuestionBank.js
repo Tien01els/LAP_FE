@@ -17,6 +17,29 @@ const QuestionBank = ({
     onUpdateQuestionBank,
     onCloseModalBank,
 }) => {
+    const thead = [
+        {
+            width: '40%',
+            'max-width': '200px',
+            title: 'CONTENT',
+        },
+        {
+            width: '30%',
+            title: 'SKILLS',
+        },
+        {
+            width: '15%',
+            title: 'TOPIC',
+        },
+        {
+            width: '10%',
+            title: 'GRADE',
+        },
+        {
+            width: '10%',
+            title: 'SCORE',
+        },
+    ];
     const Selectoptions = [
         { value: 1, label: 'Multi Choice' },
         { value: 2, label: 'True False' },
@@ -32,6 +55,7 @@ const QuestionBank = ({
 
     // debugger
     const [bank, setBank] = useState([]);
+    const [viewBank, setViewBank] = useState([]);
     const [valueQuestionBank, setValueQuestionBank] = useState([]);
     const [checked, setChecked] = useState([]);
     const [questionBank, setQuestionBank] = useState([]);
@@ -56,11 +80,15 @@ const QuestionBank = ({
     const [currentPage, setCurrentPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
-    const [values, setValues] = useState([]);
-    const [test, setTest] = useState('');
     const [level, setLevel] = useState('');
 
     const bankFormula = useRef();
+
+    const handlePageClick = (event) => {
+        setCurrentPage(event.selected + 1);
+        const newOffset = (event.selected * 5) % bank.length;
+        setItemOffset(newOffset);
+    };
 
     const [modalConfirmQuestionIsOpen, setConfirmQuestionIsOpen] =
         React.useState(false);
@@ -154,6 +182,7 @@ const QuestionBank = ({
                 }
                 setBank(questions);
                 setValueQuestionBank(bank);
+                setCurrentPage(bank.length > 0 ? 1 : 0);
             });
     };
 
@@ -215,6 +244,7 @@ const QuestionBank = ({
                 handleClickQuestionBank(questionsBank[i].id);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -227,34 +257,12 @@ const QuestionBank = ({
         bankFormula.current.setValue(questionBankContent || '');
     }, [questionBankContent]);
 
-    const handlePageClick = (event) => {
-        setCurrentPage(event.selected + 1);
-        const newOffset = (event.selected * 5) % values.length;
-        setItemOffset(newOffset);
-    };
-    const thead = [
-        {
-            width: '40%',
-            'max-width': '200px',
-            title: 'CONTENT',
-        },
-        {
-            width: '30%',
-            title: 'SKILLS',
-        },
-        {
-            width: '15%',
-            title: 'TOPIC',
-        },
-        {
-            width: '10%',
-            title: 'GRADE',
-        },
-        {
-            width: '10%',
-            title: 'SCORE',
-        },
-    ];
+    useEffect(() => {
+        const endOffset = itemOffset + 5;
+        setViewBank(bank.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(bank.length / 5));
+    }, [itemOffset, bank]);
+
     return (
         <div className='px-8 h-full relative'>
             <i
@@ -419,7 +427,7 @@ const QuestionBank = ({
                                 <Table
                                     checkboxTable={true}
                                     thead={thead}
-                                    tbody={bank}
+                                    tbody={viewBank}
                                     actions={[]}
                                     customCssTr='cursor-pointer'
                                     onClickTh={handleClickQuestionBank}
