@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import Button from '../components/Button'
+import CustomCheckbox from '../components/CustomeCheckbox'
 import MultiChoice from '../components/Teacher/AnswerType/MultiChoice'
+import TrueFalse from '../components/Teacher/AnswerType/TrueFalse'
 
-const answerType = 'multichoice'
+const answerType = 'multiselect'
 const answers = [
   { isTrue: true, answer: 'Hehe' },
   { isTrue: false, answer: 'Huhu' },
@@ -18,17 +20,34 @@ const AnswerQuestion = () => {
       case 'multichoice':
         return (
           <div>
-            <MultiChoice answers={answers} setAnswers={() => {}} />
+            <MultiChoice answers={answers} setAnswers={() => {}} Preview />
+          </div>
+        )
+      case 'inputanswer':
+        return (
+          <textarea
+            placeholder="Enter the answer..."
+            className="outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]"
+          ></textarea>
+        )
+      case 'truefalse':
+        return (
+          <div>
+            <TrueFalse setAnswers={() => {}} />
+          </div>
+        )
+      case 'multiselect':
+        return (
+          <div className="flex flex-col items-center gap-5">
+            {answers.map((item, i) => {
+              return <CustomCheckbox item={item} />
+            })}
           </div>
         )
       default:
         return <div>404</div>
     }
   }
-
-  //   setInterval(() => {
-  //     setCountdown((prevState) => prevState - 1)
-  //   }, 1000)
 
   return (
     <div className="flex flex-col px-10 gap-5 py-7">
