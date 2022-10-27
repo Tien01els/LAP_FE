@@ -14,7 +14,7 @@ const TeacherSidebar = () => {
       {/* logo */}
       <div className="flex flex-col justify-center items-center gap-20">
         <img src={logo} alt="" className="w-[200px] h-[100px] bg-cover"></img>
-        <TeacherMenu></TeacherMenu>
+        <TeacherMenu/>
       </div>
 
       {/* bottom */}

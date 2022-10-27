@@ -38,7 +38,7 @@ const TeacherMenu = () => {
                 <span className='font-semibold text-sm'>Test</span>
             </NavLink>
             <NavLink
-                to={'/teacher/createquestion'}
+                to={'/teacher/create-question'}
                 className={({ isActive }) =>
                     isActive
                         ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'

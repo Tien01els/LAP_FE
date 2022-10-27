@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 const MultiChoice = ({ answers, setAnswers, Preview }) => {
     const [value, setValue] = useState('');
@@ -20,7 +20,6 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
         }),
         []
     );
-    console.log(value);
 
     useEffect(() => {
         if (
@@ -28,6 +27,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
             answers.length === 4 &&
             answers.filter((item) => item.isTrue).length === 1
         ) {
+            console.log(answers);
             const trueAnswer = answers.findIndex(
                 (element) => element.isTrue === true
             );
@@ -47,12 +47,15 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
     }, [answers, convert]);
 
     useEffect(() => {
-        setAnswers([
-            { isTrue: value === 'a' ? true : false, answer: answerA },
-            { isTrue: value === 'b' ? true : false, answer: answerB },
-            { isTrue: value === 'c' ? true : false, answer: answerC },
-            { isTrue: value === 'd' ? true : false, answer: answerD },
-        ]);
+        setAnswers({
+            ...answers,
+            multichoice: [
+                { isTrue: value === 'a' ? true : false, answer: answerA },
+                { isTrue: value === 'b' ? true : false, answer: answerB },
+                { isTrue: value === 'c' ? true : false, answer: answerC },
+                { isTrue: value === 'd' ? true : false, answer: answerD },
+            ],
+        });
     }, [answerA, answerB, answerC, answerD, value, setAnswers]);
 
     return (

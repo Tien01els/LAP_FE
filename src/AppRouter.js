@@ -17,39 +17,58 @@ const TeacherAssignment = lazy(() =>
     import('./pages/TeacherPages/TeacherAssignment')
 );
 const TeacherManageStudents = lazy(() =>
-  import('./pages/TeacherPages/TeacherManageStudents'),
-)
+    import('./pages/TeacherPages/TeacherManageStudents')
+);
 
 const StudentDashboard = lazy(() =>
-  import('./pages/StudentPages/StudentDashboard'),
-)
+    import('./pages/StudentPages/StudentDashboard')
+);
 
-const AnswerQuestion = lazy(() => import('./pages/AnswerQuestion'))
+const AnswerQuestion = lazy(() => import('./pages/AnswerQuestion'));
 
 export default function AppRouter() {
-  return (
-    <Routes>
-      <Route path="/" element={<MainLayout></MainLayout>}>
-        <Route path="/" element={<TeacherDashBoard />}></Route>
-        <Route path="/teacher/dashboard" element={<TeacherDashBoard />}></Route>
-        <Route path="/teacher/class" element={<TeacherClasses />}></Route>
-        <Route path="/teacher/class/:id" element={<TeacherClass />} />
-        <Route path="/teacher/class/:id/topic" element={<Topics />} />
-        <Route
-          path="/teacher/createquestion"
-          element={<TeacherCreateQuestion />}
-        />
-        <Route
-          path="/teacher/manage-student"
-          element={<TeacherManageStudents />}
-        />
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/question" element={<AnswerQuestion />} />
-          <Route
+    return (
+        <Routes>
+            <Route path='/' element={<MainLayout></MainLayout>}>
+                <Route path='/' element={<TeacherDashBoard />}></Route>
+                <Route
+                    path='/teacher/dashboard'
+                    element={<TeacherDashBoard />}
+                ></Route>
+                <Route
+                    path='/teacher/class'
+                    element={<TeacherClasses />}
+                ></Route>
+                <Route
+                    path='/teacher/class/:classId'
+                    element={<TeacherClass />}
+                />
+                <Route
+                    path='/teacher/class/:classId/topic'
+                    element={<Topics />}
+                />
+                <Route
+                    path='/teacher/class/:classId/topic/:topicId'
+                    element={<Skills />}
+                />
+                <Route
+                    path='/teacher/create-question'
+                    element={<TeacherCreateQuestion />}
+                />
+                <Route
+                    path='/teacher/manage-student'
+                    element={<TeacherManageStudents />}
+                />
+                <Route
+                    path='/student/dashboard'
+                    element={<StudentDashboard />}
+                />
+                <Route path='/question' element={<AnswerQuestion />} />
+                <Route
                     path='/teacher/skill/:skillId/assignment/:assignmentId'
                     element={<TeacherAssignment />}
                 />
-      </Route>
-    </Routes>
-  )
+            </Route>
+        </Routes>
+    );
 }

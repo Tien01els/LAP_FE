@@ -9,13 +9,20 @@ import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 
 import { API_URL } from '../../constant';
 
-const AssignmentInfo = () => {
+const AssignmentInfo = ({
+    setSelectedAssignmentName,
+    setSelectedTotalScore,
+    setSelectedTimeDo,
+    setSelectedRedo,
+    setSelectedTimeDue,
+    setSelectedDayDue,
+}) => {
     const { assignmentId } = useParams();
 
     const [assignmentName, setAssignmentName] = useState('');
     const [selectedDay, setSelectedDay] = useState(null);
     const [time, setTime] = useState('');
-    // const [totalScore, setTotalScore] = useState(0);
+    const [totalScore, setTotalScore] = useState(0);
     const [examTime, setExamTime] = useState(0);
     const [redo, setRedo] = useState(0);
 
@@ -31,6 +38,25 @@ const AssignmentInfo = () => {
     const handleRedo = (e) => {
         setRedo(e.target.value);
     };
+
+    useEffect(() => {
+        setSelectedAssignmentName(assignmentName);
+    }, [setSelectedAssignmentName, assignmentName]);
+    useEffect(() => {
+        setSelectedTotalScore(totalScore);
+    }, [setSelectedTotalScore, totalScore]);
+    useEffect(() => {
+        setSelectedTimeDo(examTime);
+    }, [setSelectedTimeDo, examTime]);
+    useEffect(() => {
+        setSelectedRedo(redo);
+    }, [setSelectedRedo, redo]);
+    useEffect(() => {
+        setSelectedTimeDue(time);
+    }, [setSelectedTimeDue, time]);
+    useEffect(() => {
+        setSelectedDayDue(selectedDay);
+    }, [setSelectedDayDue, selectedDay]);
 
     useEffect(() => {
         axios.get(API_URL + `assignment/${assignmentId}`).then((res) => {
@@ -51,6 +77,7 @@ const AssignmentInfo = () => {
             });
             setExamTime(assignment.time);
             setRedo(assignment.redo);
+            setTotalScore(assignment.totalScore);
         });
     }, [assignmentId]);
 

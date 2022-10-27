@@ -22,17 +22,7 @@ const Table = ({
                                     scope='col'
                                     className='p-4'
                                     style={{ width: '5%' }}
-                                >
-                                    <div className='flex items-center'>
-                                        <input
-                                            type='checkbox'
-                                            className='w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                                        />
-                                        <label className='sr-only'>
-                                            checkbox
-                                        </label>
-                                    </div>
-                                </th>
+                                ></th>
                             )}
                             {thead &&
                                 thead.map((head, index, arr) => {
@@ -70,7 +60,6 @@ const Table = ({
                                         return key !== 'id';
                                     }
                                 );
-                                console.log(tbody);
                                 return (
                                     <tr
                                         key={uuidv4()}
@@ -90,7 +79,7 @@ const Table = ({
                                                         checked={checked.includes(
                                                             body.id
                                                         )}
-                                                        className='w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                                                        className='w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer'
                                                         onChange={() =>
                                                             onClickTh(body.id)
                                                         }
