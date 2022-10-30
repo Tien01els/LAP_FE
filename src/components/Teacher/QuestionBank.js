@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
@@ -12,11 +12,7 @@ import TrueFalse from './AnswerType/TrueFalse';
 import InputAnswer from './AnswerType/InputAnswer';
 import MultiSelect from './AnswerType/MultiSelect';
 
-const QuestionBank = ({
-    questionsBank,
-    onUpdateQuestionBank,
-    onCloseModalBank,
-}) => {
+const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank }) => {
     const thead = [
         {
             width: '40%',
@@ -73,7 +69,17 @@ const QuestionBank = ({
     const [questionBankContent, setQuestionBankContent] = useState('');
     const [enableHitQuestionBank, setEnableHitQuestionBank] = useState(false);
     const [hintQuestionBank, setHintQuestionBank] = useState(false);
-    const [optionQuestionBank, setOptionQuestionBank] = useState({});
+    const [optionQuestionBank, setOptionQuestionBank] = useState({
+        multiChoice: [
+            { isTrue: false, answers: '' },
+            { isTrue: false, answers: '' },
+            { isTrue: false, answers: '' },
+            { isTrue: false, answers: '' },
+        ],
+        multiSelect: [],
+        input: [],
+        trueFalse: [],
+    });
     const [selectedOptionType, setSelectedOptionType] = useState({});
     const [score, setScore] = useState(0);
 
@@ -90,8 +96,7 @@ const QuestionBank = ({
         setItemOffset(newOffset);
     };
 
-    const [modalConfirmQuestionIsOpen, setConfirmQuestionIsOpen] =
-        React.useState(false);
+    const [modalConfirmQuestionIsOpen, setConfirmQuestionIsOpen] = React.useState(false);
 
     const handleOpenConfirmQuestion = () => {
         const questionChecked = questionBank.map((question) => {
@@ -148,7 +153,19 @@ const QuestionBank = ({
         setQuestionBankContent(data?.content || '');
         setEnableHitQuestionBank(!!data?.hint);
         setHintQuestionBank(data?.hint || '');
-        setOptionQuestionBank(data?.option || []);
+        setOptionQuestionBank(
+            data?.option || {
+                multiChoice: [
+                    { isTrue: false, answers: '' },
+                    { isTrue: false, answers: '' },
+                    { isTrue: false, answers: '' },
+                    { isTrue: false, answers: '' },
+                ],
+                multiSelect: [],
+                input: [],
+                trueFalse: [],
+            }
+        );
         setLevel(data?.level || '');
         setSelectedOptionType(Selectoptions[data?.questionTypeId - 1] || '');
         setScore(data?.score || 0);
@@ -195,9 +212,7 @@ const QuestionBank = ({
                 label: 'All Grades',
             });
             for (let i = 0; i < grades.length; i++)
-                option.push(
-                    convertResToOption(grades[i].id, grades[i].gradeName)
-                );
+                option.push(convertResToOption(grades[i].id, grades[i].gradeName));
             setGrades(option);
         });
     };
@@ -211,9 +226,7 @@ const QuestionBank = ({
                 label: 'All Topics',
             });
             for (let i = 0; i < topics.length; i++)
-                option.push(
-                    convertResToOption(topics[i].id, topics[i].topicName)
-                );
+                option.push(convertResToOption(topics[i].id, topics[i].topicName));
             setTopics(option);
         });
     };
@@ -227,9 +240,7 @@ const QuestionBank = ({
                 label: 'All Skills',
             });
             for (let i = 0; i < skills.length; i++)
-                option.push(
-                    convertResToOption(skills[i].id, skills[i].skillName)
-                );
+                option.push(convertResToOption(skills[i].id, skills[i].skillName));
             setSkills(option);
         });
     };
@@ -290,9 +301,7 @@ const QuestionBank = ({
                         <span className='flex text-xl font-medium gap-2'>
                             Score:
                             <div className='flex font-normal'>
-                                <div className='flex justify-end min-w-[32px]'>
-                                    {score || 0}
-                                </div>
+                                <div className='flex justify-end min-w-[32px]'>{score || 0}</div>
                                 <span>.pt</span>
                             </div>
                         </span>
@@ -331,9 +340,7 @@ const QuestionBank = ({
                             <div className='px-6 py-3 text-white flex flex-row gap-4 items-center bg-primary rounded-md overflow-hidden w-full break-words'>
                                 <i className='far fa-lightbulb'></i>
                                 <span className=' whitespace-pre-line'>
-                                    {hintQuestionBank
-                                        ? hintQuestionBank
-                                        : 'Hint'}
+                                    {hintQuestionBank ? hintQuestionBank : 'Hint'}
                                 </span>
                             </div>
                         )}
@@ -442,8 +449,7 @@ const QuestionBank = ({
                                     breakLabel='...'
                                     nextLabel={
                                         <button>
-                                            Next{' '}
-                                            <i className='fas fa-angle-right'></i>
+                                            Next <i className='fas fa-angle-right'></i>
                                         </button>
                                     }
                                     onPageChange={handlePageClick}
@@ -452,8 +458,7 @@ const QuestionBank = ({
                                     pageCount={pageCount}
                                     previousLabel={
                                         <button>
-                                            <i className='fas fa-angle-left'></i>{' '}
-                                            Previous
+                                            <i className='fas fa-angle-left'></i> Previous
                                         </button>
                                     }
                                     renderOnZeroPageCount={null}
@@ -464,9 +469,7 @@ const QuestionBank = ({
                         </div>
                     </div>
                     <div>
-                        <button onClick={handleOpenConfirmQuestion}>
-                            Save Questions
-                        </button>
+                        <button onClick={handleOpenConfirmQuestion}>Save Questions</button>
                         <Modal
                             isOpen={modalConfirmQuestionIsOpen}
                             style={{
@@ -487,9 +490,7 @@ const QuestionBank = ({
                                 ></i> */}
                                 <div className='flex flex-col justify-between pt-8 h-full'>
                                     <div className=''>
-                                        <span>
-                                            Do you want add these questions?
-                                        </span>
+                                        <span>Do you want add these questions?</span>
                                         <Table
                                             checkboxTable={false}
                                             thead={thead}
@@ -500,16 +501,8 @@ const QuestionBank = ({
                                         />
                                     </div>
                                     <div className='flex justify-between self-center w-64 mb-4'>
-                                        <button
-                                            onClick={handleCloseConfirmQuestion}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            onClick={handleConfirmQuestionBank}
-                                        >
-                                            Save
-                                        </button>
+                                        <button onClick={handleCloseConfirmQuestion}>Cancel</button>
+                                        <button onClick={handleConfirmQuestionBank}>Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -521,4 +514,4 @@ const QuestionBank = ({
     );
 };
 
-export default memo(QuestionBank);
+export default QuestionBank;
