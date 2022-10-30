@@ -43,13 +43,21 @@ const TeacherAssignment = () => {
 
     const [enableHint, setEnableHint] = useState(false);
     const [hint, setHint] = useState('');
-    const [answers, setAnswers] = useState([]);
+    const [answers, setAnswers] = useState({
+        multiChoice: [
+            { isTrue: false, answer: '' },
+            { isTrue: false, answer: '' },
+            { isTrue: false, answer: '' },
+            { isTrue: false, answer: '' },
+        ],
+        multiSelect: [],
+        input: [],
+        trueFalse: [],
+    });
     const [currentQid, setCurrentQid] = useState('');
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-    const [selectedSkills, setSelectedSkills] = useState(() =>
-        skillId ? [skillId] : []
-    );
+    const [selectedSkills, setSelectedSkills] = useState(() => (skillId ? [skillId] : []));
     const [selectedLevel, setSelectedLevel] = useState('');
     const [selectedAssignmentName, setSelectedAssignmentName] = useState('');
     const [selectedTotalScore, setSelectedTotalScore] = useState('');
@@ -59,8 +67,6 @@ const TeacherAssignment = () => {
     const [selectedDayDue, setSelectedDayDue] = useState('');
 
     const [modalBankIsOpen, setBankIsOpen] = useState(false);
-    const [questionsBank, setQuestionsBank] = useState([]);
-    const [questionsNew, setQuestionsNew] = useState([]);
 
     const handleOpenModalBank = () => {
         setBankIsOpen(true);
@@ -71,8 +77,7 @@ const TeacherAssignment = () => {
     };
 
     const handleUpdateQuestionBank = (questionBank) => {
-        setQuestionsBank(questionBank);
-        setQuestionList([...questionsNew, ...questionBank]);
+        setQuestionList([...questionBank]);
     };
     const handleScore = (e) => {
         const score = Math.max(0, Math.min(100, Number(e.target.value)));
@@ -89,12 +94,21 @@ const TeacherAssignment = () => {
         setHint('');
         setEnableHint(false);
         setSelectedOption(Selectoptions[0]);
-        setAnswers([]);
+        setAnswers({
+            multiChoice: [
+                { isTrue: false, answer: '' },
+                { isTrue: false, answer: '' },
+                { isTrue: false, answer: '' },
+                { isTrue: false, answer: '' },
+            ],
+            multiSelect: [],
+            input: [],
+            trueFalse: [],
+        });
         forceUpdate();
         setSelectedLevel('');
         selectLevel.current.setValue('');
     };
-
     const convertResToOption = (value, label) => {
         return {
             value: value,
@@ -117,12 +131,7 @@ const TeacherAssignment = () => {
 
     const addQuestionItem = () => {
         if (questionList.find((item) => item.id === currentQid)) {
-            let index = questionList.findIndex(
-                (item) => item.id === currentQid
-            );
-            let indexNew = questionsNew.findIndex(
-                (itemNew) => itemNew.id === currentQid
-            );
+            let index = questionList.findIndex((item) => item.id === currentQid);
             const questionUpdate = {
                 content: question,
                 option: answers,
@@ -146,8 +155,6 @@ const TeacherAssignment = () => {
                         questionTypeId: res.data?.questionTypeId,
                         teacherId: res.data?.teacherId,
                     };
-                    questionsNew[indexNew] = questionList[index];
-                    setQuestionsNew([...questionsNew]);
                     setQuestionList([...questionList]);
                     resetValue();
                 })
@@ -178,19 +185,13 @@ const TeacherAssignment = () => {
                     teacherId: res.data?.teacherId,
                 };
                 setQuestionList([...questionList, questionNewCreate]);
-                setQuestionsNew([...questionsNew, questionNewCreate]);
                 resetValue();
             })
             .catch((err) => console.log(err));
     };
-
     const removeQuestionItem = (id) => {
         const newList = questionList.filter((item) => item.id !== id);
-        const currentQuestionBank = questionsBank.filter(
-            (item) => item.id !== id
-        );
         setQuestionList(newList);
-        setQuestionsBank(currentQuestionBank);
         resetValue();
     };
     const handleSaveAssignment = () => {
@@ -205,28 +206,43 @@ const TeacherAssignment = () => {
             dateDue: moment(due).format('YYYY-MM-DD HH:mm:ss'),
             teacherId: 1,
         };
-        axios
-            .put(API_URL + `assignment/${assignmentId}`, assignment)
-            .then((res) => {
-                const assignmentQuestions = questionList.map((question) => ({
+        axios.put(API_URL + `assignment/${assignmentId}`, assignment).then((res) => {
+            const questionIds = questionList.map((question) => question.id);
+            axios
+                .put(API_URL + `assignment-question`, {
                     assignmentId,
-                    questionId: question.id,
-                }));
-                axios
-                    .post(API_URL + `assignment-question`, assignmentQuestions)
-                    .then((res) => {
-                        console.log(res.data);
-                    });
-            });
+                    questionIds,
+                })
+                .then((res) => {
+                    console.log(res.data);
+                });
+        });
     };
+
+    useEffect(() => {
+        axios.get(API_URL + `assignment-question/assignment/${assignmentId}`).then((res) => {
+            const assignmentQuestion = res.data;
+            setQuestionList(
+                assignmentQuestion.map((question) => ({
+                    id: question?.questionId,
+                    content: question?.content,
+                    hint: question?.hint,
+                    score: question?.score,
+                    option: question?.option,
+                    level: question?.level,
+                    questionTypeId: question?.questionTypeId,
+                    teacherId: question?.teacherId,
+                }))
+            );
+        });
+    }, [assignmentId]);
+
     useEffect(() => {
         if (selectedLevel) {
             if (selectedLevel.toLowerCase() === 'easy') setScore(5);
             if (selectedLevel.toLowerCase() === 'medium') setScore(10);
             if (selectedLevel.toLowerCase() === 'hard') setScore(20);
-            selectLevel.current.setValue(
-                convertResToOption(selectedLevel, selectedLevel)
-            );
+            selectLevel.current.setValue(convertResToOption(selectedLevel, selectedLevel));
         }
     }, [selectedLevel, score]);
 
@@ -241,9 +257,7 @@ const TeacherAssignment = () => {
                 <div className='w-[800px] bg-white rounded-lg shadow-lg flex flex-col justify-between my-4 px-10 py-5'>
                     <div className='flex flex-col gap-4'>
                         <div className='flex justify-between items-center'>
-                            <span className='font-medium text-xl'>
-                                Question
-                            </span>
+                            <span className='font-medium text-xl'>Question</span>
                             <div className='flex flex-row gap-3 items-center'>
                                 <Select
                                     ref={selectLevel}
@@ -317,10 +331,7 @@ const TeacherAssignment = () => {
                                     className='hidden'
                                     id='hint'
                                 />
-                                <label
-                                    htmlFor='hint'
-                                    className='cursor-pointer select-none py-1'
-                                >
+                                <label htmlFor='hint' className='cursor-pointer select-none py-1'>
                                     {enableHint ? (
                                         <span className='bg-primary rounded-md px-2 border-2 border-primary py-1 text-white duration-300'>
                                             Hint
@@ -401,9 +412,7 @@ const TeacherAssignment = () => {
                 <div className='flex flex-col my-4 gap-3'>
                     <div className='bg-white h-[34vh] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between'>
                         <AssignmentInfo
-                            setSelectedAssignmentName={
-                                setSelectedAssignmentName
-                            }
+                            setSelectedAssignmentName={setSelectedAssignmentName}
                             setSelectedTotalScore={setSelectedTotalScore}
                             setSelectedTimeDo={setSelectedTimeDo}
                             setSelectedRedo={setSelectedRedo}
@@ -414,9 +423,7 @@ const TeacherAssignment = () => {
                     <div className='h-[60vh] bg-white w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
                         <div>
                             <div className='flex justify-between px-10 pt-8'>
-                                <span className='font-medium text-xl'>
-                                    Question list
-                                </span>
+                                <span className='font-medium text-xl'>Question list</span>
                                 <div>
                                     <button
                                         className='btn btn-primary'
@@ -438,19 +445,14 @@ const TeacherAssignment = () => {
                                         ariaHideApp={false}
                                     >
                                         <QuestionBank
-                                            questionsBank={questionsBank}
-                                            onUpdateQuestionBank={
-                                                handleUpdateQuestionBank
-                                            }
-                                            onCloseModalBank={
-                                                handleCloseModalBank
-                                            }
+                                            questionsBank={questionList}
+                                            onUpdateQuestionBank={handleUpdateQuestionBank}
+                                            onCloseModalBank={handleCloseModalBank}
                                         />
                                     </Modal>
                                 </div>
                             </div>
                             <div className='h-[300px] rounded-sm mx-5 my-5 px-2 py-2 flex flex-col gap-4 overflow-y-auto duration-1000'>
-                                {console.log(questionList)}
                                 {questionList.map((val, i) => (
                                     <QuestionItem
                                         question={val}
@@ -459,9 +461,7 @@ const TeacherAssignment = () => {
                                         removeQuestionItem={() => {
                                             removeQuestionItem(val.id);
                                         }}
-                                        handleReviewQuestion={
-                                            handleReviewQuestion
-                                        }
+                                        handleReviewQuestion={handleReviewQuestion}
                                     />
                                 ))}
                             </div>
