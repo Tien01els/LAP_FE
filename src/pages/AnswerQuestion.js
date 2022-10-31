@@ -4,39 +4,49 @@ import CustomCheckbox from '../components/CustomeCheckbox'
 import MultiChoice from '../components/Teacher/AnswerType/MultiChoice'
 import TrueFalse from '../components/Teacher/AnswerType/TrueFalse'
 
-const answerType = 'multiselect'
-const answers = [
-  { isTrue: true, answer: 'Hehe' },
-  { isTrue: false, answer: 'Huhu' },
-  { isTrue: false, answer: 'Hihi' },
-  { isTrue: false, answer: 'hoho' },
-]
+const answerType = 'inputAnswer'
+const answers = {
+  multiChoice: [
+    { isTrue: true, answer: 'Hehe' },
+    { isTrue: false, answer: 'Huhu' },
+    { isTrue: false, answer: 'Hihi' },
+    { isTrue: false, answer: 'hoho' },
+  ],
+  multiSelect: [
+    { isTrue: true, answer: 'Hehe' },
+    { isTrue: false, answer: 'Huhu' },
+    { isTrue: false, answer: 'Hihi' },
+    { isTrue: false, answer: 'hoho' },
+    { isTrue: false, answer: 'hyhy' },
+    { isTrue: false, answer: 'hehe' },
+  ],
+}
 
 const AnswerQuestion = () => {
   //   const [countdown, setCountdown] = useState()
 
   const renderAnswer = () => {
     switch (answerType) {
-      case 'multichoice':
+      case 'multiChoice':
         return (
           <div>
             <MultiChoice answers={answers} setAnswers={() => {}} Preview />
           </div>
         )
-      case 'inputanswer':
+      case 'inputAnswer':
         return (
           <textarea
             placeholder="Enter the answer..."
             className="outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]"
           ></textarea>
         )
-      case 'truefalse':
+      case 'trueFalse':
         return (
           <div>
             <TrueFalse setAnswers={() => {}} />
           </div>
         )
-      case 'multiselect':
+      case 'multiSelect':
         return (
           <div className="flex flex-col items-center gap-5">
             {answers.map((item, i) => {
@@ -89,7 +99,7 @@ const AnswerQuestion = () => {
               <span className="font-semibold text-2xl text-primary">
                 01 : 10
               </span>
-              <div className="flex flex-wrap gap-5 max-h-[300px] px-5 overflow-y-auto py-3">
+              <div className="flex flex-wrap gap-5 h-fit px-5 overflow-y-auto py-3">
                 {new Array(20).fill(0).map((item, i) => {
                   return (
                     <div className="h-[40px] w-[30px] flex flex-col outline outline-2 outline-gray-500 hover:outline-green-500 rounded overflow-hidden transition-all cursor-pointer select-none">
