@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css'
 import { Calendar } from '@hassanmojab/react-modern-calendar-datepicker'
@@ -16,9 +17,55 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper'
 
 import achievementImg from '../../assets/image/achievement.png'
+import axios from 'axios'
+import { API_URL } from '../../constant'
+import moment from 'moment'
 
 const StudentDashboard = () => {
   const [selectedDay, setSelectedDay] = useState(null)
+
+  const [assignments, setAssignments] = useState([])
+  const [assignmentDays, setAssignmentsDays] = useState([])
+
+  let studentId = 1
+
+  useEffect(() => {
+    axios
+      .get(API_URL + 'student-assignment/' + studentId)
+      .then((res) => {
+        setAssignments(res?.data)
+        handleDays(res?.data)
+      })
+      .catch((err) => console.log(err))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleDays = async (assignments) => {
+    let days = []
+
+    // [
+    //   {
+    //     year: 2022,
+    //     month: 9,
+    //     day: 26,
+    //     className: 'deadline',
+    //   },
+    // ]
+
+    for (let i = 0; i < assignments.length; i++) {
+      days.push({
+        year: parseInt(moment(assignments[i]?.dateDue).format('YYYY')),
+        month: parseInt(moment(assignments[i]?.dateDue).format('MM')),
+        day: parseInt(moment(assignments[i]?.dateDue).format('DD')),
+        className: 'deadline',
+      })
+    }
+
+    console.log(days)
+
+    await setAssignmentsDays(days)
+  }
+
   const averageScore = 68
   return (
     <div className="px-10 py-7 flex flex-row gap-5 h-[full] text-gray-800">
@@ -95,18 +142,18 @@ const StudentDashboard = () => {
           <div className="w-full px-4 py-3 flex flex-col bg-white shadow-lg rounded-lg">
             <div className="flex flex-row items-center px-2 justify-between">
               <h2 className="font-semibold font-inter text-gray-600">
-                Lasted Topics
+                Class Topics
               </h2>
               <span className="text-xs text-primary cursor-pointer select-none">
                 View all
               </span>
             </div>
-            <div className="grid grid-cols-1 text-gray-800 gap-3 py-3 h-full divide-y">
+            <div className="flex flex-col h-[297px] text-gray-800 gap-3 py-3 divide-y">
               {new Array(5).fill(0).map((val, i) => {
                 return (
                   <div
                     key={i}
-                    className="flex pt-5 px-3 flex-row justify-between items-center h-full"
+                    className="flex pt-5 px-3 flex-row justify-between items-center "
                   >
                     <span className="truncate max-w-[50%]">
                       Unit - <span className="text-gray-500">{i}</span>
@@ -127,18 +174,64 @@ const StudentDashboard = () => {
           </div>
         </div>
         {/* foot */}
-        <div className="w-full h-[50px] bg-white rounded-lg shadow-lg"></div>
+        <div className="flex items-center justify-center px-7 w-full h-[50px] bg-white rounded-lg shadow-lg">
+          <span>Class Name</span>
+        </div>
       </div>
       {/* calendar */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col h-[500px] gap-4">
         <Calendar
           colorPrimary="#75b9cc"
           value={selectedDay}
           onChange={setSelectedDay}
-          calendarClassName="custom-calendar"
           calendarTodayClassName="custom-today-day"
+          customDaysClassName={assignmentDays}
+          calendarClassName="custom-calendar"
         />
-        <div className="h-full w-full bg-white rounded-lg shadow-lg"></div>
+        <div className="w-full  py-4 flex flex-col gap-2 bg-primary rounded-lg shadow-lg">
+          <span className="text-white px-5 text-base font-semibold font-inter">
+            Deadlines
+          </span>
+          <div className="flex flex-col py-1 mx-5 pr-2 gap-3 h-[210px] overflow-y-auto">
+            {assignments
+              .filter(
+                (item) =>
+                  parseInt(moment(item.dateDue).format('DD')) ===
+                  selectedDay?.day,
+              )
+              .map((item, i) => {
+                return (
+                  <motion.div
+                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    layout
+                    key={i}
+                    className="bg-white w-full px-5 py-3 h-[60px] flex justify-between items-center rounded-lg font-inter font-semibold text-gray-600"
+                  >
+                    <div className="flex flex-col max-w-[200px] gap-2">
+                      <span className="text-sm truncate">
+                        {item?.assignmentName}
+                      </span>
+                      <div className="flex flex-row gap-2 items-center text-xs text-gray-500">
+                        <span>
+                          {selectedDay.day +
+                            '-' +
+                            moment(selectedDay?.month.toString()).format('MMM')}
+                        </span>
+                        <span>
+                          Due : {moment(item.dateDue).format('hh:mm A')}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xs cursor-pointer">View</span>
+                    </div>
+                  </motion.div>
+                )
+              })}
+          </div>
+        </div>
       </div>
     </div>
   )
