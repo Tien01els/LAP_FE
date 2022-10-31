@@ -19,6 +19,8 @@ import TrueFalse from '../../components/Teacher/AnswerType/TrueFalse';
 import InputAnswer from '../../components/Teacher/AnswerType/InputAnswer';
 import MultiSelect from '../../components/Teacher/AnswerType/MultiSelect';
 import QuestionBank from '../../components/Teacher/QuestionBank';
+import GenerateQuestionForAssignenment from '../../components/Teacher/GenerateQuestionForAssignenment';
+import QuestionOption from '../../components/Teacher/QuestionOption';
 
 const TeacherAssignment = () => {
     const teacherId = 1;
@@ -28,13 +30,7 @@ const TeacherAssignment = () => {
         { value: 3, label: 'Input' },
         { value: 4, label: 'Multi Select' },
     ];
-    const levelOption = [
-        { value: 'Easy', label: 'Easy' },
-        { value: 'Medium', label: 'Medium' },
-        { value: 'Hard', label: 'Hard' },
-    ];
     const { skillId, assignmentId } = useParams();
-    const selectLevel = useRef('');
 
     const [question, setQuestion] = useState('');
     const [questionList, setQuestionList] = useState([]);
@@ -57,6 +53,8 @@ const TeacherAssignment = () => {
     const [currentQid, setCurrentQid] = useState('');
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
+    const [selectedGrade, setSelectedGrade] = useState('');
+    const [selectedTopic, setSelectedTopic] = useState('');
     const [selectedSkills, setSelectedSkills] = useState(() => (skillId ? [skillId] : []));
     const [selectedLevel, setSelectedLevel] = useState('');
     const [selectedAssignmentName, setSelectedAssignmentName] = useState('');
@@ -67,6 +65,7 @@ const TeacherAssignment = () => {
     const [selectedDayDue, setSelectedDayDue] = useState('');
 
     const [modalBankIsOpen, setBankIsOpen] = useState(false);
+    const [modalGenerateIsOpen, setGenerateIsOpen] = useState(false);
 
     const handleOpenModalBank = () => {
         setBankIsOpen(true);
@@ -74,6 +73,14 @@ const TeacherAssignment = () => {
 
     const handleCloseModalBank = () => {
         setBankIsOpen(false);
+    };
+
+    const handleOpenModalGenerate = () => {
+        setGenerateIsOpen(true);
+    };
+
+    const handleCloseModalGenerate = () => {
+        setGenerateIsOpen(false);
     };
 
     const handleUpdateQuestionBank = (questionBank) => {
@@ -107,13 +114,6 @@ const TeacherAssignment = () => {
         });
         forceUpdate();
         setSelectedLevel('');
-        selectLevel.current.setValue('');
-    };
-    const convertResToOption = (value, label) => {
-        return {
-            value: value,
-            label: label,
-        };
     };
 
     const handleReviewQuestion = (data) => {
@@ -122,11 +122,17 @@ const TeacherAssignment = () => {
         if (data?.hint !== '') {
             setEnableHint(true);
             setHint(data?.hint);
+        } else {
+            setEnableHint(false);
+            setHint('');
         }
         setAnswers(data?.option);
         setScore(data?.score);
         setSelectedLevel(data?.level);
         setSelectedOption(Selectoptions[data?.questionTypeId - 1]);
+        setSelectedGrade(data?.gradeId);
+        setSelectedTopic(data?.topicId);
+        setSelectedSkills(data?.skillIds);
     };
 
     const addQuestionItem = () => {
@@ -154,6 +160,9 @@ const TeacherAssignment = () => {
                         level: res.data?.level,
                         questionTypeId: res.data?.questionTypeId,
                         teacherId: res.data?.teacherId,
+                        gradeId: res.data?.gradeId,
+                        topicId: res.data?.topicId,
+                        skillIds: res.data?.skillIds,
                     };
                     setQuestionList([...questionList]);
                     resetValue();
@@ -183,6 +192,9 @@ const TeacherAssignment = () => {
                     level: res.data?.level,
                     questionTypeId: res.data?.questionTypeId,
                     teacherId: res.data?.teacherId,
+                    gradeId: res.data?.gradeId,
+                    topicId: res.data?.topicId,
+                    skillIds: res.data?.skillIds,
                 };
                 setQuestionList([...questionList, questionNewCreate]);
                 resetValue();
@@ -220,6 +232,14 @@ const TeacherAssignment = () => {
     };
 
     useEffect(() => {
+        axios.get(API_URL + `skill/${skillId}`).then((res) => {
+            setSelectedGrade(res.data.gradeId);
+            setSelectedTopic(res.data.topicId);
+            setSelectedSkills([res.data.id]);
+        });
+    }, [skillId]);
+
+    useEffect(() => {
         axios.get(API_URL + `assignment-question/assignment/${assignmentId}`).then((res) => {
             const assignmentQuestion = res.data;
             setQuestionList(
@@ -232,6 +252,9 @@ const TeacherAssignment = () => {
                     level: question?.level,
                     questionTypeId: question?.questionTypeId,
                     teacherId: question?.teacherId,
+                    gradeId: question?.gradeId,
+                    topicId: question?.topicId,
+                    skillIds: question?.skillIds,
                 }))
             );
         });
@@ -242,7 +265,6 @@ const TeacherAssignment = () => {
             if (selectedLevel.toLowerCase() === 'easy') setScore(5);
             if (selectedLevel.toLowerCase() === 'medium') setScore(10);
             if (selectedLevel.toLowerCase() === 'hard') setScore(20);
-            selectLevel.current.setValue(convertResToOption(selectedLevel, selectedLevel));
         }
     }, [selectedLevel, score]);
 
@@ -256,9 +278,9 @@ const TeacherAssignment = () => {
             <div className='flex flex-row gap-7 justify-center w-full h-full'>
                 <div className='w-[800px] bg-white rounded-lg shadow-lg flex flex-col justify-between my-4 px-10 py-5'>
                     <div className='flex flex-col gap-4'>
-                        <div className='flex justify-between items-center'>
-                            <span className='font-medium text-xl'>Question</span>
-                            <div className='flex flex-row gap-3 items-center'>
+                        {/* <div className='flex justify-between items-center'>
+                           <span className='font-medium text-xl'>Question</span>
+                           <div className='flex flex-row gap-3 items-center'>
                                 <Select
                                     ref={selectLevel}
                                     options={levelOption}
@@ -275,7 +297,21 @@ const TeacherAssignment = () => {
                                     />
                                     <span>pt</span>
                                 </div>
-                            </div>
+                            </div> *
+                        </div> */}
+                        <div className='h-[88px]'>
+                            <QuestionOption
+                                setSelectedSkills={setSelectedSkills}
+                                selectedSkills={selectedSkills}
+                                setSelectedLevel={setSelectedLevel}
+                                selectedLevel={selectedLevel}
+                                setSelectedGrade={setSelectedGrade}
+                                selectedGrade={selectedGrade}
+                                setSelectedTopic={setSelectedTopic}
+                                selectedTopic={selectedTopic}
+                                handleScore={handleScore}
+                                score={score}
+                            />
                         </div>
 
                         <math-field
@@ -410,7 +446,7 @@ const TeacherAssignment = () => {
                     </div>
                 </div>
                 <div className='flex flex-col my-4 gap-3'>
-                    <div className='bg-white h-[34vh] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between'>
+                    <div className='bg-white h-[280px] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between'>
                         <AssignmentInfo
                             setSelectedAssignmentName={setSelectedAssignmentName}
                             setSelectedTotalScore={setSelectedTotalScore}
@@ -420,7 +456,7 @@ const TeacherAssignment = () => {
                             setSelectedDayDue={setSelectedDayDue}
                         />
                     </div>
-                    <div className='h-[60vh] bg-white w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
+                    <div className='grow bg-white w-[400px] pb-7 rounded-lg shadow-lg flex flex-col justify-between'>
                         <div>
                             <div className='flex justify-between px-10 pt-8'>
                                 <span className='font-medium text-xl'>Question list</span>
@@ -466,7 +502,31 @@ const TeacherAssignment = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className='flex justify-center items-center'>
+                        <div className='flex justify-center items-center gap-5'>
+                            <Button
+                                className='px-28 border-none shadow-lg'
+                                onClick={handleOpenModalGenerate}
+                            >
+                                Generate question
+                            </Button>
+                            <Modal
+                                isOpen={modalGenerateIsOpen}
+                                style={{
+                                    top: '0',
+                                    left: '0',
+                                    right: 'auto',
+                                    bottom: 'auto',
+                                    marginRight: '-50%',
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                                contentLabel='Example Modal'
+                                ariaHideApp={false}
+                            >
+                                <GenerateQuestionForAssignenment
+                                    listCurrentQuestion={questionList}
+                                    onCloseModalGenerate={handleCloseModalGenerate}
+                                />
+                            </Modal>
                             <Button
                                 className='px-28 border-none shadow-lg'
                                 onClick={handleSaveAssignment}
