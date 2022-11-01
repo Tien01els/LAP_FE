@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 import { API_URL } from '../../constant';
 
-const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGenerate }) => {
+const GenerateQuestionForAssignenment = ({
+    selectedGrade,
+    selectedTopic,
+    selectedSkills,
+    listCurrentQuestion,
+    onCloseModalGenerate,
+    onUpdateGenerateQuestion,
+}) => {
     const teacherId = 1;
     const { assignmentId } = useParams();
 
@@ -20,6 +27,11 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
     const [listGrade, setListGrade] = useState([]);
     const [listTopic, setListTopic] = useState([]);
     const [listSkill, setListSkill] = useState([]);
+
+    const selectGrade = useRef();
+    const selectTopic = useRef();
+    const selectSkill = useRef();
+    const prevSkill = useRef(selectedSkills[0]);
 
     const levelOptions = [
         { value: 'Easy', label: 'Easy' },
@@ -64,6 +76,7 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
             return values;
         });
     };
+
     const handleGenerateQuestionForAssignment = () => {
         const currentQuestions = listCurrentQuestion.map((question) => question.id);
         const conditions = {
@@ -78,7 +91,8 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
             currentQuestions: currentQuestions || [],
         };
         axios.post(API_URL + `assignment-question/generate`, conditions).then((res) => {
-            console.log(res.data);
+            onUpdateGenerateQuestion(res.data);
+            onCloseModalGenerate();
         });
     };
 
@@ -111,6 +125,37 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
             setListSkill(option);
         });
     }, [topicId]);
+
+    useEffect(() => {
+        if (listGrade.length > 0) {
+            const grade = listGrade.find((grade) => grade.value === selectedGrade);
+            selectGrade.current.setValue(convertResToOption(grade.value, grade.label));
+        }
+    }, [selectedGrade, listGrade]);
+
+    useEffect(() => {
+        if (listTopic.length > 0) {
+            const topic = listTopic.find((topic) => topic.value === selectedTopic);
+            selectTopic.current.setValue(convertResToOption(topic.value, topic.label));
+        }
+    }, [selectedTopic, listTopic]);
+
+    useEffect(() => {
+        if (listSkill.length === 0) {
+            prevSkill.current = null;
+        }
+        if (
+            selectedSkills &&
+            listSkill.length > 0 &&
+            selectedSkills.length > 0 &&
+            prevSkill.current !== selectedSkills[0]
+        ) {
+            prevSkill.current = selectedSkills[0];
+            const skill = listSkill.find((skill) => skill.value === selectedSkills[0]);
+
+            if (skill) selectSkill.current.setValue(convertResToOption(skill.value, skill.label));
+        }
+    }, [selectedSkills, listSkill]);
 
     return (
         <div className='px-8 h-full relative'>
@@ -172,6 +217,7 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
                     <div className='flex flex-row gap-4'>
                         <span className='flex text-xl font-medium gap-2 '>Grade:</span>
                         <Select
+                            ref={selectGrade}
                             options={listGrade}
                             placeholder='Select grade...'
                             onChange={(e) => setGradeId(e.value)}
@@ -179,6 +225,7 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
                         />
                         <span className='flex text-xl font-medium gap-2 '>Topic:</span>
                         <Select
+                            ref={selectTopic}
                             options={listTopic}
                             placeholder='Select topic...'
                             onChange={(e) => setTopicId(e.value)}
@@ -191,6 +238,7 @@ const GenerateQuestionForAssignenment = ({ listCurrentQuestion, onCloseModalGene
                         </span>
                         <div>
                             <Select
+                                ref={selectSkill}
                                 placeholder='Select question types...'
                                 closeMenuOnSelect={false}
                                 isMulti

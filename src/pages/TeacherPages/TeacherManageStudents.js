@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Button from '../../components/Button';
-import StudentCard from '../../components/Teacher/StudentCard';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+
+import Button from '../../components/Button';
+import StudentCard from '../../components/Teacher/StudentCard';
 import CustomProgressBar from '../../components/CustomProgressBar';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import achievementImg from '../../assets/image/achievement.png';
@@ -40,7 +42,7 @@ const customStyles = {
 };
 
 const TeacherManageStudents = () => {
-    const [averageScore, setAverageScore] = useState(56);
+    const [averageScore, setAverageScore] = useState(0);
     const [filterStudent, setFilterStudent] = useState('All');
     const [filteredStudentList, setFilteredStudentList] = useState([]);
     const [studentList, setStudentList] = useState([]);
@@ -49,24 +51,24 @@ const TeacherManageStudents = () => {
     const [addStatus, setAddStatus] = useState('');
     const studentEmail = useRef();
 
+    const { classId } = useParams();
     const toggleModal = () => {
         setAddStudentModal(!addStudentModal);
     };
 
-    useEffect(() => {
-        // load students
+    const handleGetStudentOfClass = useCallback(() => {
         axios
-            .get(API_URL + 'student/class/1')
+            .get(API_URL + `student/class/${classId}`)
             .then((res) => {
-                console.log(res.data);
                 // res.data[0].averageScore = 100;
                 // res.data[1].averageScore = 49;
                 setStudentList(res.data);
                 setStudentInfo(res.data[0]);
                 setFilteredStudentList(res.data);
+                console.log(res.data);
             })
             .catch((err) => console.log(err));
-    }, []);
+    }, [classId]);
 
     const handleScoreFilter = (filterStudent) => {
         if (filterStudent === 'All') {
@@ -74,35 +76,39 @@ const TeacherManageStudents = () => {
         }
 
         if (filterStudent === 'Good') {
-            setFilteredStudentList(
-                studentList.filter((student) => student.averageScore > 50)
-            );
+            setFilteredStudentList(studentList.filter((student) => student.averageScore > 50));
         }
 
         if (filterStudent === 'Below Average') {
-            setFilteredStudentList(
-                studentList.filter((student) => student.averageScore < 50)
-            );
+            setFilteredStudentList(studentList.filter((student) => student.averageScore < 50));
         }
     };
 
     const handleAddStudent = async () => {
         await axios
-            .put(API_URL + 'student/1', {
+            .post(API_URL + `student/class/${classId}`, {
                 studentEmail: studentEmail.current.value,
             })
             .then((res) => {
                 setStudentList(res.data);
                 setStudentInfo(res.data[0]);
                 setAddStatus(res.data.text);
-                console.log(res.data.text);
                 if (res.data.text === 'Ok') {
                     toggleModal();
                 }
+                handleGetStudentOfClass();
             })
             .catch((err) => console.log(err, 'hehe'));
         // window.location.reload()
     };
+
+    useEffect(() => {
+        handleGetStudentOfClass();
+    }, [handleGetStudentOfClass]);
+
+    useEffect(() => {
+        setAverageScore(studentInfo.averageScore);
+    }, [studentInfo]);
 
     return (
         <div className='flex flex-row h-screen'>
@@ -125,9 +131,7 @@ const TeacherManageStudents = () => {
                                 handleScoreFilter('All');
                             }}
                             className={`cursor-pointer transition-all ${
-                                filterStudent === 'All'
-                                    ? 'font-medium '
-                                    : 'text-base'
+                                filterStudent === 'All' ? 'font-medium ' : 'text-base'
                             }`}
                         >
                             All
@@ -138,9 +142,7 @@ const TeacherManageStudents = () => {
                                 handleScoreFilter('Good');
                             }}
                             className={`cursor-pointer transition-all ${
-                                filterStudent === 'Good'
-                                    ? 'font-medium '
-                                    : 'text-base'
+                                filterStudent === 'Good' ? 'font-medium ' : 'text-base'
                             }`}
                         >
                             Good
@@ -151,19 +153,14 @@ const TeacherManageStudents = () => {
                                 handleScoreFilter('Below Average');
                             }}
                             className={`cursor-pointer transition-all ${
-                                filterStudent === 'Below Average'
-                                    ? 'font-medium '
-                                    : 'text-base'
+                                filterStudent === 'Below Average' ? 'font-medium ' : 'text-base'
                             }`}
                         >
                             Below Average
                         </span>
                     </div>
                     <div>
-                        <Button
-                            className='text-xs border-none'
-                            onClick={toggleModal}
-                        >
+                        <Button className='text-xs border-none' onClick={toggleModal}>
                             Add a student
                         </Button>
                         <Modal
@@ -182,16 +179,12 @@ const TeacherManageStudents = () => {
                                 <div className='flex flex-col justify-between gap-5 h-full'>
                                     {/* title */}
                                     <div>
-                                        <span className='text-2xl font-medium'>
-                                            Add a student
-                                        </span>
+                                        <span className='text-2xl font-medium'>Add a student</span>
                                     </div>
                                     {/* username */}
                                     <div className='flex flex-col gap-3'>
                                         {addStatus === 'No ok' && (
-                                            <span className='text-red-500'>
-                                                Can't add student.
-                                            </span>
+                                            <span className='text-red-500'>Can't add student.</span>
                                         )}
                                         <input
                                             ref={studentEmail}
@@ -202,10 +195,7 @@ const TeacherManageStudents = () => {
                                     </div>
                                     {/* button add*/}
                                     <div className='flex flex-row-reverse'>
-                                        <Button
-                                            className='border-none'
-                                            onClick={handleAddStudent}
-                                        >
+                                        <Button className='border-none' onClick={handleAddStudent}>
                                             Add
                                         </Button>
                                     </div>
@@ -222,6 +212,7 @@ const TeacherManageStudents = () => {
                                 key={i}
                                 student={val}
                                 setStudentInfo={setStudentInfo}
+                                onGetStudentOfClass={handleGetStudentOfClass}
                             />
                         );
                     })}
@@ -236,14 +227,9 @@ const TeacherManageStudents = () => {
                         className='w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5'
                     />
                     <div className='flex flex-col justify-center items-center'>
-                        <span className='font-bold text-2xl my-3'>
-                            {studentInfo?.fullName}
-                        </span>
+                        <span className='font-bold text-2xl my-3'>{studentInfo?.fullName}</span>
                         <span className='text-gray-500 text-sm'>
-                            Date of birth :{' '}
-                            {moment(studentInfo?.dateOfBirth).format(
-                                'DD/MM/YYYY'
-                            )}
+                            Date of birth : {moment(studentInfo?.dateOfBirth).format('DD/MM/YYYY')}
                         </span>
                     </div>
                     {/* swiper */}
@@ -281,15 +267,12 @@ const TeacherManageStudents = () => {
                                     <div
                                         className='h-[160px] w-[200px] bg-cover'
                                         style={{
-                                            backgroundImage:
-                                                "url('" + achievementImg + "')",
+                                            backgroundImage: "url('" + achievementImg + "')",
                                         }}
                                     ></div>
                                     <div className='flex gap-3 items-center'>
-                                        <span className='text-primary text-2xl'>
-                                            56
-                                        </span>{' '}
-                                        Topics completed
+                                        <span className='text-primary text-2xl'>56</span> Topics
+                                        completed
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -305,19 +288,15 @@ const TeacherManageStudents = () => {
                                 </span>
                             </div>
                             <p className='text-justify text-base text-gray-500'>
-                                Lorem Ipsum is simply dummy text of the printing
-                                and typesetting industry. Lorem Ipsum has been
-                                the industry's standard dummy text ever since
-                                the 1500s, when an unknown printer took a galley
-                                of type and scrambled it to make a type specimen
-                                book. It has survived not only five centuries,
-                                but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was
-                                popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages,
-                                and more recently with desktop publishing
-                                software like Aldus PageMaker including versions
-                                of Lorem Ipsum
+                                Lorem Ipsum is simply dummy text of the printing and typesetting
+                                industry. Lorem Ipsum has been the industry's standard dummy text
+                                ever since the 1500s, when an unknown printer took a galley of type
+                                and scrambled it to make a type specimen book. It has survived not
+                                only five centuries, but also the leap into electronic typesetting,
+                                remaining essentially unchanged. It was popularised in the 1960s
+                                with the release of Letraset sheets containing Lorem Ipsum passages,
+                                and more recently with desktop publishing software like Aldus
+                                PageMaker including versions of Lorem Ipsum
                             </p>
                         </div>
                         {/* Topics */}

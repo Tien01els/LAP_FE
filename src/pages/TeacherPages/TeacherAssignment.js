@@ -57,6 +57,7 @@ const TeacherAssignment = () => {
     const [selectedTopic, setSelectedTopic] = useState('');
     const [selectedSkills, setSelectedSkills] = useState(() => (skillId ? [skillId] : []));
     const [selectedLevel, setSelectedLevel] = useState('');
+
     const [selectedAssignmentName, setSelectedAssignmentName] = useState('');
     const [selectedTotalScore, setSelectedTotalScore] = useState('');
     const [selectedTimeDo, setSelectedTimeDo] = useState('');
@@ -85,6 +86,9 @@ const TeacherAssignment = () => {
 
     const handleUpdateQuestionBank = (questionBank) => {
         setQuestionList([...questionBank]);
+    };
+    const handleUpdateGenerateQuestion = (questionGenerate) => {
+        setQuestionList([...questionList, ...questionGenerate]);
     };
     const handleScore = (e) => {
         const score = Math.max(0, Math.min(100, Number(e.target.value)));
@@ -523,8 +527,12 @@ const TeacherAssignment = () => {
                                 ariaHideApp={false}
                             >
                                 <GenerateQuestionForAssignenment
+                                    selectedGrade={selectedGrade}
+                                    selectedTopic={selectedTopic}
+                                    selectedSkills={selectedSkills}
                                     listCurrentQuestion={questionList}
                                     onCloseModalGenerate={handleCloseModalGenerate}
+                                    onUpdateGenerateQuestion={handleUpdateGenerateQuestion}
                                 />
                             </Modal>
                             <Button
