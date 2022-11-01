@@ -2,11 +2,12 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
+import moment from 'moment';
 
 import Table from '../../components/Table';
 import { API_URL } from '../../constant';
 import ModalCreateSkill from './ModalCreateSkill';
-import ModalAssign from './ModalAssign';
+// import ModalAssign from './ModalAssign';
 
 const Skills = () => {
     const thead = [
@@ -35,10 +36,10 @@ const Skills = () => {
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const [modalCreateSkillIsOpen, setCreateSkillIsOpen] = useState(false);
-    const [modalAssignIsOpen, setAssignIsOpen] = useState(false);
-    const [currentSkill, setCurrentSkill] = useState();
+    // const [modalAssignIsOpen, setAssignIsOpen] = useState(false);
+    // const [currentSkill, setCurrentSkill] = useState();
 
-    const [assignmentName, setAssignmentName] = useState('');
+    // const [assignmentName, setAssignmentName] = useState('');
 
     const handleDeleteSkill = (id) => {
         axios.delete(API_URL + `skill/${id}`).then((res) => {
@@ -70,11 +71,37 @@ const Skills = () => {
         setCreateSkillIsOpen(true);
     };
 
-    const handleOpenModalAssign = (skillId) => {
-        setAssignIsOpen(true);
-        setCurrentSkill(skillId);
-        const skill = valueSkills.find((value) => value.id === skillId);
-        setAssignmentName(skill.skillName);
+    // const handleOpenModalAssign = (skillId) => {
+    //     setAssignIsOpen(true);
+    // };
+
+    const handleAssignSkill = (skillId) => {
+        axios.get(API_URL + `skill-assignment/skill/${skillId}`).then((res) => {
+            if (!res.data) {
+                const skill = valueSkills.find((value) => value.id === skillId);
+                const assignment = {
+                    assignmentName: skill.skillName,
+                    time: 90,
+                    totalScore: 100,
+                    redo: 0,
+                    dateDue: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                    teacherId: 1,
+                };
+                axios.post(API_URL + `assignment`, assignment).then((res) => {
+                    axios
+                        .post(API_URL + `skill-assignment`, {
+                            assignmentId: res.data.id,
+                            skillId: skillId,
+                        })
+                        .then((res) => {
+                            navigate(
+                                `/teacher/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`
+                            );
+                        });
+                });
+            }
+            navigate(`/teacher/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`);
+        });
     };
 
     const handlePageClick = (event) => {
@@ -113,17 +140,13 @@ const Skills = () => {
                 </span>
             </div>
             <div className='w-full h-[68px] bg-primary flex items-center justify-between mt-[20px] rounded-xl shadow-lg px-12'>
-                <h1 className='text-2xl font-medium uppercase text-white'>
-                    {topic.topicName}
-                </h1>
+                <h1 className='text-2xl font-medium uppercase text-white'>{topic.topicName}</h1>
                 <button
                     className='h-7 w-24 px-2 flex items-center justify-center text-white rounded-xl border-[1px]'
                     onClick={handleOpenModalCreateSkill}
                 >
                     {/* material-icons */}
-                    <span className=' flex items-center justify-center mr-1'>
-                        Add
-                    </span>
+                    <span className=' flex items-center justify-center mr-1'>Add</span>
                     <span>skill</span>
                 </button>
                 <ModalCreateSkill
@@ -142,7 +165,7 @@ const Skills = () => {
                         actions={[
                             {
                                 name: 'Assign',
-                                eventAction: handleOpenModalAssign,
+                                eventAction: handleAssignSkill,
                             },
                             {
                                 name: 'Delete',
@@ -150,12 +173,12 @@ const Skills = () => {
                             },
                         ]}
                     />
-                    <ModalAssign
+                    {/* <ModalAssign
                         modalAssignIsOpen={modalAssignIsOpen}
                         setAssignIsOpen={setAssignIsOpen}
                         assignId={currentSkill}
                         assignmentName={assignmentName}
-                    />
+                    /> */}
                 </div>
                 <div className='mt-[16px] flex justify-between px-5'>
                     <span className='font-sm text-gray-500'>
