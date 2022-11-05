@@ -158,7 +158,7 @@ const TeacherDashBoard = () => {
           </div>
         </div>
         {/* calendar */}
-        <div className="min-w-[30%] min-h-[80%]">
+        <div className="min-w-[30%]">
           <div className="flex items-center justify-center">
             <Calendar
               colorPrimary="#75b9cc"
@@ -181,7 +181,7 @@ const TeacherDashBoard = () => {
                   layout
                   className="flex flex-col gap-3"
                 >
-                  <span className="text-base font-semibold">
+                  <span className="text-base text-gray-600 font-semibold">
                     Upcoming Assignments
                   </span>
                   {assignments
