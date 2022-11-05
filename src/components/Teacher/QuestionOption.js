@@ -33,7 +33,7 @@ const QuestionOption = ({
     const selectGrade = useRef();
     const selectTopic = useRef();
     const selectSkill = useRef();
-
+    
     const prevSkill = useRef(selectedSkills[0]);
 
     const convertResToOption = (value, label) => {
