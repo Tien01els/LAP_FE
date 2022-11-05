@@ -197,7 +197,6 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
                         score: bank[i].score,
                     });
                 }
-                console.log(bank);
                 setBank(questions);
                 setValueQuestionBank(bank);
                 setCurrentPage(bank.length > 0 ? 1 : 0);

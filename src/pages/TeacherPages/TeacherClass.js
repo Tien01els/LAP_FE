@@ -57,12 +57,9 @@ const TeacherClass = () => {
                         alt=''
                         className='w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5'
                     />
-                    <span className='font-bold text-3xl my-3'>
-                        {classInfo.className}
-                    </span>
+                    <span className='font-bold text-3xl my-3'>{classInfo.className}</span>
                     <span className=''>
-                        Date created:{' '}
-                        {`${moment(classInfo.createdAt).format('MM/DD/YYYY')}`}
+                        Date created: {`${moment(classInfo.createdAt).format('MM/DD/YYYY')}`}
                     </span>
                 </div>
 
@@ -88,7 +85,7 @@ const TeacherClass = () => {
                         title='Students'
                         shadow='teacherdetails__Students'
                         color='text-[#ff24cf78]'
-                        nav='/teacher/dashboard'
+                        nav={`/teacher/class/${classId}/manage-student`}
                     />
                 </div>
             </div>

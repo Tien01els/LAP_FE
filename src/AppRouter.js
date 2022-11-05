@@ -28,11 +28,12 @@ const StudentDashboard = lazy(() =>
 //login
 const Login = lazy(() => import('./pages/Login'))
 
-const StudentClass = lazy(() => import('./pages/StudentPages/StudentClass'))
+const StudentClass = lazy(() => import('./pages/StudentPages/StudentClass'))\
 
 const AnswerQuestion = lazy(() => import('./pages/AnswerQuestion'))
 
 export default function AppRouter() {
+
   return (
     <Routes>
       <Route path="/" element={<MainLayout></MainLayout>}>
