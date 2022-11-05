@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+
 import { API_URL } from '../constant';
 import Button from '../components/Button';
 import CustomCheckbox from '../components/CustomeCheckbox';
@@ -10,11 +11,14 @@ import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
 
 const answerType = 'multiselect';
 const answers = [
+
     { isTrue: true, answer: 'Hehe' },
     { isTrue: false, answer: 'Huhu' },
     { isTrue: false, answer: 'Hihi' },
     { isTrue: false, answer: 'hoho' },
+
 ];
+
 
 const AnswerQuestion = () => {
     //   const [countdown, setCountdown] = useState()
@@ -122,6 +126,7 @@ const AnswerQuestion = () => {
                             </div>
                         </div>
                         <Button className='border-none w-[70%]'>Submit</Button>
+
                     </div>
                 </div>
             </div>

@@ -34,27 +34,27 @@ const TeacherDashBoard = () => {
   //   grade: '40A',
   // }
 
-    const navigate = useNavigate();
-    const [selectedDay, setSelectedDay] = useState(null);
-    const [Classes, setClasses] = useState([]);
-    const [assignments, setAssignments] = useState([]);
-    const [assignmentDays, setAssignmentsDays] = useState([]);
-    const teacherId = 1;
-    useEffect(() => {
-        axios
-            .get(API_URL + `class/teacher/${teacherId}`)
-            .then((res) => {
-                setClasses(res.data);
-            })
-            .catch((err) => console.log(err));
+  const navigate = useNavigate()
+  const [selectedDay, setSelectedDay] = useState(null)
+  const [Classes, setClasses] = useState([])
+  const [assignments, setAssignments] = useState([])
+  const [assignmentDays, setAssignmentsDays] = useState([])
+  const teacherId = 1
+  useEffect(() => {
+    axios
+      .get(API_URL + `class/teacher/${teacherId}`)
+      .then((res) => {
+        setClasses(res.data)
+      })
+      .catch((err) => console.log(err))
 
-        axios
-            .get(API_URL + `assignment/teacher/${teacherId}`)
-            .then((res) => {
-                setAssignments(res.data);
-                handleDays(res.data);
-            })
-            .catch((err) => console.log(err));
+    axios
+      .get(API_URL + `assignment/teacher/${teacherId}`)
+      .then((res) => {
+        setAssignments(res.data)
+        handleDays(res.data)
+      })
+      .catch((err) => console.log(err))
 
     // eslint-disable-next-line
   }, [])
@@ -79,8 +79,6 @@ const TeacherDashBoard = () => {
         className: 'deadline',
       })
     }
-
-    console.log(days)
 
     await setAssignmentsDays(days)
   }
@@ -126,7 +124,6 @@ const TeacherDashBoard = () => {
 
   return (
     <div className="flex flex-col h-[100vh]">
-      {/* <PageHeader pageName={`Dashboard`}></PageHeader> */}
       <div className="flex flex-row w-full divide-solid h-full pt-8">
         <div className="w-[75%] h-[100%] overflow-hidden flex flex-col  items-center">
           <div className="flex justify-center min-w-[92%] bg-white rounded-md shadow-md hover:shadow-lg transition-all">
@@ -161,7 +158,7 @@ const TeacherDashBoard = () => {
           </div>
         </div>
         {/* calendar */}
-        <div className="min-w-[30%] min-h-[80%]">
+        <div className="min-w-[30%]">
           <div className="flex items-center justify-center">
             <Calendar
               colorPrimary="#75b9cc"
@@ -184,7 +181,7 @@ const TeacherDashBoard = () => {
                   layout
                   className="flex flex-col gap-3"
                 >
-                  <span className="text-base font-semibold">
+                  <span className="text-base text-gray-600 font-semibold">
                     Upcoming Assignments
                   </span>
                   {assignments
