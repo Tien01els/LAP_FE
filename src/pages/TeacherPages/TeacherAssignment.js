@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState, useRef } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import 'mathlive';
 import Select from 'react-select';
 import { motion } from 'framer-motion';
