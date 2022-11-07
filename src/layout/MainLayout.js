@@ -1,18 +1,21 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Footer from '../modules/main/Footer'
-import TeacherSidebar from '../modules/main/TeacherSidebar'
-const MainLayout = ({ children }) => {
-  return (
-    <>
-      {/* <Header></Header> */}
-      <TeacherSidebar/>
-      <div className="pl-60">
-        <Outlet></Outlet>
-      </div>
-      <Footer></Footer>
-    </>
-  )
-}
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Footer from '../modules/main/Footer';
+import TeacherSidebar from '../modules/main/TeacherSidebar';
 
-export default MainLayout
+const MainLayout = ({ role }) => {
+    if (!role) return <Outlet></Outlet>;
+
+    return (
+        <>
+            {/* <Header></Header> */}
+            <TeacherSidebar />
+            <div className='pl-60'>
+                <Outlet></Outlet>
+            </div>
+            <Footer></Footer>
+        </>
+    );
+};
+
+export default MainLayout;
