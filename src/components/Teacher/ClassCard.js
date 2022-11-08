@@ -17,7 +17,7 @@ const ClassCard = ({ classInfo }) => {
             layout
             className='flex flex-col gap-2 bg-white shadow-lg hover:shadow-xl duration-300 w-[250px] h-[200px] rounded-lg'
             onClick={() => {
-                navigate(`/teacher/class/${classInfo.id}`);
+                navigate(`/class/${classInfo.id}`);
             }}
         >
             <div className='flex justify-center pt-5'>

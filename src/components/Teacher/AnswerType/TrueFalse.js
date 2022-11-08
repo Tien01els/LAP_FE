@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useState } from 'react'
 
-const TrueFalse = ({ questionType, answers, setAnswers }) => {
+const TrueFalse = ({  answers, setAnswers }) => {
   const [value, setValue] = useState('')
 
   const handleOnChange = (e) => {

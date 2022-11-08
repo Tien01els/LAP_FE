@@ -46,7 +46,7 @@ const Topics = () => {
 
     const handleViewDetailTopic = (id) => {
         const topic = valueTopics.find((valueTopic) => valueTopic.classTopicId === id);
-        navigate(`/teacher/class/${classId}/topic/${topic?.id}`, {
+        navigate(`/class/${classId}/topic/${topic?.id}`, {
             state: topic,
         });
     };
@@ -109,7 +109,7 @@ const Topics = () => {
                 <span
                     className='underline underline-offset-4 font-semibold cursor-pointer'
                     onClick={() => {
-                        navigate('/teacher/class');
+                        navigate('/class');
                     }}
                 >
                     All Classes

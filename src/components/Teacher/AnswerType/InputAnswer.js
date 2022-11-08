@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 
-const InputAnswer = ({ questionType, answers, setAnswers }) => {
+const InputAnswer = ({  answers, setAnswers }) => {
   const [answer, setAnswer] = useState('')
 
   const preValue = useRef('')
