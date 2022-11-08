@@ -1,3 +1,4 @@
+
 import React, { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
@@ -12,6 +13,8 @@ const Skills = lazy(() => import('./pages/SkillPages/Skills'));
 const TeacherAssignment = lazy(() => import('./pages/TeacherPages/TeacherAssignment'));
 const TeacherManageStudents = lazy(() => import('./pages/TeacherPages/TeacherManageStudents'));
 const TeacherManageTopic = lazy(() => import('./pages/TeacherPages/TeacherManageTopic'));
+
+const AssignmentView = lazy(() => import('./pages/TeacherPages/AssignmentView'))
 // Students
 const StudentDashboard = lazy(() => import('./pages/StudentPages/StudentDashboard'));
 const StudentClass = lazy(() => import('./pages/StudentPages/StudentClass'));
@@ -52,6 +55,8 @@ export default function AppRouter() {
                             path='/class/:classId/manage-topic'
                             element={<TeacherManageTopic />}
                         />
+                        
+                        <Route path="/test" element={<AssignmentView />} />
                     </>
                 ) : decodedToken?.roleId === 3 ? (
                     <>

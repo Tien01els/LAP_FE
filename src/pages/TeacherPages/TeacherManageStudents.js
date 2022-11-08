@@ -1,313 +1,203 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Button from '../../components/Button';
-import StudentCard from '../../components/Teacher/StudentCard';
-import { buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import CustomProgressBar from '../../components/CustomProgressBar';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import achievementImg from '../../assets/image/achievement.png';
+import React, { useRef, useState } from 'react'
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
+// components
+import Button from '../../components/Button'
+import GrowingInput from '../../components/GrowingInput'
+import TopicCard from '../../components/Student/TopicCard'
+import GrowingTextArea from './GrowingTextArea'
+import ModalAddTopic from '../TopicPages/ModalAddTopic'
 
-// import required modules
-import { Navigation } from 'swiper';
-import axios from 'axios';
-import { API_URL } from '../../constant';
-import moment from 'moment';
-import Modal from 'react-modal';
+//test
+const topicImage =
+  'https://thumbs.dreamstime.com/b/letter-block-word-topic-wood-background-business-concept-170764857.jpg'
 
-const customStyles = {
-    overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(165, 165, 165, 0.6)',
+const TeacherManageTopic = () => {
+  //Topics
+  const [topics, setTopics] = useState([
+    {
+      img: topicImage,
+      topicName: 'abc',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
     },
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        border: 'none',
-        borderRadius: '8px',
+    {
+      img: topicImage,
+
+      topicName: 'def',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
     },
-};
+    {
+      img: topicImage,
 
-const TeacherManageStudents = () => {
-    const [averageScore, setAverageScore] = useState(56);
-    const [filterStudent, setFilterStudent] = useState('All');
-    const [filteredStudentList, setFilteredStudentList] = useState([]);
-    const [studentList, setStudentList] = useState([]);
-    const [studentInfo, setStudentInfo] = useState({});
-    const [addStudentModal, setAddStudentModal] = useState(false);
-    const [addStatus, setAddStatus] = useState('');
-    const studentEmail = useRef();
+      topicName: 'gggc',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
+    },
+    {
+      img: topicImage,
 
-    const toggleModal = () => {
-        setAddStudentModal(!addStudentModal);
-    };
+      topicName: 'jhkjhkjh',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
+    },
+  ])
 
-    useEffect(() => {
-        // load students
-        axios
-            .get(API_URL + 'student/class/1')
-            .then((res) => {
-                console.log(res.data);
-                // res.data[0].averageScore = 100;
-                // res.data[1].averageScore = 49;
-                setStudentList(res.data);
-                setStudentInfo(res.data[0]);
-                setFilteredStudentList(res.data);
-            })
-            .catch((err) => console.log(err));
-    }, []);
+  // Add topic
+  const [openAddTopic, setOpenAddTopic] = useState(false)
 
-    const handleScoreFilter = (filterStudent) => {
-        if (filterStudent === 'All') {
-            setFilteredStudentList(studentList);
-        }
+  //edit Topic Name
+  const topicNameRef = useRef(null)
+  const [isEditingTopicName, setIsEditingTopicName] = useState(false)
+  const handleEditTopicName = () => {
+    topicNameRef.current.focus()
+    setIsEditingTopicName(!isEditingTopicName)
+  }
 
-        if (filterStudent === 'Good') {
-            setFilteredStudentList(studentList.filter((student) => student.averageScore > 50));
-        }
+  // topic des
+  const topicDesRef = useRef(null)
+  const [isEditingDes, setIsEditingDes] = useState(false)
+  const handleEditingDes = () => {
+    topicDesRef.current.focus()
+    setIsEditingDes(!isEditingDes)
+  }
 
-        if (filterStudent === 'Below Average') {
-            setFilteredStudentList(studentList.filter((student) => student.averageScore < 50));
-        }
-    };
+  //Search
+  const [searchTerm, setSearchTerm] = useState('')
 
-    const handleAddStudent = async () => {
-        await axios
-            .put(API_URL + 'student/1', {
-                studentEmail: studentEmail.current.value,
-            })
-            .then((res) => {
-                setStudentList(res.data);
-                setStudentInfo(res.data[0]);
-                setAddStatus(res.data.text);
-                console.log(res.data.text);
-                if (res.data.text === 'Ok') {
-                    toggleModal();
-                }
-            })
-            .catch((err) => console.log(err, 'hehe'));
-        // window.location.reload()
-    };
-
-    return (
-        <div className='flex flex-row h-screen'>
-            {/* left */}
-            <div className='w-[40%] flex flex-col px-10 py-5 gap-6'>
-                <div className='flex flex-row justify-between items-center px-4'>
-                    {/* search */}
-                    <span className='text-2xl font-medium'>Students</span>
-                    <input
-                        className='outline-none rounded-lg text-base px-4 py-2 drop-shadow-md focus:drop-shadow-lg transition-all'
-                        placeholder='Search'
-                    />
-                </div>
-                {/* filter */}
-                <div className='flex flex-row justify-between items-center pl-6 pr-4 text-lg'>
-                    <div className='flex flex-row h-[30px] gap-5 items-center'>
-                        <span
-                            onClick={() => {
-                                setFilterStudent('All');
-                                handleScoreFilter('All');
-                            }}
-                            className={`cursor-pointer transition-all ${
-                                filterStudent === 'All' ? 'font-medium ' : 'text-base'
-                            }`}
-                        >
-                            All
-                        </span>
-                        <span
-                            onClick={() => {
-                                setFilterStudent('Good');
-                                handleScoreFilter('Good');
-                            }}
-                            className={`cursor-pointer transition-all ${
-                                filterStudent === 'Good' ? 'font-medium ' : 'text-base'
-                            }`}
-                        >
-                            Good
-                        </span>
-                        <span
-                            onClick={() => {
-                                setFilterStudent('Below Average');
-                                handleScoreFilter('Below Average');
-                            }}
-                            className={`cursor-pointer transition-all ${
-                                filterStudent === 'Below Average' ? 'font-medium ' : 'text-base'
-                            }`}
-                        >
-                            Below Average
-                        </span>
-                    </div>
-                    <div>
-                        <Button className='text-xs border-none' onClick={toggleModal}>
-                            Add a student
-                        </Button>
-                        <Modal
-                            isOpen={addStudentModal}
-                            onRequestClose={toggleModal}
-                            style={customStyles}
-                            ariaHideApp={false}
-                        >
-                            <div className='w-[500px] h-[200px] flex flex-col relative'>
-                                <div
-                                    className='absolute text-xl cursor-pointer translate-x-[490px] -translate-y-[10px]'
-                                    onClick={toggleModal}
-                                >
-                                    <i className='fas fa-times text-gray-700'></i>
-                                </div>
-                                <div className='flex flex-col justify-between gap-5 h-full'>
-                                    {/* title */}
-                                    <div>
-                                        <span className='text-2xl font-medium'>Add a student</span>
-                                    </div>
-                                    {/* username */}
-                                    <div className='flex flex-col gap-3'>
-                                        {addStatus === 'No ok' && (
-                                            <span className='text-red-500'>Can't add student.</span>
-                                        )}
-                                        <div className='w-[40%] flex flex-col px-10 py-5 gap-6'>
-                                            <div className='flex flex-row justify-between items-center px-4'>
-                                                {/* search */}
-                                                <span className='text-2xl font-medium'>
-                                                    Students
-                                                </span>
-                                                <input
-                                                    ref={studentEmail}
-                                                    type='text'
-                                                    placeholder='Type in student email'
-                                                    className='w-full outline-none border transition-all focus:border-primary rounded p-2'
-                                                />
-                                            </div>
-                                            {/* button add*/}
-                                            <div className='flex flex-row-reverse'>
-                                                <Button
-                                                    className='border-none'
-                                                    onClick={handleAddStudent}
-                                                >
-                                                    Add
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Modal>
-                    </div>
-                </div>
-                {/* cards */}
-                <div className='flex flex-col gap-7 px-4 pb-4 overflow-auto scroll-smooth'>
-                    {filteredStudentList.map((val, i) => {
-                        return (
-                            <StudentCard key={i} student={val} setStudentInfo={setStudentInfo} />
-                        );
-                    })}
-                </div>
-            </div>
-            {/* right */}
-            <div className='w-[60%] bg-white py-5 px-10 overflow-y-auto'>
-                <div className='flex flex-col gap-5 justify-center items-center'>
-                    <img
-                        src='https://img.freepik.com/premium-vector/students-classroom-teacher-near-blackboard-auditorium-teaches-maths-lesson-children-study-subject-kids-group-studying-elementary-primary-school-class-interior-cartoon-vector-flat-concept_176411-2393.jpg?w=2000'
-                        alt=''
-                        className='w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5'
-                    />
-                    <div className='flex flex-col justify-center items-center'>
-                        <span className='font-bold text-2xl my-3'>{studentInfo?.fullName}</span>
-                        <span className='text-gray-500 text-sm'>
-                            Date of birth : {moment(studentInfo?.dateOfBirth).format('DD/MM/YYYY')}
-                        </span>
-                    </div>
-                    {/* swiper */}
-                    <div className='flex flex-col justify-center items-center w-[690px] select-none'>
-                        <Swiper
-                            navigation={true}
-                            modules={[Navigation]}
-                            className='mySwiper w-[100%] justify-center items-center'
-                        >
-                            <SwiperSlide>
-                                <div className='h-[200px] w-[200px] pt-5 font-opensan'>
-                                    <CustomProgressBar
-                                        value={averageScore}
-                                        circleRatio={0.75}
-                                        initialAnimation={true}
-                                        styles={buildStyles({
-                                            pathColor: '#5199ad',
-                                            rotation: 1 / 2 + 1 / 8,
-                                            trailColor: '#eee',
-                                        })}
-                                    >
-                                        <div className='flex flex-col items-center justify-center text-primary'>
-                                            <span className='font-semibold text-4xl'>
-                                                {averageScore}
-                                            </span>
-                                            <span className='font-semibold text-sm'>
-                                                Average Score
-                                            </span>
-                                        </div>
-                                    </CustomProgressBar>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='flex flex-col'>
-                                    <div
-                                        className='h-[160px] w-[200px] bg-cover'
-                                        style={{
-                                            backgroundImage: "url('" + achievementImg + "')",
-                                        }}
-                                    ></div>
-                                    <div className='flex gap-3 items-center'>
-                                        <span className='text-primary text-2xl'>56</span> Topics
-                                        completed
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                        </Swiper>
-                    </div>
-
-                    <div className='flex flex-col gap-7'>
-                        {/* Bio*/}
-                        <div className='flex flex-col gap-3 w-full'>
-                            <div>
-                                <span className='text-2xl font-medium text-primary select-none'>
-                                    Bio
-                                </span>
-                            </div>
-                            <p className='text-justify text-base text-gray-500'>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting
-                                industry. Lorem Ipsum has been the industry's standard dummy text
-                                ever since the 1500s, when an unknown printer took a galley of type
-                                and scrambled it to make a type specimen book. It has survived not
-                                only five centuries, but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was popularised in the 1960s
-                                with the release of Letraset sheets containing Lorem Ipsum passages,
-                                and more recently with desktop publishing software like Aldus
-                                PageMaker including versions of Lorem Ipsum
-                            </p>
-                        </div>
-                        {/* Topics */}
-                        <div className='flex flex-col gap-3 w-full'>
-                            <div>
-                                <span className='text-2xl font-medium text-primary select-none'>
-                                    Topics
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="flex flex-row h-screen">
+      {/* left */}
+      <div className="w-[40%] flex flex-col px-5 py-5 gap-6">
+        <div className="flex flex-col gap-3 px-4">
+          <span className="text-2xl font-medium truncate">ClassName</span>
+          {/* search */}
+          <div className="flex flex-row justify-between items-center w-full">
+            <input
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="outline-none rounded-lg text-base px-4 py-2 w-[65%] drop-shadow-md focus:drop-shadow-lg transition-all"
+              placeholder="Search topics"
+            />
+            <Button
+              className="border-none"
+              onClick={() => {
+                setOpenAddTopic(!openAddTopic)
+              }}
+            >
+              Add a Topic
+            </Button>
+            <ModalAddTopic
+              modalIsOpen={openAddTopic}
+              setIsOpen={setOpenAddTopic}
+            />
+          </div>
         </div>
-    );
-};
-
-export default TeacherManageStudents;
+        {/* filter */}
+        {/* courses */}
+        <div className="flex flex-col gap-7 px-4 pb-4 overflow-auto scroll-smooth">
+          {topics
+            .filter((val) => {
+              if (
+                searchTerm === '' ||
+                val.topicName.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+                return val
+              return ''
+            })
+            .map((item, i) => {
+              return <TopicCard TopicInfo={item} key={i} isTeacher />
+            })}
+        </div>
+      </div>
+      {/* right */}
+      <div className="flex flex-col gap-5 w-[60%] bg-white py-5 px-10 overflow-y-auto">
+        {/* Topic tile */}
+        <div className="flex flex-row gap-3 justify-center items-center">
+          <GrowingInput
+            ref={topicNameRef}
+            className={`text-2xl text-center font-medium text-primary`}
+            defaultValue="Text"
+            readOnly={!isEditingTopicName}
+            isEditing={isEditingTopicName}
+          />
+          <i
+            onClick={() => handleEditTopicName()}
+            className="fa-regular fa-pen-to-square mb-1 cursor-pointer text-primary font-medium text-xl select-none active:scale-90"
+          />
+        </div>
+        {/* image */}
+        <div
+          className={`relative rounded-lg min-h-[300px] overflow-hidden flex items-center justify-center bg-center w-full select-none  cursor-pointer transition-all`}
+        >
+          <img src={topicImage} className="h-[300px] w-full" alt="" />
+          <div className="absolute z-1 w-full text-transparent hover:text-white hover:bg-gray-800 flex justify-center items-center hover:bg-opacity-50 transition-all min-h-[300px]">
+            <span className="text-2xl">Click to edit</span>
+          </div>
+        </div>
+        {/* topic des */}
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-row justify-between items-center">
+            <span className="text-2xl font-medium text-gray-700">
+              Topic descriptions
+            </span>
+            <span
+              onClick={handleEditingDes}
+              className="mr-5 text-primary cursor-pointer active:scale-90 select-none"
+            >
+              Edit
+            </span>
+          </div>
+          <GrowingTextArea
+            ref={topicDesRef}
+            className="text-justify"
+            defaultValue="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+            readOnly={!isEditingDes}
+            isEditing={isEditingDes}
+          />
+        </div>
+        {/* skills */}
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-row justify-between items-center">
+            <span className="text-2xl font-medium text-gray-700">Skills</span>
+            <Button>Add a skill</Button>
+          </div>
+          <div className="flex flex-col gap-1">
+            {new Array(3).fill(0).map((val, i) => {
+              return (
+                <div key={i} className="flex flex-col gap-3 px-2 py-3 ">
+                  <div className="flex border-b p-y-2 pb-2 flex-row justify-between items-center">
+                    <span className="text-xl">Skill name</span>
+                    <span className="text-sm text-primary select-none cursor-pointer">
+                      Create Assignment
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    {new Array(2).fill(0).map((val, i) => {
+                      return (
+                        <div
+                          key={i}
+                          className="flex flex-row items-center justify-between"
+                        >
+                          <span>Assignment Name</span>
+                          <div className="flex flex-row items-center gap-3">
+                            <i className="fa-solid fa-pen-to-square text-primary cursor-pointer"></i>
+                            <i className="fa-solid fa-trash-can text-red-500 cursor-pointer"></i>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+export default TeacherManageTopic
