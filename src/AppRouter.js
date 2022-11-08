@@ -20,6 +20,9 @@ const TeacherManageStudents = lazy(() =>
 const TeacherManageTopic = lazy(() =>
   import('./pages/TeacherPages/TeacherManageTopic'),
 )
+
+const AssignmentView = lazy(() => import('./pages/TeacherPages/AssignmentView'))
+
 // Students
 const StudentDashboard = lazy(() =>
   import('./pages/StudentPages/StudentDashboard'),
@@ -61,6 +64,7 @@ export default function AppRouter() {
           path="/teacher/class/:classId/manage-topic"
           element={<TeacherManageTopic />}
         />
+        <Route path="/test" element={<AssignmentView />} />
         {/* student routes */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route path="/question" element={<AnswerQuestion />} />

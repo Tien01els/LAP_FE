@@ -5,12 +5,51 @@ import Button from '../../components/Button'
 import GrowingInput from '../../components/GrowingInput'
 import TopicCard from '../../components/Student/TopicCard'
 import GrowingTextArea from './GrowingTextArea'
+import ModalAddTopic from '../TopicPages/ModalAddTopic'
 
 //test
 const topicImage =
   'https://thumbs.dreamstime.com/b/letter-block-word-topic-wood-background-business-concept-170764857.jpg'
 
 const TeacherManageTopic = () => {
+  //Topics
+  const [topics, setTopics] = useState([
+    {
+      img: topicImage,
+      topicName: 'abc',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
+    },
+    {
+      img: topicImage,
+
+      topicName: 'def',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
+    },
+    {
+      img: topicImage,
+
+      topicName: 'gggc',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
+    },
+    {
+      img: topicImage,
+
+      topicName: 'jhkjhkjh',
+      descriptions:
+        'ákjdlasdjasldaskjdkdlajdasldjalkdjasld lkasj dlkas dáldj sald lkasjdalkd kl',
+      skill: 50,
+    },
+  ])
+
+  // Add topic
+  const [openAddTopic, setOpenAddTopic] = useState(false)
+
   //edit Topic Name
   const topicNameRef = useRef(null)
   const [isEditingTopicName, setIsEditingTopicName] = useState(false)
@@ -27,6 +66,9 @@ const TeacherManageTopic = () => {
     setIsEditingDes(!isEditingDes)
   }
 
+  //Search
+  const [searchTerm, setSearchTerm] = useState('')
+
   return (
     <div className="flex flex-row h-screen">
       {/* left */}
@@ -36,18 +78,39 @@ const TeacherManageTopic = () => {
           {/* search */}
           <div className="flex flex-row justify-between items-center w-full">
             <input
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="outline-none rounded-lg text-base px-4 py-2 w-[65%] drop-shadow-md focus:drop-shadow-lg transition-all"
               placeholder="Search topics"
             />
-            <Button className="border-none">Add a Topic</Button>
+            <Button
+              className="border-none"
+              onClick={() => {
+                setOpenAddTopic(!openAddTopic)
+              }}
+            >
+              Add a Topic
+            </Button>
+            <ModalAddTopic
+              modalIsOpen={openAddTopic}
+              setIsOpen={setOpenAddTopic}
+            />
           </div>
         </div>
         {/* filter */}
         {/* courses */}
         <div className="flex flex-col gap-7 px-4 pb-4 overflow-auto scroll-smooth">
-          {new Array(3).fill(0).map((item, i) => {
-            return <TopicCard key={i} isTeacher />
-          })}
+          {topics
+            .filter((val) => {
+              if (
+                searchTerm === '' ||
+                val.topicName.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+                return val
+              return ''
+            })
+            .map((item, i) => {
+              return <TopicCard TopicInfo={item} key={i} isTeacher />
+            })}
         </div>
       </div>
       {/* right */}
@@ -67,12 +130,14 @@ const TeacherManageTopic = () => {
           />
         </div>
         {/* image */}
-        <img
-          src={topicImage}
-          className="rounded-lg h-[300px] select-none pointer-events-none"
-          width="100%"
-          alt=""
-        ></img>
+        <div
+          className={`relative rounded-lg min-h-[300px] overflow-hidden flex items-center justify-center bg-center w-full select-none  cursor-pointer transition-all`}
+        >
+          <img src={topicImage} className="h-[300px] w-full" alt="" />
+          <div className="absolute z-1 w-full text-transparent hover:text-white hover:bg-gray-800 flex justify-center items-center hover:bg-opacity-50 transition-all min-h-[300px]">
+            <span className="text-2xl">Click to edit</span>
+          </div>
+        </div>
         {/* topic des */}
         <div className="flex flex-col gap-3">
           <div className="flex flex-row justify-between items-center">
@@ -100,16 +165,28 @@ const TeacherManageTopic = () => {
             <span className="text-2xl font-medium text-gray-700">Skills</span>
             <Button>Add a skill</Button>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
             {new Array(3).fill(0).map((val, i) => {
               return (
                 <div key={i} className="flex flex-col gap-3 px-2 py-3 ">
-                  <span className="border-b p-y-2">Skill name</span>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex border-b p-y-2 pb-2 flex-row justify-between items-center">
+                    <span className="text-xl">Skill name</span>
+                    <span className="text-sm text-primary select-none cursor-pointer">
+                      Create Assignment
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-4">
                     {new Array(2).fill(0).map((val, i) => {
                       return (
-                        <div>
-                          <span>Assignment</span>
+                        <div
+                          key={i}
+                          className="flex flex-row items-center justify-between"
+                        >
+                          <span>Assignment Name</span>
+                          <div className="flex flex-row items-center gap-3">
+                            <i className="fa-solid fa-pen-to-square text-primary cursor-pointer"></i>
+                            <i className="fa-solid fa-trash-can text-red-500 cursor-pointer"></i>
+                          </div>
                         </div>
                       )
                     })}
