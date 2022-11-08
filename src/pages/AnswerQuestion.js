@@ -6,15 +6,16 @@ import Button from '../components/Button';
 import CustomCheckbox from '../components/CustomeCheckbox';
 import MultiChoice from '../components/Teacher/AnswerType/MultiChoice';
 import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
+import InputAnswer from '../components/Teacher/AnswerType/InputAnswer';
 import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
 const AnswerQuestion = () => {
     //   const [countdown, setCountdown] = useState()
-    const [currentQuestion, setCurrentQuestion] = useState({});
+    const [currentQuestion, setCurrentQuestion] = useState();
     const [currentQuestionId, setCurrentQuestionId] = useState();
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
-    const [answers, setAnswers] = useState({
+    const [answer, setAnswer] = useState({
         multiChoice: [
             { isTrue: false, answer: '' },
             { isTrue: false, answer: '' },
@@ -28,14 +29,33 @@ const AnswerQuestion = () => {
 
     const { assignmentId } = useParams();
 
-    const handleQuestionOfAssignmentForStudent = useCallback(async () => {
-        const res = await axiosJWT.post(API_URL + `student-question/assignment/${assignmentId}`);
-        const questionsOfAssignment = res.data;
-        if (questionsOfAssignment && questionsOfAssignment.length > 0) {
-            setListQuestionOfAssignment(questionsOfAssignment);
-            setCurrentQuestionId(questionsOfAssignment[0]?.id);
-        }
-    }, [assignmentId]);
+    const handleSaveAnswer = async () => {
+        console.log(currentQuestionId);
+        await axiosJWT.put(
+            API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
+            {
+                answer,
+            }
+        );
+        if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
+            handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
+    };
+
+    const handleQuestionOfAssignmentForStudent = useCallback(
+        async (index) => {
+            const questionIndex = index || 0;
+            const res = await axiosJWT.get(API_URL + `student-question/assignment/${assignmentId}`);
+            const questionsOfAssignment = res.data;
+            for (let i = 0; i < questionsOfAssignment.length; i++)
+                questionsOfAssignment[i].index = i;
+
+            if (questionsOfAssignment && questionsOfAssignment.length > 0) {
+                setListQuestionOfAssignment(questionsOfAssignment);
+                setCurrentQuestionId(questionsOfAssignment[questionIndex]?.id);
+            }
+        },
+        [assignmentId]
+    );
 
     useEffect(() => {
         handleQuestionOfAssignmentForStudent();
@@ -49,28 +69,50 @@ const AnswerQuestion = () => {
         );
     }, [currentQuestionId, listQuestionOfAssignment]);
 
-    const renderAnswer = (questionTypeId, contentQuestion) => {
+    useEffect(() => {
+        if (currentQuestion)
+            setAnswer(
+                currentQuestion?.answerOfStudent?.answer
+                    ? currentQuestion?.answerOfStudent?.answer
+                    : {
+                          multiChoice: currentQuestion?.contentQuestion.multiChoice.map(
+                              (multiChoice) => ({
+                                  isTrue: false,
+                                  answer: multiChoice.answer,
+                              })
+                          ),
+                          multiSelect: [],
+                          input: [],
+                          trueFalse: currentQuestion?.contentQuestion.trueFalse?.map(
+                              (trueFalse) => ({
+                                  isTrue: false,
+                                  answer: trueFalse.answer,
+                              })
+                          ),
+                      }
+            );
+    }, [currentQuestion]);
+    const renderAnswer = (questionTypeId) => {
         switch (questionTypeId) {
             case 1:
-                contentQuestion.multiChoice = contentQuestion?.multiChoice.map((multiChoice) => ({
-                    isTrue: false,
-                    answer: multiChoice.answer,
-                }));
+                // contentQuestion.multiChoice = contentQuestion?.multiChoice.map((multiChoice) => ({
+                //     isTrue: false,
+                //     answer: multiChoice.answer,
+                // }));
                 return (
-                    <div>
-                        <MultiChoice answers={contentQuestion} setAnswers={setAnswers} Preview />
-                    </div>
+                    <MultiChoice
+                        key={currentQuestion}
+                        answers={answer}
+                        setAnswers={setAnswer}
+                        Preview
+                    />
                 );
             case 2:
-                contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
-                    isTrue: false,
-                    answer: trueFalse.answer,
-                }));
-                return (
-                    <div>
-                        <TrueFalse answers={contentQuestion} setAnswers={setAnswers} />
-                    </div>
-                );
+                // contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
+                //     isTrue: false,
+                //     answer: trueFalse.answer,
+                // }));
+                return <TrueFalse answers={answer} setAnswers={setAnswer} />;
             case 3:
                 return (
                     <textarea
@@ -81,7 +123,7 @@ const AnswerQuestion = () => {
             case 4:
                 return (
                     <div className='flex flex-col items-center gap-5'>
-                        {contentQuestion.map((item, i) => {
+                        {answer?.multiChoice?.map((item, i) => {
                             return (
                                 <CustomCheckbox key={item.isTrue + item.answer + i} item={item} />
                             );
@@ -102,21 +144,20 @@ const AnswerQuestion = () => {
                     <div className='w-full bg-white shadow rounded-lg px-12 pt-7 pb-5 flex flex-col gap-5 text-justify'>
                         <div className='flex'>
                             <h2 className='font-semibold font-inter text-primary rounded-lg text-xl'>
-                                Question - 10
+                                Question - {currentQuestion?.index + 1}
                             </h2>
                         </div>
                         {/* problem */}
                         <span>{currentQuestion?.content}</span>
                         {/* answer */}
-                        <div className=''>
-                            {renderAnswer(
-                                currentQuestion?.questionTypeId,
-                                currentQuestion?.contentQuestion
-                            )}
-                        </div>
+                        <div className=''>{renderAnswer(currentQuestion?.questionTypeId)}</div>
                         {/* Next */}
                         <div className='flex flex-row-reverse'>
-                            <Button className='border-none'>Save</Button>
+                            <Button className='border-none' onClick={handleSaveAnswer}>
+                                {currentQuestion?.index === listQuestionOfAssignment.length - 1
+                                    ? 'Submit'
+                                    : 'Next'}
+                            </Button>
                         </div>
                     </div>
                 </div>

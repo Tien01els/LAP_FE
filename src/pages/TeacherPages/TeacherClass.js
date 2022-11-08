@@ -30,7 +30,7 @@ const TeacherClass = () => {
                         <span
                             className='underline underline-offset-4 font-semibold cursor-pointer'
                             onClick={() => {
-                                navigate('/teacher/class');
+                                navigate('/class');
                             }}
                         >
                             All Classes
@@ -71,21 +71,21 @@ const TeacherClass = () => {
                         isScore={true}
                         shadow='teacherdetails__AScore'
                         color={'text-[#00d4ff]'}
-                        nav='/teacher/dashboard'
+                        nav='/dashboard'
                     />
                     <DetailsCard
                         value={classInfo.numberTopics}
                         title='Topics'
                         shadow='teacherdetails__Topics'
                         color='text-[#9fff24]'
-                        nav={`/teacher/class/${classId}/topic`}
+                        nav={`/class/${classId}/topic`}
                     />
                     <DetailsCard
                         value={classInfo.numberStudents}
                         title='Students'
                         shadow='teacherdetails__Students'
                         color='text-[#ff24cf78]'
-                        nav={`/teacher/class/${classId}/manage-student`}
+                        nav={`/class/${classId}/manage-student`}
                     />
                 </div>
             </div>

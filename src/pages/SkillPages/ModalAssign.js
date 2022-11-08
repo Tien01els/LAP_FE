@@ -70,7 +70,7 @@ const ModalAssign = ({
                 .then((res) => {
                     console.log(res.data);
                     navigate(
-                        `/teacher/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`
+                        `/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`
                     );
                 });
         });

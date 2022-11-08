@@ -46,7 +46,7 @@ const Login = () => {
             const res = await axiosJWT.get(API_URL + `account`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
-            // const { accessToken } = res.cookies;
+            
             console.log(res);
         } catch (err) {
             console.log(err);
