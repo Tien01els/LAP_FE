@@ -45,46 +45,41 @@ const Topics = () => {
     };
 
     const handleViewDetailTopic = (id) => {
-        const topic = valueTopics.find(
-            (valueTopic) => valueTopic.classTopicId === id
-        );
+        const topic = valueTopics.find((valueTopic) => valueTopic.classTopicId === id);
         navigate(`/teacher/class/${classId}/topic/${topic?.id}`, {
             state: topic,
         });
     };
 
     const getTopicOfClass = () => {
-        axios
-            .get(API_URL + `class-topic/teacher/${teacherId}/class/${classId}`)
-            .then((res) => {
-                let result = res.data;
-                let arrayResult = [];
-                let arrayValueTopic = [];
-                for (let i = 0; i < result.length; ++i) {
-                    arrayResult = [
-                        ...arrayResult,
-                        {
-                            id: result[i].id,
-                            topicName: result[i].topicName,
-                            numberSkills: result[i].numberSkills,
-                            prerequisiteTopicName:
-                                result[i].prerequisiteTopicName,
-                        },
-                    ];
-                    arrayValueTopic = [
-                        ...arrayValueTopic,
-                        {
-                            id: result[i].topicId,
-                            topicName: result[i].topicName,
-                            description: result[i].description,
-                            classTopicId: result[i].id,
-                        },
-                    ];
-                }
-                setValueTopics(arrayValueTopic);
-                setValues(arrayResult);
-                setCurrentPage(arrayResult.length > 0 ? 1 : 0);
-            });
+        axios.get(API_URL + `class-topic/teacher/${teacherId}/class/${classId}`).then((res) => {
+            let result = res.data;
+            let arrayResult = [];
+            let arrayValueTopic = [];
+            for (let i = 0; i < result.length; ++i) {
+                arrayResult = [
+                    ...arrayResult,
+                    {
+                        id: result[i].id,
+                        topicName: result[i].topicName,
+                        numberSkills: result[i].numberSkills,
+                        prerequisiteTopicName: result[i].prerequisiteTopicName,
+                    },
+                ];
+                arrayValueTopic = [
+                    ...arrayValueTopic,
+                    {
+                        id: result[i].topicId,
+                        topicName: result[i].topicName,
+                        description: result[i].description,
+                        classTopicId: result[i].id,
+                    },
+                ];
+            }
+            setValueTopics(arrayValueTopic);
+            setValues(arrayResult);
+            setCurrentPage(arrayResult.length > 0 ? 1 : 0);
+        });
     };
 
     function handleOpenModalAddTopic() {
@@ -121,17 +116,13 @@ const Topics = () => {
                 </span>
             </div>
             <div className='w-full h-[68px] bg-primary flex items-center justify-between mt-[20px] rounded-xl shadow-lg px-12'>
-                <h1 className='text-2xl font-medium uppercase text-white'>
-                    Topics
-                </h1>
+                <h1 className='text-2xl font-medium uppercase text-white'>Topics</h1>
                 <button
                     className='h-7 w-24 px-2 flex items-center justify-center text-white rounded-xl border-[1px]'
                     onClick={handleOpenModalAddTopic}
                 >
                     {/* material-icons */}
-                    <span className=' flex items-center justify-center mr-1'>
-                        Add
-                    </span>
+                    <span className=' flex items-center justify-center mr-1'>Add</span>
                     <span>topic</span>
                 </button>
                 <ModalAddTopic
@@ -148,12 +139,12 @@ const Topics = () => {
                         tbody={topics}
                         actions={[
                             {
-                                name: 'Delete',
-                                eventAction: handleDeleteClassTopic,
-                            },
-                            {
                                 name: 'View detail',
                                 eventAction: handleViewDetailTopic,
+                            },
+                            {
+                                name: 'Delete',
+                                eventAction: handleDeleteClassTopic,
                             },
                         ]}
                     />
