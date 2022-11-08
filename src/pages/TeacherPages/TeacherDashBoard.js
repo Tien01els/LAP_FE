@@ -143,7 +143,7 @@ const TeacherDashBoard = () => {
                 <span
                   className="mr-3 text-sm duration-300 hover:cursor-pointer hover:underline underline-offset-4"
                   onClick={() => {
-                    navigate('/teacher/class')
+                    navigate('/class')
                   }}
                 >
                   View all

@@ -19,7 +19,7 @@ const ManageAssignment = () => {
                     <span
                         className='underline underline-offset-4 font-semibold cursor-pointer'
                         onClick={() => {
-                            navigate('/teacher/dashboard');
+                            navigate('/dashboard');
                         }}
                     >
                         Dashboard

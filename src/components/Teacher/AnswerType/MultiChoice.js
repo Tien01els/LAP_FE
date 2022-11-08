@@ -7,9 +7,9 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
     const [answerC, setAnswerC] = useState('');
     const [answerD, setAnswerD] = useState('');
 
-    const handleOnChange = (e) => {
-        setValue(e.target.value);
-    };
+    // const handleOnChange = (e) => {
+    //     setValue(e.target.value);
+    // };
 
     const convert = useMemo(
         () => ({
@@ -73,11 +73,39 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
 
     return (
         <div className='w-full'>
-            <div className='hidden' onChange={handleOnChange}>
-                <input type='radio' name='right-answer' value='a' id='option-a' />
-                <input type='radio' name='right-answer' value='b' id='option-b' />
-                <input type='radio' name='right-answer' value='c' id='option-c' />
-                <input type='radio' name='right-answer' value='d' id='option-d' />
+            <div className='hidden'>
+                <input
+                    type='radio'
+                    checked={value === 'a'}
+                    onChange={(e) => setValue(e.target.value)}
+                    name='right-answer'
+                    value='a'
+                    id='option-a'
+                />
+                <input
+                    type='radio'
+                    checked={value === 'b'}
+                    onChange={(e) => setValue(e.target.value)}
+                    name='right-answer'
+                    value='b'
+                    id='option-b'
+                />
+                <input
+                    type='radio'
+                    checked={value === 'c'}
+                    onChange={(e) => setValue(e.target.value)}
+                    name='right-answer'
+                    value='c'
+                    id='option-c'
+                />
+                <input
+                    type='radio'
+                    checked={value === 'd'}
+                    onChange={(e) => setValue(e.target.value)}
+                    name='right-answer'
+                    value='d'
+                    id='option-d'
+                />
             </div>
             <div className='grid grid-cols-2 gap-5 my-5'>
                 <label

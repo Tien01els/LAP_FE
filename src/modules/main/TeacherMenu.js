@@ -5,7 +5,7 @@ const TeacherMenu = () => {
     return (
         <div className='flex flex-col gap-3'>
             <NavLink
-                to={'/teacher/dashboard'}
+                to={'/dashboard'}
                 className={({ isActive }) =>
                     isActive
                         ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#e5ebee]'
@@ -16,7 +16,7 @@ const TeacherMenu = () => {
                 <span className='font-semibold text-sm'>Dashboard</span>
             </NavLink>
             <NavLink
-                to={'/teacher/class'}
+                to={'/class'}
                 className={({ isActive }) =>
                     isActive
                         ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#e5ebee]'
@@ -27,7 +27,7 @@ const TeacherMenu = () => {
                 <span className='font-semibold ml-1 text-sm'>Class</span>
             </NavLink>
             <NavLink
-                to={'/teacher/class/123'}
+                to={'/class/123'}
                 className={({ isActive }) =>
                     isActive
                         ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'
@@ -38,7 +38,7 @@ const TeacherMenu = () => {
                 <span className='font-semibold text-sm'>Test</span>
             </NavLink>
             <NavLink
-                to={'/teacher/manage-assignment'}
+                to={'/manage-assignment'}
                 className={({ isActive }) =>
                     isActive
                         ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'
@@ -49,7 +49,7 @@ const TeacherMenu = () => {
                 <span className='font-semibold text-sm'>Manage Assignment</span>
             </NavLink>
             <NavLink
-                to={'/teacher/create-question'}
+                to={'/create-question'}
                 className={({ isActive }) =>
                     isActive
                         ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'

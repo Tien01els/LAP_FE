@@ -95,12 +95,12 @@ const Skills = () => {
                         })
                         .then((res) => {
                             navigate(
-                                `/teacher/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`
+                                `/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`
                             );
                         });
                 });
             }
-            navigate(`/teacher/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`);
+            navigate(`/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`);
         });
     };
 
@@ -133,7 +133,7 @@ const Skills = () => {
                 <span
                     className='underline underline-offset-4 font-semibold cursor-pointer'
                     onClick={() => {
-                        navigate('/teacher/class/:classId/topic/');
+                        navigate('/class/:classId/topic/');
                     }}
                 >
                     All Topics
