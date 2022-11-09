@@ -5,12 +5,10 @@ import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Button from '../../components/Button';
+import createAxiosJWT from '../../createAxiosJWT';
 
-const ModalCreateTopic = ({
-    modalTopicIsOpen,
-    setTopicIsOpen,
-    getTopicOfGrade,
-}) => {
+const axiosJWT = createAxiosJWT();
+const ModalCreateTopic = ({ modalTopicIsOpen, setTopicIsOpen, getTopicOfGrade }) => {
     const {
         register: registerCreate,
         handleSubmit: handleSubmitCreate,
@@ -27,7 +25,7 @@ const ModalCreateTopic = ({
         });
     }
     function getPrerequisiteTopicOfGrade() {
-        axios.get(API_URL + `topic/teacher/1/grade/1`).then((res) => {
+        axiosJWT.get(API_URL + `topic/teacher/grade/1`).then((res) => {
             setPrerequisiteTopicGrades(res.data);
         });
     }
@@ -103,9 +101,7 @@ const ModalCreateTopic = ({
             >
                 <div className='flex flex-col gap-4'>
                     <div className='flex justify-center'>
-                        <h2 className='text-2xl font-semibold'>
-                            Create new topic
-                        </h2>
+                        <h2 className='text-2xl font-semibold'>Create new topic</h2>
                     </div>
                     <div className='flex flex-col gap-2'>
                         <label htmlFor='topicName'>Name</label>
@@ -148,9 +144,7 @@ const ModalCreateTopic = ({
                         </select>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <label htmlFor='prerequisiteTopic'>
-                            Prerequisite topic
-                        </label>
+                        <label htmlFor='prerequisiteTopic'>Prerequisite topic</label>
                         <select
                             name='prerequisiteTopic'
                             className='border border-gray-500 rounded px-2'
@@ -160,19 +154,18 @@ const ModalCreateTopic = ({
                             <option disabled value='-1'>
                                 -- Select a prerequisite topic --
                             </option>
-                            {prerequisiteTopicGrades.map((topic) => {
-                                return (
-                                    <option key={topic.id} value={topic.id}>
-                                        {topic.topicName}
-                                    </option>
-                                );
-                            })}
+                            {prerequisiteTopicGrades &&
+                                prerequisiteTopicGrades.map((topic) => {
+                                    return (
+                                        <option key={topic.id} value={topic.id}>
+                                            {topic.topicName}
+                                        </option>
+                                    );
+                                })}
                         </select>
                     </div>
                 </div>
-                <Button className='border-none bg-primary w-full mt-5'>
-                    Create
-                </Button>
+                <Button className='border-none bg-primary w-full mt-5'>Create</Button>
             </form>
         </Modal>
     );

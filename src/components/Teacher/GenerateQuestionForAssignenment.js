@@ -4,7 +4,9 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 import { API_URL } from '../../constant';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const GenerateQuestionForAssignenment = ({
     selectedGrade,
     selectedTopic,
@@ -97,7 +99,7 @@ const GenerateQuestionForAssignenment = ({
     };
 
     useEffect(() => {
-        axios.get(API_URL + `grade/teacher/${teacherId}`).then((res) => {
+        axiosJWT.get(API_URL + `grade/teacher`).then((res) => {
             const grades = res.data;
             const option = [];
             for (let i = 0; i < grades.length; i++)
@@ -107,7 +109,7 @@ const GenerateQuestionForAssignenment = ({
     }, []);
 
     useEffect(() => {
-        axios.get(API_URL + `topic/teacher/${teacherId}/grade/${gradeId}`).then((res) => {
+        axiosJWT.get(API_URL + `topic/teacher/grade/${gradeId}`).then((res) => {
             const topics = res.data;
             const option = [];
             for (let i = 0; i < topics.length; i++)
