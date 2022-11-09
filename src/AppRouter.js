@@ -1,6 +1,7 @@
 import React, { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
+import Test from './pages/Test'
 
 const MainLayout = lazy(() => import('./layout/MainLayout'))
 const TeacherDashBoard = lazy(() =>
@@ -72,8 +73,8 @@ export default function AppRouter() {
               path="/class/:classId/manage-topic"
               element={<TeacherManageTopic />}
             />
-
             <Route path="/test" element={<AssignmentView />} />
+            <Route path="/test2" element={<Test />} />
           </>
         ) : decodedToken?.roleId === 3 ? (
           <>

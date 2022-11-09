@@ -12,8 +12,8 @@ const CustomCheckbox = ({ item }) => {
         setIsCheck(!isChecked)
       }}
     >
-      <input type="checkbox" value={item.answer} className="hidden" />
-      <label className="cursor-pointer">{item.answer}</label>
+      <input type="checkbox" value={item?.answer} className="hidden" />
+      <label className="cursor-pointer">{item?.answer}</label>
     </div>
   )
 }
