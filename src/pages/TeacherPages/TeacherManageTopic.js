@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+} from 'react'
 import { useParams } from 'react-router-dom'
 
 import { API_URL } from '../../constant'
@@ -193,6 +199,7 @@ const TeacherManageTopic = () => {
           {currentTopic?.topicName && (
             <GrowingInput
               ref={topicNameRef}
+              value={currentTopic.topicName}
               className={`text-2xl text-center font-medium text-primary`}
               defaultValue={currentTopic.topicName}
               readOnly={!isEditingTopicName}
@@ -229,8 +236,8 @@ const TeacherManageTopic = () => {
           {currentTopic?.description && (
             <GrowingTextArea
               ref={topicDesRef}
+              value={currentTopic.description}
               className="text-justify"
-              // defaultValue="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
               defaultValue={currentTopic.description}
               readOnly={!isEditingDes}
               isEditing={isEditingDes}
@@ -252,41 +259,7 @@ const TeacherManageTopic = () => {
           </div>
           <div className="flex flex-col gap-1">
             {skills.map((val, i) => {
-              return (
-                <div key={i} className="flex flex-col gap-3 px-2 py-3 ">
-                  <div className="flex border-b p-y-2 pb-2 flex-row justify-between items-center">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-xl">{val.skillName}</span>
-                      <span className="text-primary text-sm">
-                        {val.standardName}
-                      </span>
-                    </div>
-
-                    <span
-                      className="text-sm text-primary select-none cursor-pointer active:scale-90"
-                      onClick={handleOpenModalAssign}
-                    >
-                      Create Assignment
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    {new Array(2).fill(0).map((val, i) => {
-                      return (
-                        <div
-                          key={i}
-                          className="flex flex-row items-center justify-between"
-                        >
-                          <span>Assignment Name</span>
-                          <div className="flex flex-row items-center gap-3">
-                            <i className="fa-solid fa-pen-to-square text-primary cursor-pointer active:scale-90"></i>
-                            <i className="fa-solid fa-trash-can text-red-500 cursor-pointer active:scale-90"></i>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )
+              return <SkillInTopics val={val} key={i} isTeacher />
             })}
           </div>
         </div>
@@ -294,4 +267,54 @@ const TeacherManageTopic = () => {
     </div>
   )
 }
+
+const SkillInTopics = ({ isTeacher, val }) => {
+  const [openMoreOption, setOpenMoreOption] = useState(false)
+  return (
+    <div className="flex flex-col gap-3 px-2 py-3 ">
+      <div className="flex border-b p-y-2 pb-2 flex-row justify-between items-center">
+        <span className="text-xl">{val.skillName}</span>
+        <div className="flex flex-row gap-5 items-center">
+          <span className="text-primary text-sm">{val.standardName}</span>
+          {isTeacher && (
+            <div className="flex flex-col">
+              <div
+                className={`rounded-full relative h-[24px] w-[24px] cursor-pointer  select-none flex items-center justify-center bg-${
+                  openMoreOption ? `gray-100` : `white`
+                } hover:bg-gray-100`}
+                onClick={() => setOpenMoreOption(!openMoreOption)}
+              >
+                <i className="fas fa-ellipsis-h font-xs"></i>
+                {openMoreOption && (
+                  <div className="absolute z-1 w-[125px] translate-y-14 -translate-x-12 border-t-2 text-sm border-primary bg-[#ffffff] flex flex-col divide-y shadow-lg rounded-b">
+                    <div className="cursor-pointer px-2 py-1 hover:bg-[#ffffff] transition-all">
+                      <span>Remove</span>
+                    </div>
+                    <div className="cursor-pointer px-2 py-1 hover:bg-[#ffffff] transition-all">
+                      <span>Create Assignment</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-col gap-4">
+        {new Array(2).fill(0).map((val, i) => {
+          return (
+            <div key={i} className="flex flex-row items-center justify-between">
+              <span>Assignment Name</span>
+              <div className="flex flex-row items-center gap-3">
+                <i className="fa-solid fa-pen-to-square text-primary cursor-pointer active:scale-90"></i>
+                <i className="fa-solid fa-trash-can text-red-500 cursor-pointer active:scale-90"></i>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default TeacherManageTopic

@@ -20,7 +20,12 @@ const TopicCard = ({
       />
       <div className="flex flex-col justify-evenly w-full h-full">
         <div className="flex flex-row justify-between items-center">
-          <span className="font-medium w-[220px] truncate cursor-pointer">
+          <span
+            onClick={() => {
+              setCurrentTopicId(TopicInfo?.topicId)
+            }}
+            className="font-medium w-[220px] truncate cursor-pointer"
+          >
             {TopicInfo?.topicName}
           </span>
           {isTeacher && (
@@ -63,9 +68,7 @@ const TopicCard = ({
             className="text-primary cursor-pointer"
             // onClick={() => handleViewStudent()}
             onClick={() => {
-              setCurrentTopicId(
-                TopicInfo?.topicId ? TopicInfo?.topicId : TopicInfo?.id,
-              )
+              setCurrentTopicId(TopicInfo?.topicId)
             }}
           >
             View
