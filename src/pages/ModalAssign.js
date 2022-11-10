@@ -9,15 +9,10 @@ import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import { utils } from 'react-modern-calendar-datepicker';
 import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 
-import { API_URL } from '../../constant';
-import Button from '../../components/Button';
+import { API_URL } from '../constant';
+import Button from '../components/Button';
 
-const ModalAssign = ({
-    modalAssignIsOpen,
-    setAssignIsOpen,
-    assignId,
-    assignmentName,
-}) => {
+const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentName }) => {
     const currentDate = moment();
     const navigate = useNavigate();
     const [selectedDay, setSelectedDay] = useState({
@@ -28,9 +23,7 @@ const ModalAssign = ({
     const [time, setTime] = useState(() => {
         const hours = currentDate.hours();
         const minutes = currentDate.minutes();
-        return `${hours > 9 ? hours : '0' + hours}:${
-            minutes > 9 ? minutes : '0' + minutes
-        }`;
+        return `${hours > 9 ? hours : '0' + hours}:${minutes > 9 ? minutes : '0' + minutes}`;
     });
 
     const {
@@ -50,9 +43,7 @@ const ModalAssign = ({
     };
 
     const handleCreateAssignment = (data) => {
-        const due = new Date(
-            `${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${time}`
-        );
+        const due = new Date(`${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${time}`);
         const assignment = {
             assignmentName: data.assignmentName,
             time: data.time,
@@ -69,9 +60,7 @@ const ModalAssign = ({
                 })
                 .then((res) => {
                     console.log(res.data);
-                    navigate(
-                        `/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`
-                    );
+                    navigate(`/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`);
                 });
         });
     };
@@ -134,14 +123,10 @@ const ModalAssign = ({
                 >
                     <div className='flex flex-col gap-4'>
                         <div className='flex justify-center'>
-                            <h2 className='text-2xl font-semibold'>
-                                Assign for skill
-                            </h2>
+                            <h2 className='text-2xl font-semibold'>Assign for skill</h2>
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <label htmlFor='assignmentName'>
-                                Assignment name
-                            </label>
+                            <label htmlFor='assignmentName'>Assignment name</label>
                             <input
                                 type='text'
                                 name='assignmentName'
@@ -196,9 +181,7 @@ const ModalAssign = ({
                             />
                         </div>
                         <div className='flex gap-4'>
-                            <label htmlFor='time'>
-                                Time (Please enter minutes)
-                            </label>
+                            <label htmlFor='time'>Time (Please enter minutes)</label>
                             <input
                                 type='number'
                                 name='time'
@@ -211,9 +194,7 @@ const ModalAssign = ({
                             />
                         </div>
                         <div className='flex gap-4'>
-                            <label htmlFor='redo'>
-                                Redo (Please enter {'>='} 0)
-                            </label>
+                            <label htmlFor='redo'>Redo (Please enter {'>='} 0)</label>
                             <input
                                 type='number'
                                 name='redo'
@@ -228,9 +209,7 @@ const ModalAssign = ({
                         </div>
                     </div>
 
-                    <Button className='border-none bg-primary w-full mt-5'>
-                        Assign
-                    </Button>
+                    <Button className='border-none bg-primary w-full mt-5'>Assign</Button>
                 </form>
             </div>
         </Modal>

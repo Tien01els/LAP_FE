@@ -5,12 +5,15 @@ import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Button from '../../components/Button';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const ModalCreateSkill = ({
     modalCreateSkillIsOpen,
     setCreateSkillIsOpen,
-    getSkillsOfTopic,
     topicId,
+    getSkillsOfTopic,
+    getTopicOfClass,
 }) => {
     const customStyles = {
         overlay: {
@@ -41,25 +44,26 @@ const ModalCreateSkill = ({
 
     const [standards, setStandards] = useState([]);
 
-    function handleCloseModalCreateSkill() {
+    const handleCloseModalCreateSkill = () => {
         setCreateSkillIsOpen(false);
-    }
+    };
 
-    function handleCreateSkill(data) {
+    const handleCreateSkill = (data) => {
         const skill = {
             ...data,
             topicId,
         };
-        axios.post(API_URL + `skill`, skill).then((res) => {
+        axiosJWT.post(API_URL + `skill`, skill).then((res) => {
             getSkillsOfTopic();
+            getTopicOfClass();
         });
-    }
+    };
 
-    function getStandards() {
+    const getStandards = () => {
         axios.get(API_URL + `standard`).then((res) => {
             setStandards(res.data);
         });
-    }
+    };
 
     useEffect(() => {
         getStandards();
@@ -96,9 +100,7 @@ const ModalCreateSkill = ({
             >
                 <div className='flex flex-col gap-4'>
                     <div className='flex justify-center'>
-                        <h2 className='text-2xl font-semibold'>
-                            Create new skill
-                        </h2>
+                        <h2 className='text-2xl font-semibold'>Create new skill</h2>
                     </div>
                     <div className='flex flex-col gap-2'>
                         <label htmlFor='skillName'>Name</label>
@@ -133,10 +135,7 @@ const ModalCreateSkill = ({
                             </option>
                             {standards.map((standard) => {
                                 return (
-                                    <option
-                                        key={standard.id}
-                                        value={standard.id}
-                                    >
+                                    <option key={standard.id} value={standard.id}>
                                         {standard.standardName}
                                     </option>
                                 );
@@ -144,9 +143,7 @@ const ModalCreateSkill = ({
                         </select>
                     </div>
                 </div>
-                <Button className='border-none bg-primary w-full mt-5'>
-                    Create
-                </Button>
+                <Button className='border-none bg-primary w-full mt-5'>Create</Button>
             </form>
         </Modal>
     );

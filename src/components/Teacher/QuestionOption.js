@@ -3,7 +3,9 @@ import axios from 'axios';
 import Select from 'react-select';
 
 import { API_URL } from '../../constant';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const QuestionOption = ({
     selectedSkills,
     setSelectedSkills,
@@ -18,7 +20,6 @@ const QuestionOption = ({
     handleScore,
     score,
 }) => {
-    const teacherId = 1;
     const levelOption = [
         { value: 'Easy', label: 'Easy' },
         { value: 'Medium', label: 'Medium' },
@@ -33,7 +34,7 @@ const QuestionOption = ({
     const selectGrade = useRef();
     const selectTopic = useRef();
     const selectSkill = useRef();
-    
+
     const prevSkill = useRef(selectedSkills[0]);
 
     const convertResToOption = (value, label) => {
@@ -44,7 +45,7 @@ const QuestionOption = ({
     };
 
     useEffect(() => {
-        axios.get(API_URL + `grade/teacher/${teacherId}`).then((res) => {
+        axiosJWT.get(API_URL + `grade/teacher`).then((res) => {
             const grades = res.data;
             const option = [];
             for (let i = 0; i < grades.length; i++)
@@ -55,7 +56,7 @@ const QuestionOption = ({
 
     useEffect(() => {
         if (selectedGrade)
-            axios.get(API_URL + `topic/teacher/${teacherId}/grade/${selectedGrade}`).then((res) => {
+            axiosJWT.get(API_URL + `topic/teacher/grade/${selectedGrade}`).then((res) => {
                 const topics = res.data;
                 const option = [];
                 for (let i = 0; i < topics.length; i++)
