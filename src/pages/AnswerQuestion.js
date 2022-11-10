@@ -12,12 +12,12 @@ import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
 const AnswerQuestion = () => {
+    const { assignmentId, questionIndex } = useParams();
     //   const [countdown, setCountdown] = useState()
     const [currentQuestion, setCurrentQuestion] = useState();
     const [currentQuestionId, setCurrentQuestionId] = useState();
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
     const [answers, setAnswers] = useState();
-    const { assignmentId, questionIdx } = useParams();
 
     const handleSaveAnswer = async () => {
         await axiosJWT.put(
@@ -33,7 +33,7 @@ const AnswerQuestion = () => {
 
     const handleQuestionOfAssignmentForStudent = useCallback(
         async (index) => {
-            const questionIndex = index || 0;
+            const questionIdx = index || 0;
             const res = await axiosJWT.get(API_URL + `student-question/assignment/${assignmentId}`);
             const questionsOfAssignment = res.data;
             for (let i = 0; i < questionsOfAssignment.length; i++)
@@ -41,7 +41,7 @@ const AnswerQuestion = () => {
 
             if (questionsOfAssignment && questionsOfAssignment.length > 0) {
                 setListQuestionOfAssignment(questionsOfAssignment);
-                setCurrentQuestionId(questionsOfAssignment[questionIndex]?.id);
+                setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
             }
         },
         [assignmentId]
@@ -89,9 +89,10 @@ const AnswerQuestion = () => {
     }, [currentQuestion]);
 
     // useEffect(() => {
-    //     listQuestionOfAssignment && setCurrentQuestionId(listQuestionOfAssignment[questionIdx].id);
+    //     listQuestionOfAssignment &&
+    //         setCurrentQuestionId(listQuestionOfAssignment[questionIndex - 1]?.id);
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [questionIdx]);
+    // }, [questionIndex, listQuestionOfAssignment]);
 
     const renderAnswer = (questionTypeId) => {
         switch (questionTypeId) {
