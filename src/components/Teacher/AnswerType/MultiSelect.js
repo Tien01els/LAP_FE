@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Button from '../../Button';
 import { v4 as uuidv4 } from 'uuid';
 
-const MultiSelect = ({ questionType, answers, setAnswers }) => {
+const MultiSelect = ({ answers, setAnswers }) => {
     const [newAnswer, setNewAnswer] = useState([]);
     const count = useRef(answers?.multiSelect?.length < 2 ? 0 : answers?.multiSelect?.length);
     const preAnswer = useRef();
@@ -34,7 +34,6 @@ const MultiSelect = ({ questionType, answers, setAnswers }) => {
     useEffect(() => {
         if (answers?.multiSelect?.length > 0 && newAnswer !== answers?.multiSelect) {
             preAnswer.current = newAnswer;
-
             const listAnswer = [];
             for (let i = 0; i < answers?.multiSelect?.length; i++) {
                 if (answers?.multiSelect[i].id) {
@@ -53,7 +52,6 @@ const MultiSelect = ({ questionType, answers, setAnswers }) => {
             preAnswer.current !== newAnswer
         ) {
             setAnswers({ ...answers, multiSelect: newAnswer });
-            console.log(answers);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newAnswer]);
