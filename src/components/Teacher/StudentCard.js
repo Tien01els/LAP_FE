@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { API_URL } from '../../constant';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const imgsrc =
     'https://students.flinders.edu.au/_jcr_content/content/section_856874544_co/par_0/image_general.coreimg.png/1621207287287/waving-person.png';
 
@@ -13,10 +15,12 @@ const StudentCard = ({ student, setStudentInfo, onGetStudentOfClass }) => {
     };
 
     const handleRemoveStudent = async (id) => {
-        await axios
-            .delete(API_URL + `student/${id}/class`)
-            .then((res) => onGetStudentOfClass())
-            .catch((err) => console.log(err));
+        try {
+            await axiosJWT.delete(API_URL + `student/${id}/class`);
+            onGetStudentOfClass();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
