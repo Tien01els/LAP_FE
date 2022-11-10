@@ -11,7 +11,6 @@ import ModalAddTopic from '../TopicPages/ModalAddTopic'
 import ModalCreateSkill from '../SkillPages/ModalCreateSkill'
 import createAxiosJWT from '../../createAxiosJWT'
 import ModalAssign from '../ModalAssign'
-import TokenExpire from '../../components/Modals/TokenExpire'
 
 const axiosJWT = createAxiosJWT()
 //test
@@ -136,7 +135,6 @@ const TeacherManageTopic = () => {
   return (
     <div className="flex flex-row h-screen">
       {/* left */}
-      <TokenExpire isOpen={true} />
       <div className="w-[40%] flex flex-col px-5 py-5 gap-6">
         <div className="flex flex-col gap-3 px-4">
           <span className="text-2xl font-medium truncate">ClassName</span>

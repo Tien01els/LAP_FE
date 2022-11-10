@@ -28,13 +28,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const TeacherDashBoard = () => {
   moment().locale('en')
-  // const classInfo = {
-  //   name: 'MATH_11ASLDJ3ASDASDSAD',
-  //   image:
-  //     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzDRXFhE3aK7cERNPeEkefjyjTnQCqXLxxIBvi_h77ieGirPLbfO1D7I7km_BFVYFjGIA&usqp=CAU',
-  //   year: '2022-2023',
-  //   grade: '40A',
-  // }
 
   const navigate = useNavigate()
   const [selectedDay, setSelectedDay] = useState(null)
@@ -54,6 +47,7 @@ const TeacherDashBoard = () => {
       .then((res) => {
         setAssignments(res.data)
         handleDays(res.data)
+        console.log(res.data)
       })
       .catch((err) => console.log(err))
 
@@ -172,8 +166,7 @@ const TeacherDashBoard = () => {
               renderFooter={() => (
                 <motion.div
                   style={{
-                    height: '285px',
-                    paddingBottom: '2rem',
+                    height: '245px',
                     paddingLeft: '2rem',
                     paddingRight: '2rem',
                   }}
@@ -186,48 +179,55 @@ const TeacherDashBoard = () => {
                   <span className="text-base text-gray-600 font-semibold">
                     Upcoming Assignments
                   </span>
-                  {assignments
-                    .filter(
-                      (item) =>
-                        parseInt(moment(item.dateDue).format('DD')) ===
-                        selectedDay?.day,
-                    )
-                    .map((item, index) => {
-                      return (
-                        <div key={index} className="flex flex-col gap-4">
-                          <div className="shadow-md hover:shadow-lg transition-all rounded-md flex items-center justify-between cursor-pointer">
-                            <div
-                              style={{
-                                padding: '10px 1rem',
-                              }}
-                              className="flex flex-col"
-                            >
-                              <span className="text-sm">
-                                {item.assignmentName}
-                              </span>
-                              <span>Class</span>
-                            </div>
-                            <div
-                              style={{
-                                paddingRight: '1rem',
-                              }}
-                              className="flex flex-col justify-center items-center"
-                            >
-                              <span className="text-sm">
-                                {selectedDay.day +
-                                  '-' +
-                                  moment(selectedDay?.month.toString()).format(
-                                    'MMM',
-                                  )}
-                              </span>
-                              <span className="text-sm">
-                                {moment(item.dateDue).format('hh:mm:ss A')}
-                              </span>
+                  <div
+                    style={{
+                      padding: '0.5rem',
+                    }}
+                    className="flex flex-col gap-4 overflow-y-scroll"
+                  >
+                    {assignments
+                      .filter(
+                        (item) =>
+                          parseInt(moment(item.dateDue).format('DD')) ===
+                          selectedDay?.day,
+                      )
+                      .map((item, index) => {
+                        return (
+                          <div key={index} className="flex flex-col gap-4">
+                            <div className="shadow-md hover:shadow-lg transition-all rounded-md flex items-center justify-between cursor-pointer">
+                              <div
+                                style={{
+                                  padding: '10px 1rem',
+                                }}
+                                className="flex flex-col"
+                              >
+                                <span className="text-primary text-base">
+                                  {item.assignmentName}
+                                </span>
+                                <span>Class</span>
+                              </div>
+                              <div
+                                style={{
+                                  paddingRight: '1rem',
+                                }}
+                                className="flex flex-col justify-center items-center"
+                              >
+                                <span className="text-sm">
+                                  {selectedDay.day +
+                                    '-' +
+                                    moment(
+                                      selectedDay?.month.toString(),
+                                    ).format('MMM')}
+                                </span>
+                                <span className="text-sm">
+                                  {moment(item.dateDue).format('hh:mm:ss A')}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )
-                    })}
+                        )
+                      })}
+                  </div>
                 </motion.div>
               )}
             />
