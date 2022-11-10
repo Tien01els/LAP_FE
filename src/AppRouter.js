@@ -55,7 +55,10 @@ export default function AppRouter() {
             <Route path="/dashboard" element={<TeacherDashBoard />} />
             <Route path="/class" element={<TeacherClasses />} />
             <Route path="/class/:classId" element={<TeacherClass />} />
-            <Route path="/class/:classId/topic" element={<Topics />} />
+            <Route
+              path="/class/:classId/topic"
+              element={<TeacherManageTopic />}
+            />
             <Route path="/class/:classId/topic/:topicId" element={<Skills />} />
             <Route
               path="/create-question"
