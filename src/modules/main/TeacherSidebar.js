@@ -5,10 +5,9 @@ import { API_URL } from '../../constant'
 import logo from '../../img/logo.png'
 import TeacherMenu from './TeacherMenu'
 import createAxiosJWT from '../../createAxiosJWT'
-import jwtDecode from 'jwt-decode'
 
+const axiosJWT = createAxiosJWT()
 const TeacherSidebar = () => {
-  const axiosJWT = createAxiosJWT()
   const navigate = useNavigate()
   let user = {
     name: 'Nhat nguyen',

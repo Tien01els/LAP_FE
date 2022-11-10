@@ -5,6 +5,7 @@ import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
 import Button from '../Button'
 
+const axiosJWT = createAxiosJWT()
 const TokenExpire = ({ isOpen }) => {
   const customStyles = {
     overlay: {
