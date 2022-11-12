@@ -20,6 +20,27 @@ const AnswerQuestion = () => {
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
     const [answers, setAnswers] = useState();
 
+    const checkStudentAnswered = (questionOfAssignment) => {
+        const questionType = ['', 'multiChoice', 'trueFalse', 'input', 'multiSelect'];
+        const answerOfStudent = questionOfAssignment?.answerOfStudent?.answer;
+        const typeOfquestion =
+            questionOfAssignment?.questionTypeId &&
+            questionType[questionOfAssignment?.questionTypeId];
+        if (answerOfStudent && typeOfquestion && answerOfStudent[typeOfquestion]) {
+            const resultOfStudent = answerOfStudent[typeOfquestion];
+            if (typeOfquestion === 'multiChoice')
+                for (let i = 0; i < resultOfStudent.length; i++)
+                    if (resultOfStudent[i].isTrue) return true;
+            if (typeOfquestion === 'trueFalse')
+                for (let i = 0; i < resultOfStudent.length; i++)
+                    if (resultOfStudent[i].isTrue) return true;
+            if (typeOfquestion === 'input' && resultOfStudent[0].answer.length > 0) return true;
+            if (typeOfquestion === 'multiSelect')
+                for (let i = 0; i < resultOfStudent.length; i++)
+                    if (resultOfStudent[i].isTrue) return true;
+        }
+        return false;
+    };
     const handleSaveAnswer = async () => {
         await axiosJWT.put(
             API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
@@ -186,9 +207,11 @@ const AnswerQuestion = () => {
                                             <div className='flex justify-center items-center'>
                                                 <span>{i + 1}</span>
                                             </div>
-                                            <div className='text-white flex w-full h-full items-center justify-center bg-green-500'>
-                                                <i className='fas fa-check text-[8px]'></i>
-                                            </div>
+                                            {checkStudentAnswered(questionOfAssignment) && (
+                                                <div className='text-white flex w-full h-full items-center justify-center bg-primary'>
+                                                    {/* <i className='fas fa-check text-[8px]'></i> */}
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}
