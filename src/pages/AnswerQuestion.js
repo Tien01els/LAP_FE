@@ -3,47 +3,37 @@ import { useParams } from 'react-router-dom';
 
 import { API_URL } from '../constant';
 import Button from '../components/Button';
-import CustomCheckbox from '../components/CustomeCheckbox';
-import MultiChoice from '../components/Teacher/AnswerType/MultiChoice';
+// import MultiChoice from '../components/Teacher/AnswerType/MultiChoice';
 import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
+import MultiChoiceAnswer from '../components/Student/MultiChoiceAnswer';
+import MultiSelectAnswers from '../components/Student/MultiSelectAnswers';
 import InputAnswer from '../components/Teacher/AnswerType/InputAnswer';
 import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
 const AnswerQuestion = () => {
+    const { assignmentId, questionIndex } = useParams();
     //   const [countdown, setCountdown] = useState()
     const [currentQuestion, setCurrentQuestion] = useState();
     const [currentQuestionId, setCurrentQuestionId] = useState();
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
-    const [answer, setAnswer] = useState({
-        multiChoice: [
-            { isTrue: false, answer: '' },
-            { isTrue: false, answer: '' },
-            { isTrue: false, answer: '' },
-            { isTrue: false, answer: '' },
-        ],
-        multiSelect: [],
-        input: [],
-        trueFalse: [],
-    });
-
-    const { assignmentId } = useParams();
+    const [answers, setAnswers] = useState();
 
     const handleSaveAnswer = async () => {
-        console.log(currentQuestionId);
         await axiosJWT.put(
             API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
             {
-                answer,
+                answer: answers,
             }
         );
         if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
             handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
+        else handleQuestionOfAssignmentForStudent(currentQuestion?.index);
     };
 
     const handleQuestionOfAssignmentForStudent = useCallback(
         async (index) => {
-            const questionIndex = index || 0;
+            const questionIdx = index || 0;
             const res = await axiosJWT.get(API_URL + `student-question/assignment/${assignmentId}`);
             const questionsOfAssignment = res.data;
             for (let i = 0; i < questionsOfAssignment.length; i++)
@@ -51,7 +41,7 @@ const AnswerQuestion = () => {
 
             if (questionsOfAssignment && questionsOfAssignment.length > 0) {
                 setListQuestionOfAssignment(questionsOfAssignment);
-                setCurrentQuestionId(questionsOfAssignment[questionIndex]?.id);
+                setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
             }
         },
         [assignmentId]
@@ -71,19 +61,44 @@ const AnswerQuestion = () => {
 
     useEffect(() => {
         if (currentQuestion)
-            setAnswer(
-                currentQuestion?.answerOfStudent?.answer
-                    ? currentQuestion?.answerOfStudent?.answer
+            setAnswers(
+                currentQuestion.answerOfStudent?.answer
+                    ? {
+                          multiChoice: currentQuestion.answerOfStudent?.answer?.multiChoice?.map(
+                              (multiChoice, i) => ({
+                                  isTrue: multiChoice?.isTrue,
+                                  answer: currentQuestion.contentQuestion?.multiChoice[i]?.answer,
+                              })
+                          ),
+                          multiSelect: currentQuestion.answerOfStudent?.answer?.multiSelect?.map(
+                              (multiSelect, i) => ({
+                                  isTrue: multiSelect?.isTrue,
+                                  answer: currentQuestion.contentQuestion?.multiSelect[i]?.answer,
+                              })
+                          ),
+                          input: [],
+                          trueFalse: currentQuestion.answerOfStudent?.answer?.trueFalse?.map(
+                              (trueFalse, i) => ({
+                                  isTrue: trueFalse?.isTrue,
+                                  answer: currentQuestion.contentQuestion?.trueFalse[i]?.answer,
+                              })
+                          ),
+                      }
                     : {
-                          multiChoice: currentQuestion?.contentQuestion.multiChoice.map(
+                          multiChoice: currentQuestion.contentQuestion?.multiChoice?.map(
                               (multiChoice) => ({
                                   isTrue: false,
                                   answer: multiChoice.answer,
                               })
                           ),
-                          multiSelect: [],
+                          multiSelect: currentQuestion.contentQuestion?.multiSelect?.map(
+                              (multiSelect) => ({
+                                  isTrue: false,
+                                  answer: multiSelect.answer,
+                              })
+                          ),
                           input: [],
-                          trueFalse: currentQuestion?.contentQuestion.trueFalse?.map(
+                          trueFalse: currentQuestion.contentQuestion?.trueFalse?.map(
                               (trueFalse) => ({
                                   isTrue: false,
                                   answer: trueFalse.answer,
@@ -92,6 +107,13 @@ const AnswerQuestion = () => {
                       }
             );
     }, [currentQuestion]);
+
+    // useEffect(() => {
+    //     listQuestionOfAssignment &&
+    //         setCurrentQuestionId(listQuestionOfAssignment[questionIndex - 1]?.id);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [questionIndex, listQuestionOfAssignment]);
+
     const renderAnswer = (questionTypeId) => {
         switch (questionTypeId) {
             case 1:
@@ -99,37 +121,25 @@ const AnswerQuestion = () => {
                 //     isTrue: false,
                 //     answer: multiChoice.answer,
                 // }));
-                return (
-                    <MultiChoice
-                        key={currentQuestion}
-                        answers={answer}
-                        setAnswers={setAnswer}
-                        Preview
-                    />
-                );
+                return answers && <MultiChoiceAnswer answers={answers} setAnswers={setAnswers} />;
+
             case 2:
                 // contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
                 //     isTrue: false,
                 //     answer: trueFalse.answer,
                 // }));
-                return <TrueFalse answers={answer} setAnswers={setAnswer} />;
+                return answers && <TrueFalse answers={answers} setAnswers={setAnswers} />;
             case 3:
                 return (
-                    <textarea
-                        placeholder='Enter the answer...'
-                        className='outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]'
-                    ></textarea>
+                    answers && (
+                        <textarea
+                            placeholder='Enter the answer...'
+                            className='outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]'
+                        ></textarea>
+                    )
                 );
             case 4:
-                return (
-                    <div className='flex flex-col items-center gap-5'>
-                        {answer?.multiChoice?.map((item, i) => {
-                            return (
-                                <CustomCheckbox key={item.isTrue + item.answer + i} item={item} />
-                            );
-                        })}
-                    </div>
-                );
+                return answers && <MultiSelectAnswers answers={answers} setAnswers={setAnswers} />;
             default:
                 return <div>404</div>;
         }

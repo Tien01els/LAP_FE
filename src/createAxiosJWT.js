@@ -14,7 +14,7 @@ const refreshToken = async () => {
                 headers: { Authorization: `Bearer ${refreshToken}` },
             }
         );
-        return res.data.data;
+        return res.data;
     } catch (err) {
         // return navigation('/');
         console.log(err);

@@ -7,9 +7,6 @@ import { API_URL } from '../constant';
 import Button from '../components/Button';
 //img
 import coverImg from '../assets/image/Login.jpg';
-import createAxiosJWT from '../createAxiosJWT';
-
-const axiosJWT = createAxiosJWT();
 
 const Login = () => {
     const {
@@ -21,8 +18,6 @@ const Login = () => {
     const accessToken = localStorage.getItem('access_token');
     if (accessToken) return <Navigate to='/' replace={true} />;
 
-    // goi dang nhap o day ne nhoc
-    // Co cc
     const onSubmit = async (data) => {
         try {
             const res = await axios.post(API_URL + `account/login`, {
@@ -35,19 +30,6 @@ const Login = () => {
                 localStorage.setItem('refresh_token', tokens.refreshToken);
                 window.location.reload();
             }
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const handleGetUser = async () => {
-        try {
-            const accessToken = localStorage.getItem('access_token');
-            const res = await axiosJWT.get(API_URL + `account`, {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            });
-            
-            console.log(res);
         } catch (err) {
             console.log(err);
         }
@@ -112,9 +94,6 @@ const Login = () => {
                             Login
                         </Button>
                     </form>
-                    <Button type='submit' className='w-full ' onClick={handleGetUser}>
-                        Get User
-                    </Button>
                 </div>
             </div>
         </div>

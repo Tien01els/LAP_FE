@@ -7,7 +7,6 @@ import moment from 'moment';
 import Table from '../../components/Table';
 import { API_URL } from '../../constant';
 import ModalCreateSkill from './ModalCreateSkill';
-// import ModalAssign from './ModalAssign';
 
 const Skills = () => {
     const thead = [
@@ -36,10 +35,6 @@ const Skills = () => {
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const [modalCreateSkillIsOpen, setCreateSkillIsOpen] = useState(false);
-    // const [modalAssignIsOpen, setAssignIsOpen] = useState(false);
-    // const [currentSkill, setCurrentSkill] = useState();
-
-    // const [assignmentName, setAssignmentName] = useState('');
 
     const handleDeleteSkill = (id) => {
         axios.delete(API_URL + `skill/${id}`).then((res) => {
@@ -70,10 +65,6 @@ const Skills = () => {
     const handleOpenModalCreateSkill = () => {
         setCreateSkillIsOpen(true);
     };
-
-    // const handleOpenModalAssign = (skillId) => {
-    //     setAssignIsOpen(true);
-    // };
 
     const handleAssignSkill = (skillId) => {
         axios.get(API_URL + `skill-assignment/skill/${skillId}`).then((res) => {
@@ -173,12 +164,6 @@ const Skills = () => {
                             },
                         ]}
                     />
-                    {/* <ModalAssign
-                        modalAssignIsOpen={modalAssignIsOpen}
-                        setAssignIsOpen={setAssignIsOpen}
-                        assignId={currentSkill}
-                        assignmentName={assignmentName}
-                    /> */}
                 </div>
                 <div className='mt-[16px] flex justify-between px-5'>
                     <span className='font-sm text-gray-500'>

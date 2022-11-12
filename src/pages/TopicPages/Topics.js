@@ -3,10 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
-import Table from '../../components/Table';
 import { API_URL } from '../../constant';
+import Table from '../../components/Table';
 import ModalAddTopic from './ModalAddTopic';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const Topics = () => {
     const thead = [
         {
@@ -28,7 +30,6 @@ const Topics = () => {
     ];
     const navigate = useNavigate();
     const { classId } = useParams();
-    const teacherId = 1;
 
     const [topics, setTopics] = useState([]);
     const [valueTopics, setValueTopics] = useState([]);
@@ -52,7 +53,7 @@ const Topics = () => {
     };
 
     const getTopicOfClass = () => {
-        axios.get(API_URL + `class-topic/teacher/${teacherId}/class/${classId}`).then((res) => {
+        axiosJWT.get(API_URL + `class-topic/teacher/class/${classId}`).then((res) => {
             let result = res.data;
             let arrayResult = [];
             let arrayValueTopic = [];
