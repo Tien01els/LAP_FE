@@ -36,8 +36,8 @@ const ConfirmModal = ({ isOpen, message, yesConfirm, noConfirm }) => {
         <span>{message}</span>
       </div>
       <div className="flex flex-row-reverse gap-5">
-        <Button onClick={yesConfirm}>No</Button>
-        <Button onClick={noConfirm}>Yes</Button>
+        <Button onClick={yesConfirm}>Yes</Button>
+        <Button onClick={noConfirm}>No</Button>
       </div>
     </Modal>
   )

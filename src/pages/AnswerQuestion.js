@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { API_URL } from '../constant';
 import Button from '../components/Button';
@@ -9,12 +9,18 @@ import MultiChoiceAnswer from '../components/Student/MultiChoiceAnswer';
 import TrueFalseAnswer from '../components/Student/TrueFalseAnswer';
 import MultiSelectAnswers from '../components/Student/MultiSelectAnswers';
 import InputAnswer from '../components/Teacher/AnswerType/InputAnswer';
+import TokenExpire from '../components/Modals/TokenExpire';
+import ConfirmModal from '../components/Modals/ConfirmModal';
+
 import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
 const AnswerQuestion = () => {
+    const navigate = useNavigate();
     const { assignmentId, questionIndex } = useParams();
     //   const [countdown, setCountdown] = useState()
+    const [isExpired, setIsExpired] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState();
     const [currentQuestionId, setCurrentQuestionId] = useState();
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
@@ -41,33 +47,64 @@ const AnswerQuestion = () => {
         }
         return false;
     };
+
     const handleSaveAnswer = async () => {
+        try {
+            await axiosJWT.put(
+                API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
+                {
+                    answer: answers,
+                }
+            );
+            if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
+                handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
+            else {
+                handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+                setIsConfirm(true);
+            }
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
+    };
+
+    const handleQuestionOfAssignmentForStudent = useCallback(
+        async (index) => {
+            try {
+                const questionIdx = index || 0;
+                const res = await axiosJWT.get(
+                    API_URL + `student-question/assignment/${assignmentId}`
+                );
+                const questionsOfAssignment = res.data;
+                for (let i = 0; i < questionsOfAssignment.length; i++)
+                    questionsOfAssignment[i].index = i;
+                if (questionsOfAssignment && questionsOfAssignment.length > 0) {
+                    setListQuestionOfAssignment(questionsOfAssignment);
+                    setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
+                }
+            } catch (error) {
+                console.log(error);
+                if (error.response.status === 401) setIsExpired(true);
+            }
+        },
+        [assignmentId]
+    );
+
+    const handleSubmitAssignmet = async () => {
         await axiosJWT.put(
             API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
             {
                 answer: answers,
             }
         );
-        if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
-            handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
-        else handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+
+        handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+        setIsConfirm(true);
     };
 
-    const handleQuestionOfAssignmentForStudent = useCallback(
-        async (index) => {
-            const questionIdx = index || 0;
-            const res = await axiosJWT.get(API_URL + `student-question/assignment/${assignmentId}`);
-            const questionsOfAssignment = res.data;
-            for (let i = 0; i < questionsOfAssignment.length; i++)
-                questionsOfAssignment[i].index = i;
-
-            if (questionsOfAssignment && questionsOfAssignment.length > 0) {
-                setListQuestionOfAssignment(questionsOfAssignment);
-                setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
-            }
-        },
-        [assignmentId]
-    );
+    const handleConfirmSubmitAssignmet = async () => {
+        navigate(`/assignment/${assignmentId}/result`);
+    };
 
     useEffect(() => {
         handleQuestionOfAssignmentForStudent();
@@ -208,19 +245,26 @@ const AnswerQuestion = () => {
                                                 <span>{i + 1}</span>
                                             </div>
                                             {checkStudentAnswered(questionOfAssignment) && (
-                                                <div className='text-white flex w-full h-full items-center justify-center bg-primary'>
-                                                    {/* <i className='fas fa-check text-[8px]'></i> */}
-                                                </div>
+                                                <div className='text-white flex w-full h-full items-center justify-center bg-primary'></div>
                                             )}
                                         </div>
                                     );
                                 })}
                             </div>
                         </div>
-                        <Button className='border-none w-[70%]'>Submit</Button>
+                        <Button className='border-none w-[70%]' onClick={handleSubmitAssignmet}>
+                            Submit
+                        </Button>
                     </div>
                 </div>
             </div>
+            <TokenExpire isOpen={isExpired} />
+            <ConfirmModal
+                isOpen={isConfirm}
+                message='Do you want submit assignment?'
+                yesConfirm={handleConfirmSubmitAssignmet}
+                noConfirm={() => setIsConfirm(false)}
+            />
         </div>
     );
 };
