@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 import { API_URL } from '../constant';
 import Button from '../components/Button';
 // import MultiChoice from '../components/Teacher/AnswerType/MultiChoice';
-import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
+// import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
 import MultiChoiceAnswer from '../components/Student/MultiChoiceAnswer';
+import TrueFalseAnswer from '../components/Student/TrueFalseAnswer';
 import MultiSelectAnswers from '../components/Student/MultiSelectAnswers';
 import InputAnswer from '../components/Teacher/AnswerType/InputAnswer';
 import createAxiosJWT from '../createAxiosJWT';
@@ -76,7 +77,7 @@ const AnswerQuestion = () => {
                                   answer: currentQuestion.contentQuestion?.multiSelect[i]?.answer,
                               })
                           ),
-                          input: [],
+                          input: currentQuestion.answerOfStudent?.answer?.input,
                           trueFalse: currentQuestion.answerOfStudent?.answer?.trueFalse?.map(
                               (trueFalse, i) => ({
                                   isTrue: trueFalse?.isTrue,
@@ -97,7 +98,7 @@ const AnswerQuestion = () => {
                                   answer: multiSelect.answer,
                               })
                           ),
-                          input: [],
+                          input: [{ answer: '' }],
                           trueFalse: currentQuestion.contentQuestion?.trueFalse?.map(
                               (trueFalse) => ({
                                   isTrue: false,
@@ -117,27 +118,23 @@ const AnswerQuestion = () => {
     const renderAnswer = (questionTypeId) => {
         switch (questionTypeId) {
             case 1:
-                // contentQuestion.multiChoice = contentQuestion?.multiChoice.map((multiChoice) => ({
-                //     isTrue: false,
-                //     answer: multiChoice.answer,
-                // }));
                 return answers && <MultiChoiceAnswer answers={answers} setAnswers={setAnswers} />;
-
+            // contentQuestion.multiChoice = contentQuestion?.multiChoice.map((multiChoice) => ({
+            //     isTrue: false,
+            //     answer: multiChoice.answer,
+            // }));
             case 2:
-                // contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
-                //     isTrue: false,
-                //     answer: trueFalse.answer,
-                // }));
-                return answers && <TrueFalse answers={answers} setAnswers={setAnswers} />;
+                return answers && <TrueFalseAnswer answers={answers} setAnswers={setAnswers} />;
+            // contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
+            //     isTrue: false,
+            //     answer: trueFalse.answer,
+            // }));
             case 3:
-                return (
-                    answers && (
-                        <textarea
-                            placeholder='Enter the answer...'
-                            className='outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]'
-                        ></textarea>
-                    )
-                );
+                return answers && <InputAnswer answers={answers} setAnswers={setAnswers} />;
+            // <textarea
+            //     placeholder='Enter the answer...'
+            //     className='outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]'
+            // ></textarea>
             case 4:
                 return answers && <MultiSelectAnswers answers={answers} setAnswers={setAnswers} />;
             default:
