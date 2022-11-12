@@ -8,7 +8,7 @@ const TeacherDashBoard = lazy(() => import('./pages/TeacherPages/TeacherDashBoar
 const TeacherClasses = lazy(() => import('./pages/TeacherPages/TeacherClasses'));
 const TeacherClass = lazy(() => import('./pages/TeacherPages/TeacherClass'));
 const TeacherCreateQuestion = lazy(() => import('./pages/TeacherPages/TeacherCreateQuestion'));
-const Topics = lazy(() => import('./pages/TopicPages/Topics'));
+// const Topics = lazy(() => import('./pages/TopicPages/Topics'));
 const Skills = lazy(() => import('./pages/SkillPages/Skills'));
 const TeacherAssignment = lazy(() => import('./pages/TeacherPages/TeacherAssignment'));
 const TeacherManageStudents = lazy(() => import('./pages/TeacherPages/TeacherManageStudents'));
