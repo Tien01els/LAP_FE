@@ -31,12 +31,14 @@ const ModalAddTopic = ({ classId, modalIsOpen, setIsOpen, getTopicOfClass }) => 
             borderRadius: '8px',
         },
     };
+
     const {
         register: registerAdd,
         handleSubmit: handleSubmitAdd,
         reset: resetAdd,
         formState: formStateAdd,
     } = useForm();
+
     const handleCreateClassTopic = async (classTopic) => {
         try {
             await axios.post(API_URL + `class-topic`, { ...classTopic, classId });
