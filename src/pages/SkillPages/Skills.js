@@ -35,9 +35,6 @@ const Skills = () => {
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const [modalCreateSkillIsOpen, setCreateSkillIsOpen] = useState(false);
-    // const [currentSkill, setCurrentSkill] = useState();
-
-    // const [assignmentName, setAssignmentName] = useState('');
 
     const handleDeleteSkill = (id) => {
         axios.delete(API_URL + `skill/${id}`).then((res) => {
@@ -167,12 +164,6 @@ const Skills = () => {
                             },
                         ]}
                     />
-                    {/* <ModalAssign
-                        modalAssignIsOpen={modalAssignIsOpen}
-                        setAssignIsOpen={setAssignIsOpen}
-                        assignId={currentSkill}
-                        assignmentName={assignmentName}
-                    /> */}
                 </div>
                 <div className='mt-[16px] flex justify-between px-5'>
                     <span className='font-sm text-gray-500'>

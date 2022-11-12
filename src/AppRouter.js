@@ -58,7 +58,7 @@ export default function AppRouter() {
                             path='/class/:classId/manage-topic'
                             element={<TeacherManageTopic />}
                         />
-                        <Route path='/test' element={<AssignmentView />} />
+                        <Route path='/assignment-summary/:assignmentId' element={<AssignmentView />} />
                         <Route path='/test2' element={<Test />} />
                     </>
                 ) : decodedToken?.roleId === 3 ? (

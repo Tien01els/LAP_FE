@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
-import axios from 'axios';
 import moment from 'moment';
 
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
@@ -11,6 +10,10 @@ import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 
 import { API_URL } from '../constant';
 import Button from '../components/Button';
+import TokenExpire from '../components/Modals/TokenExpire';
+import createAxiosJWT from '../createAxiosJWT';
+
+const axiosJWT = createAxiosJWT();
 
 const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentName }) => {
     const currentDate = moment();
@@ -25,6 +28,7 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
         const minutes = currentDate.minutes();
         return `${hours > 9 ? hours : '0' + hours}:${minutes > 9 ? minutes : '0' + minutes}`;
     });
+    const [isExpired, setIsExpired] = useState(false);
 
     const {
         register: registerCreate,
@@ -42,27 +46,32 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
         setAssignIsOpen(false);
     };
 
-    const handleCreateAssignment = (data) => {
-        const due = new Date(`${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${time}`);
-        const assignment = {
-            assignmentName: data.assignmentName,
-            time: data.time,
-            totalScore: data.totalScore,
-            redo: data.redo,
-            dateDue: moment(due).format('YYYY-MM-DD HH:mm:ss'),
-            teacherId: 1,
-        };
-        axios.post(API_URL + `assignment`, assignment).then((res) => {
-            axios
-                .post(API_URL + `skill-assignment`, {
-                    assignmentId: res.data.id,
-                    skillId: assignId,
-                })
-                .then((res) => {
-                    console.log(res.data);
-                    navigate(`/skill/${res.data.skillId}/assignment/${res.data.assignmentId}/`);
-                });
-        });
+    const handleCreateAssignment = async (data) => {
+        try {
+            const due = new Date(
+                `${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${time}`
+            );
+            const assignment = {
+                assignmentName: data.assignmentName,
+                time: data.time,
+                totalScore: data.totalScore,
+                redo: data.redo,
+                dateDue: moment(due).format('YYYY-MM-DD HH:mm:ss'),
+                teacherId: 1,
+            };
+            const newAssignment = await axiosJWT.post(API_URL + `assignment`, assignment);
+            const newSkillAssignment = await axiosJWT.post(API_URL + `skill-assignment`, {
+                assignmentId: newAssignment.data?.id,
+                skillId: assignId,
+            });
+            console.log(newSkillAssignment);
+            navigate(
+                `/skill/${newSkillAssignment.data?.skillId}/assignment/${newSkillAssignment.data?.assignmentId}/`
+            );
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
     };
 
     useEffect(() => {
@@ -123,7 +132,7 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
                 >
                     <div className='flex flex-col gap-4'>
                         <div className='flex justify-center'>
-                            <h2 className='text-2xl font-semibold'>Assign for skill</h2>
+                            <h2 className='text-2xl font-semibold'>Create assignment</h2>
                         </div>
                         <div className='flex flex-col gap-2'>
                             <label htmlFor='assignmentName'>Assignment name</label>
@@ -212,6 +221,7 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
                     <Button className='border-none bg-primary w-full mt-5'>Assign</Button>
                 </form>
             </div>
+            <TokenExpire isOpen={isExpired} />
         </Modal>
     );
 };

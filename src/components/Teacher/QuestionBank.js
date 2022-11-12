@@ -98,6 +98,7 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
 
     const [modalConfirmQuestionIsOpen, setConfirmQuestionIsOpen] = React.useState(false);
 
+    const [searchParam, setSearchParam] = useState('');
     const handleOpenConfirmQuestion = () => {
         const questionChecked = questionBank.map((question) => {
             return {
@@ -270,9 +271,16 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
 
     useEffect(() => {
         const endOffset = itemOffset + 5;
-        setViewBank(bank.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(bank.length / 5));
-    }, [itemOffset, bank]);
+        const filteredBank = bank.filter((val) => {
+            if (searchParam === '' || val.content.toLowerCase().includes(searchParam.toLowerCase()))
+                return val;
+            return '';
+        });
+        setViewBank(filteredBank.slice(itemOffset, endOffset));
+        // setViewBank(bank.filter);
+        console.log(Math.ceil(filteredBank.length / 5));
+        setPageCount(Math.ceil(filteredBank.length / 5));
+    }, [itemOffset, bank, searchParam]);
 
     return (
         <div className='px-8 h-full relative'>
@@ -408,25 +416,23 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
                                 />
                             </div>
                         </div>
-                        <form className='w-full px-[8px] pb-[4px]'>
+                        <div className='w-full px-[8px] pb-[4px]'>
                             <div className='flex justify-center'>
                                 <div className='flex flex-row w-full'>
                                     <input
                                         type='search'
+                                        onChange={(e) => setSearchParam(e.target.value)}
                                         id='search-dropdown'
                                         className='block p-2.5 w-full outline-primary transition-all text-sm text-gray-900 bg-gray-50 rounded-l-lg border border-gray-300 '
                                         placeholder='Search question'
                                         required=''
                                     />
-                                    <button
-                                        type='submit'
-                                        className='top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-                                    >
+                                    <button className='top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
                                         <i className='fa fa-search' />
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <div className='grow'>
                         <div className='flex flex-col justify-between mb-[40px] h-[100%]'>

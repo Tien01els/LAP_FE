@@ -12,7 +12,6 @@ const ModalCreateSkill = ({
     modalCreateSkillIsOpen,
     setCreateSkillIsOpen,
     topicId,
-    getSkillsOfTopic,
     getTopicOfClass,
 }) => {
     const customStyles = {
@@ -54,7 +53,6 @@ const ModalCreateSkill = ({
             topicId,
         };
         axiosJWT.post(API_URL + `skill`, skill).then((res) => {
-            getSkillsOfTopic();
             getTopicOfClass();
         });
     };

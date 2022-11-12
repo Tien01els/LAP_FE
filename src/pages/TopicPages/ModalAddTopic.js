@@ -7,6 +7,7 @@ import { API_URL } from '../../constant';
 import Button from '../../components/Button';
 import ModalCreateTopic from './ModalCreateTopic';
 import createAxiosJWT from '../../createAxiosJWT';
+import { memo } from 'react';
 
 const axiosJWT = createAxiosJWT();
 const ModalAddTopic = ({ classId, modalIsOpen, setIsOpen, getTopicOfClass }) => {
@@ -134,4 +135,4 @@ const ModalAddTopic = ({ classId, modalIsOpen, setIsOpen, getTopicOfClass }) => 
     );
 };
 
-export default ModalAddTopic;
+export default memo(ModalAddTopic);

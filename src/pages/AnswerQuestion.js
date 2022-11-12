@@ -63,7 +63,27 @@ const AnswerQuestion = () => {
         if (currentQuestion)
             setAnswers(
                 currentQuestion.answerOfStudent?.answer
-                    ? currentQuestion.answerOfStudent?.answer
+                    ? {
+                          multiChoice: currentQuestion.answerOfStudent?.answer?.multiChoice?.map(
+                              (multiChoice, i) => ({
+                                  isTrue: multiChoice?.isTrue,
+                                  answer: currentQuestion.contentQuestion?.multiChoice[i]?.answer,
+                              })
+                          ),
+                          multiSelect: currentQuestion.answerOfStudent?.answer?.multiSelect?.map(
+                              (multiSelect, i) => ({
+                                  isTrue: multiSelect?.isTrue,
+                                  answer: currentQuestion.contentQuestion?.multiSelect[i]?.answer,
+                              })
+                          ),
+                          input: [],
+                          trueFalse: currentQuestion.answerOfStudent?.answer?.trueFalse?.map(
+                              (trueFalse, i) => ({
+                                  isTrue: trueFalse?.isTrue,
+                                  answer: currentQuestion.contentQuestion?.trueFalse[i]?.answer,
+                              })
+                          ),
+                      }
                     : {
                           multiChoice: currentQuestion.contentQuestion?.multiChoice?.map(
                               (multiChoice) => ({
