@@ -5,7 +5,6 @@ const imgsrc =
 
 const TopicCard = ({ TopicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) => {
     const [openMoreOption, setOpenMoreOption] = useState(false);
-    console.log(TopicInfo?.topicImg);
     return (
         <div className='w-full flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3'>
             <img
