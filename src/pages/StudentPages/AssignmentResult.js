@@ -86,6 +86,7 @@ const AssignmentResult = () => {
       .get(API_URL + `student-question/assignment/${assignmentId}`)
       .then((res) => {
         const questionsOfStudent = res.data
+
         for (let i = 0; i < questionsOfStudent.length; i++)
           questionsOfStudent[i].index = i
         if (questionsOfStudent && questionsOfStudent.length > 0) {
@@ -93,7 +94,7 @@ const AssignmentResult = () => {
           let countCorrect = 0
           let sumScore = 0
           for (let i = 0; i < questionsOfStudent.length; i++)
-            if (getCorrectAnswerOfQuestion(questionsOfStudent[i])) {
+            if (questionsOfStudent[i]?.answerOfStudent?.isCorrect) {
               ++countCorrect
               sumScore += questionsOfStudent[i].score
             }
@@ -143,7 +144,7 @@ const AssignmentResult = () => {
                       <span>{i + 1}</span>
                     </div>
 
-                    {checkStudentAnswered(questionOfStudent) ? (
+                    {questionOfStudent?.answerOfStudent?.isCorrect ? (
                       <div className="text-white flex w-full h-full items-center justify-center bg-green-400">
                         <i className="fas fa-check text-[8px]"></i>
                       </div>
@@ -197,13 +198,13 @@ const AssignmentResult = () => {
                   </div>
                   <div className="text-sm flex flex-row items-center gap-5">
                     <div className="bg-[#dcedfd] w-[480px] flex justify-between px-3 py-5 rounded-lg">
-                      <span className="w-[450px] whitespace-normal break-words">
+                      <span className="max-w-[430px] break-words whitespace-normal">
                         Your Answer: {checkStudentAnswered(questionOfStudent)}
                       </span>
                     </div>
                     {/* sai nao thi lay do */}
                     <div>
-                      {checkStudentAnswered(questionOfStudent) ? (
+                      {questionOfStudent?.answerOfStudent?.isCorrect ? (
                         <i className="fa-solid fa-circle-check text-xl text-green-400"></i>
                       ) : (
                         <i className="fa-solid fa-circle-xmark text-xl text-red-500"></i>
