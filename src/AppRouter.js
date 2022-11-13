@@ -77,14 +77,10 @@ export default function AppRouter() {
                             path='/assignment/:assignmentId/question/:questionIndex'
                             element={<AnswerQuestion />}
                         />
-                        <Route path='/class' element={<StudentClass />} />
+                        <Route path='/class/:classId' element={<StudentClass />} />
                         <Route
                             path='/assignment/:assignmentId/result'
                             element={<AssignmentResult />}
-                        />
-                        <Route
-                            path='/class/:classId/manage-topic'
-                            element={<TeacherManageTopic />}
                         />
                         {/* login */}
                     </>
