@@ -165,7 +165,7 @@ const StudentClass = () => {
             if (error.response.status === 401) setIsExpired(true);
         }
     }, [classId, currentTopicId]);
-
+    
     const getSkillsOfTopic = useCallback(async () => {
         try {
             if (currentTopicId) {
