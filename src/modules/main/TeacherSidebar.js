@@ -13,7 +13,6 @@ const TeacherSidebar = () => {
     const navigate = useNavigate();
     const accessToken = localStorage.getItem('access_token');
     const decodedToken = accessToken && jwtDecode(accessToken);
-    console.log(decodedToken);
     let user = {
         name: decodedToken && decodedToken.fullName,
         imageUrl:
