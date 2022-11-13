@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../constant'
 import logo from '../../img/logo.png'
 import TeacherMenu from './TeacherMenu'
+import StudentMenu from './StudentMenu'
 import createAxiosJWT from '../../createAxiosJWT'
+import jwtDecode from 'jwt-decode'
 
 const axiosJWT = createAxiosJWT()
 const TeacherSidebar = () => {
@@ -16,8 +18,11 @@ const TeacherSidebar = () => {
     role: 'Teacher',
   }
 
-  //   let user = jwtDecode(localStorage.getItem('access_token'))
-  //   console.log(user)
+  const accessToken = localStorage.getItem('access_token')
+  const decodedToken = accessToken && jwtDecode(accessToken)
+
+  console.log(decodedToken)
+
   const handleLogOut = async () => {
     try {
       await axiosJWT.delete(API_URL + 'account/logout')
@@ -38,7 +43,11 @@ const TeacherSidebar = () => {
       {/* logo */}
       <div className="flex flex-col justify-center items-center gap-20">
         <img src={logo} alt="" className="w-[200px] h-[100px] bg-cover"></img>
-        <TeacherMenu />
+        {decodedToken && decodedToken.roleId === 2 ? (
+          <TeacherMenu />
+        ) : (
+          <StudentMenu />
+        )}
       </div>
 
       {/* bottom */}

@@ -177,6 +177,8 @@ const StudentClass = () => {
     }
   }, [classId, currentTopicId])
 
+  console.log(currentTopicId)
+
   return (
     <div className="flex flex-row h-screen">
       {/* left */}
