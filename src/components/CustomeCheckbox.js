@@ -7,7 +7,6 @@ const CustomCheckbox = ({ item, onClickCheckbox }) => {
         onClickCheckbox(answer);
     };
     useEffect(() => {
-        console.log(item);
         setIsCheck(item?.isTrue);
     }, [item]);
 

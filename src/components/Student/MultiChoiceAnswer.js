@@ -70,10 +70,10 @@ const MultiChoiceAnswer = ({ answers, setAnswers }) => {
           name="chosenAnswer"
         />
       </div>
-      <div className="grid grid-cols-2 gap-5 my-5">
+      <div className="flex flex-col w-full gap-5 my-5">
         <label
           htmlFor="option-A"
-          className={`border border-primary  outline-none px-32 py-3 rounded-lg transition-all cursor-pointer ${
+          className={`border border-primary outline-none w-full inline-block whitespace-normal break-words px-5 justify-center py-3 rounded-lg transition-all cursor-pointer ${
             chosenAnswer === 'a'
               ? 'bg-primary text-white'
               : 'text-primary bg-white'
@@ -83,7 +83,7 @@ const MultiChoiceAnswer = ({ answers, setAnswers }) => {
         </label>
         <label
           htmlFor="option-B"
-          className={`border border-primary  outline-none px-32 py-3 rounded-lg transition-all cursor-pointer ${
+          className={`border border-primary outline-none w-full inline-block whitespace-normal break-words px-5 h-fit justify-center py-3 rounded-lg transition-all cursor-pointer ${
             chosenAnswer === 'b'
               ? 'bg-primary text-white'
               : 'text-primary bg-white'
@@ -93,7 +93,7 @@ const MultiChoiceAnswer = ({ answers, setAnswers }) => {
         </label>
         <label
           htmlFor="option-C"
-          className={`border border-primary  outline-none px-32 py-3 rounded-lg transition-all cursor-pointer ${
+          className={`border border-primary outline-none w-full inline-block whitespace-normal break-words px-5 h-fit justify-center py-3 rounded-lg transition-all cursor-pointer ${
             chosenAnswer === 'c'
               ? 'bg-primary text-white'
               : 'text-primary bg-white'
@@ -103,7 +103,7 @@ const MultiChoiceAnswer = ({ answers, setAnswers }) => {
         </label>
         <label
           htmlFor="option-D"
-          className={`border border-primary  outline-none px-32 py-3 rounded-lg transition-all cursor-pointer ${
+          className={`border border-primary outline-none w-full inline-block whitespace-normal break-words px-5 h-fit justify-center py-3 rounded-lg transition-all cursor-pointer ${
             chosenAnswer === 'd'
               ? 'bg-primary text-white'
               : 'text-primary bg-white'

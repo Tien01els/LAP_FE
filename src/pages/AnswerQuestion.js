@@ -1,51 +1,110 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { API_URL } from '../constant';
 import Button from '../components/Button';
 // import MultiChoice from '../components/Teacher/AnswerType/MultiChoice';
-import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
+// import TrueFalse from '../components/Teacher/AnswerType/TrueFalse';
 import MultiChoiceAnswer from '../components/Student/MultiChoiceAnswer';
+import TrueFalseAnswer from '../components/Student/TrueFalseAnswer';
 import MultiSelectAnswers from '../components/Student/MultiSelectAnswers';
 import InputAnswer from '../components/Teacher/AnswerType/InputAnswer';
+import TokenExpire from '../components/Modals/TokenExpire';
+import ConfirmModal from '../components/Modals/ConfirmModal';
+
 import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
 const AnswerQuestion = () => {
+    const navigate = useNavigate();
     const { assignmentId, questionIndex } = useParams();
     //   const [countdown, setCountdown] = useState()
+    const [isExpired, setIsExpired] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState();
     const [currentQuestionId, setCurrentQuestionId] = useState();
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
     const [answers, setAnswers] = useState();
 
+    const checkStudentAnswered = (questionOfAssignment) => {
+        const questionType = ['', 'multiChoice', 'trueFalse', 'input', 'multiSelect'];
+        const answerOfStudent = questionOfAssignment?.answerOfStudent?.answer;
+        const typeOfquestion =
+            questionOfAssignment?.questionTypeId &&
+            questionType[questionOfAssignment?.questionTypeId];
+        if (answerOfStudent && typeOfquestion && answerOfStudent[typeOfquestion]) {
+            const resultOfStudent = answerOfStudent[typeOfquestion];
+            if (typeOfquestion === 'multiChoice')
+                for (let i = 0; i < resultOfStudent.length; i++)
+                    if (resultOfStudent[i].isTrue) return true;
+            if (typeOfquestion === 'trueFalse')
+                for (let i = 0; i < resultOfStudent.length; i++)
+                    if (resultOfStudent[i].isTrue) return true;
+            if (typeOfquestion === 'input' && resultOfStudent[0].answer.length > 0) return true;
+            if (typeOfquestion === 'multiSelect')
+                for (let i = 0; i < resultOfStudent.length; i++)
+                    if (resultOfStudent[i].isTrue) return true;
+        }
+        return false;
+    };
+
     const handleSaveAnswer = async () => {
+        try {
+            await axiosJWT.put(
+                API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
+                {
+                    answer: answers,
+                }
+            );
+            if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
+                handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
+            else {
+                handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+                setIsConfirm(true);
+            }
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
+    };
+
+    const handleQuestionOfAssignmentForStudent = useCallback(
+        async (index) => {
+            try {
+                const questionIdx = index || 0;
+                const res = await axiosJWT.get(
+                    API_URL + `student-question/assignment/${assignmentId}`
+                );
+                const questionsOfAssignment = res.data;
+                for (let i = 0; i < questionsOfAssignment.length; i++)
+                    questionsOfAssignment[i].index = i;
+                if (questionsOfAssignment && questionsOfAssignment.length > 0) {
+                    setListQuestionOfAssignment(questionsOfAssignment);
+                    setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
+                }
+            } catch (error) {
+                console.log(error);
+                if (error.response.status === 401) setIsExpired(true);
+            }
+        },
+        [assignmentId]
+    );
+
+    const handleSubmitAssignmet = async () => {
         await axiosJWT.put(
             API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
             {
                 answer: answers,
             }
         );
-        if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
-            handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
-        else handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+
+        handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+        setIsConfirm(true);
     };
 
-    const handleQuestionOfAssignmentForStudent = useCallback(
-        async (index) => {
-            const questionIdx = index || 0;
-            const res = await axiosJWT.get(API_URL + `student-question/assignment/${assignmentId}`);
-            const questionsOfAssignment = res.data;
-            for (let i = 0; i < questionsOfAssignment.length; i++)
-                questionsOfAssignment[i].index = i;
-
-            if (questionsOfAssignment && questionsOfAssignment.length > 0) {
-                setListQuestionOfAssignment(questionsOfAssignment);
-                setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
-            }
-        },
-        [assignmentId]
-    );
+    const handleConfirmSubmitAssignmet = async () => {
+        navigate(`/assignment/${assignmentId}/result`);
+    };
 
     useEffect(() => {
         handleQuestionOfAssignmentForStudent();
@@ -76,7 +135,7 @@ const AnswerQuestion = () => {
                                   answer: currentQuestion.contentQuestion?.multiSelect[i]?.answer,
                               })
                           ),
-                          input: [],
+                          input: currentQuestion.answerOfStudent?.answer?.input,
                           trueFalse: currentQuestion.answerOfStudent?.answer?.trueFalse?.map(
                               (trueFalse, i) => ({
                                   isTrue: trueFalse?.isTrue,
@@ -97,7 +156,7 @@ const AnswerQuestion = () => {
                                   answer: multiSelect.answer,
                               })
                           ),
-                          input: [],
+                          input: [{ answer: '' }],
                           trueFalse: currentQuestion.contentQuestion?.trueFalse?.map(
                               (trueFalse) => ({
                                   isTrue: false,
@@ -117,27 +176,23 @@ const AnswerQuestion = () => {
     const renderAnswer = (questionTypeId) => {
         switch (questionTypeId) {
             case 1:
-                // contentQuestion.multiChoice = contentQuestion?.multiChoice.map((multiChoice) => ({
-                //     isTrue: false,
-                //     answer: multiChoice.answer,
-                // }));
                 return answers && <MultiChoiceAnswer answers={answers} setAnswers={setAnswers} />;
-
+            // contentQuestion.multiChoice = contentQuestion?.multiChoice.map((multiChoice) => ({
+            //     isTrue: false,
+            //     answer: multiChoice.answer,
+            // }));
             case 2:
-                // contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
-                //     isTrue: false,
-                //     answer: trueFalse.answer,
-                // }));
-                return answers && <TrueFalse answers={answers} setAnswers={setAnswers} />;
+                return answers && <TrueFalseAnswer answers={answers} setAnswers={setAnswers} />;
+            // contentQuestion.trueFalse = contentQuestion?.trueFalse.map((trueFalse) => ({
+            //     isTrue: false,
+            //     answer: trueFalse.answer,
+            // }));
             case 3:
-                return (
-                    answers && (
-                        <textarea
-                            placeholder='Enter the answer...'
-                            className='outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]'
-                        ></textarea>
-                    )
-                );
+                return answers && <InputAnswer answers={answers} setAnswers={setAnswers} />;
+            // <textarea
+            //     placeholder='Enter the answer...'
+            //     className='outline-primary resize-none transition-all border-2 border-gray-500 px-5 py-2 rounded-md w-[100%]'
+            // ></textarea>
             case 4:
                 return answers && <MultiSelectAnswers answers={answers} setAnswers={setAnswers} />;
             default:
@@ -189,18 +244,27 @@ const AnswerQuestion = () => {
                                             <div className='flex justify-center items-center'>
                                                 <span>{i + 1}</span>
                                             </div>
-                                            <div className='text-white flex w-full h-full items-center justify-center bg-green-500'>
-                                                <i className='fas fa-check text-[8px]'></i>
-                                            </div>
+                                            {checkStudentAnswered(questionOfAssignment) && (
+                                                <div className='text-white flex w-full h-full items-center justify-center bg-primary'></div>
+                                            )}
                                         </div>
                                     );
                                 })}
                             </div>
                         </div>
-                        <Button className='border-none w-[70%]'>Submit</Button>
+                        <Button className='border-none w-[70%]' onClick={handleSubmitAssignmet}>
+                            Submit
+                        </Button>
                     </div>
                 </div>
             </div>
+            <TokenExpire isOpen={isExpired} />
+            <ConfirmModal
+                isOpen={isConfirm}
+                message='Do you want submit assignment?'
+                yesConfirm={handleConfirmSubmitAssignmet}
+                noConfirm={() => setIsConfirm(false)}
+            />
         </div>
     );
 };

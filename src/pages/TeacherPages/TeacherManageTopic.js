@@ -25,7 +25,7 @@ const TeacherManageTopic = () => {
     //Search
     const [searchTerm, setSearchTerm] = useState('');
     //Topics
-    const [topicsOfClasss, setTopicsOfClasss] = useState([]);
+    const [topicsOfClass, setTopicsOfClass] = useState([]);
     const [topics, setTopics] = useState([]);
     const [skills, setSkills] = useState([]);
     const [currentTopic, setCurrentTopic] = useState({});
@@ -78,7 +78,7 @@ const TeacherManageTopic = () => {
                 ];
             }
             setTopics(valueTopics);
-            setTopicsOfClasss(result);
+            setTopicsOfClass(result);
         } catch (error) {
             console.log(error);
             if (error.response.status === 401) setIsExpired(true);
@@ -152,6 +152,7 @@ const TeacherManageTopic = () => {
     const handleOpenModalCreateSkill = () => {
         setCreateSkillIsOpen(true);
     };
+    console.log(topicsOfClass);
 
     return (
         <div className='flex flex-row h-screen'>
@@ -185,7 +186,7 @@ const TeacherManageTopic = () => {
                 {/* filter */}
                 {/* courses */}
                 <div className='flex flex-col gap-7 px-4 pb-4 overflow-auto scroll-smooth'>
-                    {topicsOfClasss
+                    {topicsOfClass
                         .filter((val) => {
                             if (
                                 searchTerm === '' ||
