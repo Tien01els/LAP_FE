@@ -58,7 +58,7 @@ const TeacherAssignment = () => {
   const [selectedSkills, setSelectedSkills] = useState(() =>
     skillId ? [skillId] : [],
   )
-  const [selectedLevel, setSelectedLevel] = useState('')
+  const [selectedLevel, setSelectedLevel] = useState('Easy')
 
   const [selectedAssignmentName, setSelectedAssignmentName] = useState('')
   const [selectedTotalScore, setSelectedTotalScore] = useState('')
@@ -270,13 +270,13 @@ const TeacherAssignment = () => {
       })
   }, [assignmentId])
 
-  useEffect(() => {
-    if (selectedLevel) {
-      if (selectedLevel.toLowerCase() === 'easy') setScore(5)
-      if (selectedLevel.toLowerCase() === 'medium') setScore(10)
-      if (selectedLevel.toLowerCase() === 'hard') setScore(20)
-    }
-  }, [selectedLevel, score])
+  // useEffect(() => {
+  //   if (selectedLevel) {
+  //     if (selectedLevel.toLowerCase() === 'easy') setScore(5)
+  //     if (selectedLevel.toLowerCase() === 'medium') setScore(10)
+  //     if (selectedLevel.toLowerCase() === 'hard') setScore(20)
+  //   }
+  // }, [selectedLevel, score])
 
   useEffect(() => {
     const mf = document.querySelector('#formula')
@@ -288,27 +288,6 @@ const TeacherAssignment = () => {
       <div className="flex flex-row gap-7 justify-center w-full h-full">
         <div className="w-[800px] bg-white rounded-lg shadow-lg flex flex-col justify-between my-4 px-10 py-5">
           <div className="flex flex-col gap-4">
-            {/* <div className='flex justify-between items-center'>
-                           <span className='font-medium text-xl'>Question</span>
-                           <div className='flex flex-row gap-3 items-center'>
-                                <Select
-                                    ref={selectLevel}
-                                    options={levelOption}
-                                    placeholder='Level'
-                                    onChange={(e) => setSelectedLevel(e.value)}
-                                    className='w-[125px]'
-                                />
-                                <div className='flex gap-2 items-center'>
-                                    <span>Score</span>
-                                    <input
-                                        className='outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all'
-                                        value={score}
-                                        onChange={handleScore}
-                                    />
-                                    <span>pt</span>
-                                </div>
-                            </div> *
-                        </div> */}
             <div className="h-[88px]">
               <QuestionOption
                 setSelectedSkills={setSelectedSkills}
