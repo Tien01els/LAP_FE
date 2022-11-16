@@ -68,11 +68,10 @@ const TeacherClass = () => {
         <div className="px-16 flex flex-row gap-32 justify-center items-center">
           <DetailsCard
             value={classInfo.averageScore}
-            title="Average Score"
-            isScore={true}
+            title="Exams"
             shadow="teacherdetails__AScore"
             color={'text-[#00d4ff]'}
-            nav="/dashboard"
+            nav={`/class/${classId}/exams`}
           />
           <DetailsCard
             value={classInfo.numberTopics}
