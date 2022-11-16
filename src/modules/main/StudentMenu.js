@@ -104,7 +104,7 @@ const StudentSidebar = () => {
 
 const Notification = ({ value }) => {
   return (
-    <div className="flex flex-row p-3 hover:bg-gray-100 transition-all gap-4">
+    <div className="flex flex-row p-3 select-none  hover:bg-gray-100 transition-all gap-4">
       {value.type === 'Accepted' ? (
         <i className="fa-solid fa-square-check text-2xl text-green-400"></i>
       ) : (
