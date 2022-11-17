@@ -24,10 +24,15 @@ const ConfirmModal = ({ isOpen, message, yesConfirm, noConfirm }) => {
     },
   }
 
+  const handleNoConfirm = () => {
+    noConfirm()
+  }
+
   return (
     <Modal
       isOpen={isOpen}
       style={customStyles}
+      shouldCloseOnOverlayClick={true}
       contentLabel="Example Modal"
       ariaHideApp={false}
     >
@@ -35,9 +40,9 @@ const ConfirmModal = ({ isOpen, message, yesConfirm, noConfirm }) => {
         <span className="text-2xl font-medium">Confirm</span>
         <span>{message}</span>
       </div>
-      <div className="flex flex-row-reverse gap-5">
+      <div className="flex flex-row-reverse mt-5 gap-5">
         <Button onClick={yesConfirm}>Yes</Button>
-        <Button onClick={noConfirm}>No</Button>
+        <Button onClick={handleNoConfirm}>No</Button>
       </div>
     </Modal>
   )
