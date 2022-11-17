@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { API_URL } from '../../constant';
@@ -7,12 +7,19 @@ import TeacherMenu from './TeacherMenu';
 import StudentMenu from './StudentMenu';
 import createAxiosJWT from '../../createAxiosJWT';
 import jwtDecode from 'jwt-decode';
+import { SocketContext } from '../../App';
 
 const axiosJWT = createAxiosJWT();
 const TeacherSidebar = () => {
+    const socket = useContext(SocketContext);
     const navigate = useNavigate();
     const accessToken = localStorage.getItem('access_token');
-    const decodedToken = accessToken && jwtDecode(accessToken);
+    const decodedToken = useMemo(() => {
+        return accessToken && jwtDecode(accessToken);
+    }, [accessToken]);
+
+    const [rooms, setRooms] = useState([]);
+
     let user = {
         name: decodedToken && decodedToken.fullName,
         imageUrl:
@@ -35,9 +42,63 @@ const TeacherSidebar = () => {
             window.location.reload();
         }
     };
+
+    const getRoomsOfUser = useCallback(async () => {
+        try {
+            if (decodedToken) {
+                const res = await axiosJWT.get(
+                    API_URL + `notification-room/receiver/${decodedToken?.accountId}`
+                );
+                setRooms(res.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, [decodedToken]);
+
+    useEffect(() => {
+        getRoomsOfUser();
+    }, [getRoomsOfUser]);
+
+    useEffect(() => {
+        rooms && socket?.emit('rooms', rooms);
+    }, [socket, rooms]);
+
+    useEffect(() => {
+        socket?.on('vui ve ko quau nha 2', (data) => {
+            if (data.senderId !== decodedToken?.accountId) {
+                // console.log(socket.id);
+                console.log('Suc vat Nhat');
+            }
+        });
+        socket?.on('get-request-unlock-topic', (data) => {
+            if (data.senderId !== decodedToken?.accountId) {
+                // console.log(socket.id);
+                console.log(data);
+                // setNotification(prev => [...prev, data])
+            }
+        });
+    }, [socket, decodedToken]);
+
+    // useEffect(() => {
+
+    // }, [notification])
+    const handleSendRequestUnlock = async () => {
+        // socket?.emit('vui ve ko quau nha', {
+        //     content: 'Khong dam no thi hoi phi a bro',
+        //     senderId: decodedToken?.accountId,
+        // });
+        socket?.emit('send-request-unlock-topic', {
+            senderId: decodedToken?.accountId,
+            userId: decodedToken?.userId,
+            topicId: 1,
+        });
+    };
+
     return (
         <div className='w-[240px] items-center h-full fixed top-0 left-0 bg-white shadow-sm flex flex-col p-5 gap-10 justify-between'>
             {/* logo */}
+            <button onClick={handleSendRequestUnlock}>Send request</button>
             <div className='flex flex-col justify-center items-center gap-20'>
                 <img src={logo} alt='' className='w-[200px] h-[100px] bg-cover'></img>
                 {decodedToken && decodedToken.roleId === 2 ? <TeacherMenu /> : <StudentMenu />}
