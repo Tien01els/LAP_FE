@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import moment from 'moment';
+
+import { API_URL } from '../../constant';
 import Button from '../../components/Button';
+import createAxiosJWT from '../../createAxiosJWT';
+import { SocketContext } from '../../App';
+import jwtDecode from 'jwt-decode';
+
+const axiosJWT = createAxiosJWT();
 
 const Notification = ({ value }) => {
     return (
@@ -8,10 +16,12 @@ const Notification = ({ value }) => {
             <i className='fa-solid fa-square-check text-2xl text-green-400'></i>
             <div className='flex flex-col gap-2'>
                 <span className='max-w-[260px] pt-1 text-sm whitespace-normal break-words text-gray-600'>
-                    {value.message}
+                    {value.content}
                 </span>
                 <div className='flex flex-row justify-between items-center'>
-                    <span className='text-xs text-gray-400'>{value.time}</span>
+                    <span className='text-xs text-gray-400'>
+                        {moment(value.dateRequest).format('lll')}
+                    </span>
                     <div className='flex flex-row gap-2'>
                         <Button className='text-xs'>Accept</Button>
                         <Button className='text-xs bg-white text-primary shadow border border-primary'>
@@ -25,26 +35,43 @@ const Notification = ({ value }) => {
 };
 
 const TeacherMenu = () => {
-    const [isOpenNoti, setIsOpenNoti] = useState(false);
+    const accessToken = localStorage.getItem('access_token');
+    const decodedToken = useMemo(() => {
+        return accessToken && jwtDecode(accessToken);
+    }, [accessToken]);
+    const socket = useContext(SocketContext);
 
-    let mock = [
-        {
-            message: 'Student ABC from Class MATH_1 request to unlock topic DEF',
-            time: '25 April 2001',
-        },
-        {
-            message: 'Student ABC from Class MATH_1 request to unlock topic DEF',
-            time: '25 April 2001',
-        },
-        {
-            message: 'Student ABC from Class MATH_1 request to unlock topic DEF',
-            time: '25 April 2001',
-        },
-        {
-            message: 'Student ABC from Class MATH_1 request to unlock topic DEF',
-            time: '25 April 2001',
-        },
-    ];
+    const [isOpenNoti, setIsOpenNoti] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        socket?.on('vui ve ko quau nha 2', (data) => {
+            console.log('SV Nhat');
+        });
+        socket?.on('get-request-unlock-topic', (data) => {
+            if (data.senderId !== decodedToken?.accountId) {
+                console.log(data);
+                setNotifications((prev) => [data, ...prev]);
+            }
+        });
+    }, [socket, decodedToken]);
+
+    const getRoomsOfUser = useCallback(async () => {
+        try {
+            if (decodedToken) {
+                const res = await axiosJWT.get(
+                    API_URL + `notification-content/receiver/${decodedToken.accountId}`
+                );
+                setNotifications(res.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, [decodedToken]);
+
+    useEffect(() => {
+        getRoomsOfUser();
+    }, [getRoomsOfUser]);
 
     return (
         <div className='flex flex-col gap-3'>
@@ -93,8 +120,8 @@ const TeacherMenu = () => {
                         Notifications
                     </span>
                     <div className='flex flex-col overflow-y-auto'>
-                        {mock.map((val, i) => {
-                            return <Notification key={i} value={val} />;
+                        {notifications?.map((val, i) => {
+                            return <Notification key={val.id} value={val} />;
                         })}
                     </div>
                 </div>

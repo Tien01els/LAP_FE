@@ -6,8 +6,8 @@ import logo from '../../img/logo.png';
 import TeacherMenu from './TeacherMenu';
 import StudentMenu from './StudentMenu';
 import createAxiosJWT from '../../createAxiosJWT';
-import jwtDecode from 'jwt-decode';
 import { SocketContext } from '../../App';
+import jwtDecode from 'jwt-decode';
 
 const axiosJWT = createAxiosJWT();
 const TeacherSidebar = () => {
@@ -47,7 +47,7 @@ const TeacherSidebar = () => {
         try {
             if (decodedToken) {
                 const res = await axiosJWT.get(
-                    API_URL + `notification-room/receiver/${decodedToken?.accountId}`
+                    API_URL + `notification-room/receiver/${decodedToken.accountId}`
                 );
                 setRooms(res.data);
             }
@@ -64,25 +64,6 @@ const TeacherSidebar = () => {
         rooms && socket?.emit('rooms', rooms);
     }, [socket, rooms]);
 
-    useEffect(() => {
-        socket?.on('vui ve ko quau nha 2', (data) => {
-            if (data.senderId !== decodedToken?.accountId) {
-                // console.log(socket.id);
-                console.log('Suc vat Nhat');
-            }
-        });
-        socket?.on('get-request-unlock-topic', (data) => {
-            if (data.senderId !== decodedToken?.accountId) {
-                // console.log(socket.id);
-                console.log(data);
-                // setNotification(prev => [...prev, data])
-            }
-        });
-    }, [socket, decodedToken]);
-
-    // useEffect(() => {
-
-    // }, [notification])
     const handleSendRequestUnlock = async () => {
         // socket?.emit('vui ve ko quau nha', {
         //     content: 'Khong dam no thi hoi phi a bro',
@@ -92,6 +73,7 @@ const TeacherSidebar = () => {
             senderId: decodedToken?.accountId,
             userId: decodedToken?.userId,
             topicId: 1,
+            typeHandle: 'Student_Topic',
         });
     };
 
