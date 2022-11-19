@@ -12,6 +12,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
 
     const [openMoreOption, setOpenMoreOption] = useState(false);
     const [isOpenModalRequest, setIsOpenModalRequest] = useState(false);
+    const [isRequested, setIsRequested] = useState(false);
 
     const accessToken = localStorage.getItem('access_token');
     const decodedToken = useMemo(() => {
@@ -21,7 +22,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
     const handleRequestOpen = () => {
         setIsOpenModalRequest(!isOpenModalRequest);
     };
-    
+
     const handleSendRequestUnlock = async () => {
         socket?.emit('send-request-unlock-topic', {
             senderId: decodedToken?.accountId,
@@ -31,6 +32,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
         });
         setIsOpenModalRequest(!isOpenModalRequest);
     };
+    console.log(topicInfo);
 
     return (
         <div className='w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3'>
@@ -45,7 +47,11 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
                     onClick={() => handleRequestOpen()}
                     className='w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 cursor-pointer z-1'
                 >
-                    <span className='text-white'>Request to Open topic</span>
+                    <span className='text-white'>
+                        {topicInfo?.notificationContentId
+                            ? `Waiting for teacher response...`
+                            : `Request to open topic`}
+                    </span>
                 </div>
             )}
             <img
