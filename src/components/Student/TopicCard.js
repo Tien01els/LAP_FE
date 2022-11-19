@@ -40,7 +40,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
                 yesConfirm={handleSendRequestUnlock}
                 message='Confirm to send request to open this topic.'
             />
-            {!topicInfo?.isUnlock && (
+            {!topicInfo?.isUnlock && !isTeacher && (
                 <div
                     onClick={() => handleRequestOpen()}
                     className={`w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 z-1 ${
