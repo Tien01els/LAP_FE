@@ -74,7 +74,7 @@ const StudentSidebar = () => {
         <div
           className={`${
             isOpenNoti ? `` : `hidden`
-          }  absolute bg-white rounded-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-[300px] translate-x-52 -translate-y-11 z-[1000px]`}
+          }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-[100vh] translate-x-[215px] -translate-y-[485px] z-[1000px]`}
         >
           <span className="text-xl text-gray-600 font-[500] px-5 py-3">
             Notifications

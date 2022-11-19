@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import TeacherSidebar from '../modules/main/TeacherSidebar'
+import Sidebar from '../modules/main/Sidebar'
 
 const MainLayout = ({ role }) => {
   if (!role) return <Outlet></Outlet>
@@ -10,7 +10,7 @@ const MainLayout = ({ role }) => {
       <div className="pl-60">
         <Outlet></Outlet>
       </div>
-      <TeacherSidebar />
+      <Sidebar />
     </>
   )
 }
