@@ -19,7 +19,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
     }, [accessToken]);
 
     const handleRequestOpen = () => {
-        topicInfo?.notificationContentId && setIsOpenModalRequest(!isOpenModalRequest);
+        !topicInfo?.notificationContentId && setIsOpenModalRequest(!isOpenModalRequest);
     };
 
     const handleSendRequestUnlock = async () => {
