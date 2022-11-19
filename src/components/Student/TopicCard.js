@@ -7,12 +7,11 @@ import { SocketContext } from '../../App';
 const imgsrc =
     'https://thumbs.dreamstime.com/b/letter-block-word-topic-wood-background-business-concept-170764857.jpg';
 
-const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isLocked }) => {
+const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) => {
     const socket = useContext(SocketContext);
 
     const [openMoreOption, setOpenMoreOption] = useState(false);
     const [isOpenModalRequest, setIsOpenModalRequest] = useState(false);
-    const [isRequested, setIsRequested] = useState(false);
 
     const accessToken = localStorage.getItem('access_token');
     const decodedToken = useMemo(() => {
@@ -20,7 +19,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
     }, [accessToken]);
 
     const handleRequestOpen = () => {
-        setIsOpenModalRequest(!isOpenModalRequest);
+        topicInfo?.notificationContentId && setIsOpenModalRequest(!isOpenModalRequest);
     };
 
     const handleSendRequestUnlock = async () => {
@@ -32,7 +31,6 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
         });
         setIsOpenModalRequest(!isOpenModalRequest);
     };
-    console.log(topicInfo);
 
     return (
         <div className='w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3'>
@@ -42,10 +40,12 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId, isL
                 yesConfirm={handleSendRequestUnlock}
                 message='Confirm to send request to open this topic.'
             />
-            {isLocked && (
+            {!topicInfo?.isUnlock && (
                 <div
                     onClick={() => handleRequestOpen()}
-                    className='w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 cursor-pointer z-1'
+                    className={`w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 z-1 ${
+                        topicInfo?.notificationContentId ? '' : 'cursor-pointer'
+                    }`}
                 >
                     <span className='text-white'>
                         {topicInfo?.notificationContentId

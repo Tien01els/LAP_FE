@@ -208,7 +208,6 @@ const StudentClass = () => {
                                     topicInfo={item}
                                     key={i}
                                     setCurrentTopicId={setCurrentTopicId}
-                                    isLocked
                                 />
                             );
                         })}
