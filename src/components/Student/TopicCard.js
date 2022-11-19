@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import jwtDecode from 'jwt-decode';
 
 import ConfirmModal from '../Modals/ConfirmModal';
@@ -12,6 +12,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
 
     const [openMoreOption, setOpenMoreOption] = useState(false);
     const [isOpenModalRequest, setIsOpenModalRequest] = useState(false);
+    const [isRequested, setIsRequested] = useState(false);
 
     const accessToken = localStorage.getItem('access_token');
     const decodedToken = useMemo(() => {
@@ -19,7 +20,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
     }, [accessToken]);
 
     const handleRequestOpen = () => {
-        !topicInfo?.notificationContentId && setIsOpenModalRequest(!isOpenModalRequest);
+        !isRequested && setIsOpenModalRequest(!isOpenModalRequest);
     };
 
     const handleSendRequestUnlock = async () => {
@@ -30,8 +31,12 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
             typeHandle: 'Student_Topic',
         });
         setIsOpenModalRequest(!isOpenModalRequest);
+        setIsRequested(true);
     };
 
+    useEffect(() => {
+        setIsRequested(topicInfo?.notificationContentId);
+    }, [topicInfo?.notificationContentId]);
     return (
         <div className='w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3'>
             <ConfirmModal
@@ -44,13 +49,11 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
                 <div
                     onClick={() => handleRequestOpen()}
                     className={`w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 z-1 ${
-                        topicInfo?.notificationContentId ? '' : 'cursor-pointer'
+                        isRequested ? '' : 'cursor-pointer'
                     }`}
                 >
                     <span className='text-white'>
-                        {topicInfo?.notificationContentId
-                            ? `Waiting for teacher response...`
-                            : `Request to open topic`}
+                        {isRequested ? `Waiting for teacher response...` : `Request to open topic`}
                     </span>
                 </div>
             )}
