@@ -15,7 +15,15 @@ const TopicCard = ({
   const [openMoreOption, setOpenMoreOption] = useState(false)
   const [isOpenModalRequest, setIsOpenModalRequest] = useState(false)
 
+  const [isRequested, setIsRequested] = useState(false)
+
   const handleRequestOpen = () => {
+    if (isRequested) return
+    setIsOpenModalRequest(!isOpenModalRequest)
+  }
+
+  const handleAcceptToRequest = () => {
+    setIsRequested(true)
     setIsOpenModalRequest(!isOpenModalRequest)
   }
 
@@ -24,6 +32,7 @@ const TopicCard = ({
       <ConfirmModal
         isOpen={isOpenModalRequest}
         noConfirm={handleRequestOpen}
+        yesConfirm={handleAcceptToRequest}
         message="Confirm to send request to open this topic."
       />
       {isLocked && (
@@ -31,7 +40,11 @@ const TopicCard = ({
           onClick={() => handleRequestOpen()}
           className="w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 cursor-pointer z-1"
         >
-          <span className="text-white">Request to Open topic</span>
+          <span className="text-white">
+            {isRequested
+              ? `Waiting for teacher response...`
+              : `Request to Open topic`}
+          </span>
         </div>
       )}
       <img
