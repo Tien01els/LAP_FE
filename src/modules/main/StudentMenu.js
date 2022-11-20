@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
+import StudentNotification from './StudentNotification'
 
 const StudentSidebar = () => {
   const accessToken = localStorage.getItem('access_token')
@@ -74,14 +75,14 @@ const StudentSidebar = () => {
         <div
           className={`${
             isOpenNoti ? `` : `hidden`
-          }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-[100vh] translate-x-[215px] -translate-y-[485px] z-[1000px]`}
+          }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-screen wibu:h-screen translate-x-[215px] -translate-y-[365px] wibu:-translate-y-[365px] z-[1000px]`}
         >
           <span className="text-xl text-gray-600 font-[500] px-5 py-3">
             Notifications
           </span>
           <div className="flex flex-col overflow-y-auto">
             {mock.map((val, i) => {
-              return <Notification key={i} value={val} />
+              return <StudentNotification key={i} value={val} />
             })}
           </div>
         </div>
@@ -98,24 +99,6 @@ const StudentSidebar = () => {
         <i className="fa-regular fa-user text-xl pb-1 pr-1"></i>
         <span className="font-semibold text-sm">Profile</span>
       </NavLink>
-    </div>
-  )
-}
-
-const Notification = ({ value }) => {
-  return (
-    <div className="flex flex-row p-3 select-none  hover:bg-gray-100 transition-all gap-4">
-      {value.type === 'Accepted' ? (
-        <i className="fa-solid fa-square-check text-2xl text-green-400"></i>
-      ) : (
-        <i className="fa-solid fa-square-xmark text-2xl text-red-400"></i>
-      )}
-      <div className="flex flex-col gap-2">
-        <span className="max-w-[260px] pt-1 text-sm whitespace-normal break-words text-gray-600">
-          {value.message}
-        </span>
-        <span className="text-xs text-gray-400">{value.time}</span>
-      </div>
     </div>
   )
 }

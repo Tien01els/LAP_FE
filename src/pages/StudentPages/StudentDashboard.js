@@ -20,6 +20,9 @@ import achievementImg from '../../assets/image/achievement.png'
 import axios from 'axios'
 import { API_URL } from '../../constant'
 import moment from 'moment'
+import jwtDecode from 'jwt-decode'
+
+const studentId = jwtDecode(localStorage.getItem('access_token'))?.userId
 
 const StudentDashboard = () => {
   const [selectedDay, setSelectedDay] = useState(null)
@@ -27,14 +30,13 @@ const StudentDashboard = () => {
   const [assignments, setAssignments] = useState([])
   const [assignmentDays, setAssignmentsDays] = useState([])
 
-  const studentId = 1
-
   useEffect(() => {
     axios
-      .get(API_URL + 'student-assignment/' + studentId)
+      .get(API_URL + 'student-assignment/student/' + studentId)
       .then((res) => {
-        setAssignments(res?.data)
-        handleDays(res?.data)
+        // setAssignments(res?.data)
+        // handleDays(res?.data)
+        console.log(res.data)
       })
       .catch((err) => console.log(err))
     // eslint-disable-next-line react-hooks/exhaustive-deps
