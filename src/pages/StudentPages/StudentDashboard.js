@@ -27,7 +27,7 @@ const StudentDashboard = () => {
   const [assignments, setAssignments] = useState([])
   const [assignmentDays, setAssignmentsDays] = useState([])
 
-  let studentId = 1
+  const studentId = 1
 
   useEffect(() => {
     axios
