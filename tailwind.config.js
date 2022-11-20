@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   darkMode: 'class',
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -34,6 +36,10 @@ module.exports = {
       },
       boxShadow: {
         sdprimary: '10px 10px 20px rgba(211, 211, 211, 0.25)',
+      },
+      screens: {
+        wibu: { min: '768px', max: '1024px' },
+        ...defaultTheme.screens,
       },
     },
   },

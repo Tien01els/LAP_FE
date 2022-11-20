@@ -29,12 +29,12 @@ const StudentCard = ({ student, setStudentInfo, onGetStudentOfClass }) => {
       <div className="flex flex-col justify-evenly h-full">
         <div className="flex flex-row justify-between items-center">
           <span
-            className="font-medium max-w-[380px] truncate cursor-pointer"
+            className="font-medium max-w-[360px] truncate cursor-pointer"
             onClick={() => handleViewStudent()}
           >
             {student?.fullName}
           </span>
-          <div className="flex flex-col">
+          <div className="flex flex-col mr-2">
             <div
               className={`rounded-full relative h-[24px] w-[24px] cursor-pointer  select-none flex items-center justify-center bg-${
                 openMoreOption ? `gray-100` : `white`
@@ -69,7 +69,7 @@ const StudentCard = ({ student, setStudentInfo, onGetStudentOfClass }) => {
           passages, and more recently with desktop publishing software like
           Aldus PageMaker including versions of Lorem Ipsum
         </p>
-        <div className="flex flex-row justify-between items-center pr-1 text-xs">
+        <div className="flex flex-row justify-between items-center mr-3 text-xs">
           <span>
             Average Score :{' '}
             <span className="text-primary">{student?.averageScore}</span>
