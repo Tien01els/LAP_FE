@@ -60,7 +60,6 @@ const TeacherManageTopic = () => {
         try {
             const res = await axiosJWT.get(API_URL + `class-topic/teacher/class/${classId}`);
             const result = res.data;
-            console.log(result);
             if (result.length > 0 && result[0]?.topicId && !currentTopicId)
                 setCurrentTopicId(result[0].topicId);
             let valueTopics = [];
@@ -152,7 +151,6 @@ const TeacherManageTopic = () => {
     const handleOpenModalCreateSkill = () => {
         setCreateSkillIsOpen(true);
     };
-    console.log(topicsOfClass);
 
     return (
         <div className='flex flex-row h-screen'>

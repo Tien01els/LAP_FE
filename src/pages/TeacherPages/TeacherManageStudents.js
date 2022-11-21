@@ -15,7 +15,6 @@ import 'swiper/css/navigation';
 
 // import required modules
 import { Navigation } from 'swiper';
-import axios from 'axios';
 import { API_URL } from '../../constant';
 import moment from 'moment';
 import Modal from 'react-modal';
@@ -44,6 +43,9 @@ const customStyles = {
 };
 
 const TeacherManageStudents = () => {
+    // const accessToken = localStorage.getItem('access_token');
+    // const decodedToken = accessToken && jwtDecode(accessToken);
+
     const [averageScore, setAverageScore] = useState(0);
     const [filterStudent, setFilterStudent] = useState('All');
     const [filteredStudentList, setFilteredStudentList] = useState([]);
@@ -51,6 +53,7 @@ const TeacherManageStudents = () => {
     const [studentInfo, setStudentInfo] = useState({});
     const [addStudentModal, setAddStudentModal] = useState(false);
     const [addStatus, setAddStatus] = useState('');
+    const [messageError, setMessageError] = useState('');
     const studentEmail = useRef();
 
     const { classId } = useParams();
@@ -58,16 +61,15 @@ const TeacherManageStudents = () => {
         setAddStudentModal(!addStudentModal);
     };
 
-    const handleGetStudentOfClass = useCallback(() => {
-        axiosJWT
-            .get(API_URL + `student/class/${classId}`)
-            .then((res) => {
-                setStudentList(res.data);
-                setStudentInfo(res.data[0]);
-                setFilteredStudentList(res.data);
-                console.log(res.data);
-            })
-            .catch((err) => console.log(err));
+    const handleGetStudentOfClass = useCallback(async () => {
+        try {
+            const res = axiosJWT.get(API_URL + `student/class/${classId}`);
+            setStudentList(res.data);
+            setStudentInfo(res.data[0]);
+            setFilteredStudentList(res.data);
+        } catch (error) {
+            console.log(error);
+        }
     }, [classId]);
 
     const handleScoreFilter = (filterStudent) => {
@@ -83,23 +85,27 @@ const TeacherManageStudents = () => {
             setFilteredStudentList(studentList.filter((student) => student?.averageScore < 50));
         }
     };
+    console.log(studentInfo);
 
     const handleAddStudent = async () => {
-        await axiosJWT
-            .post(API_URL + `student/class/${classId}`, {
+        try {
+            const newStudentOfClass = await axiosJWT.post(API_URL + `student/class/${classId}`, {
                 studentEmail: studentEmail.current.value,
-            })
-            .then((res) => {
-                setStudentList(res.data);
-                setStudentInfo(res.data[0]);
-                setAddStatus(res.data.text);
-                if (res.data.text === 'Ok') {
-                    toggleModal();
-                }
-                handleGetStudentOfClass();
-            })
-            .catch((err) => console.log(err, 'hehe'));
-        // window.location.reload()
+            });
+
+            setAddStatus(newStudentOfClass.data.text);
+            setMessageError(newStudentOfClass.data.message);
+
+            if (newStudentOfClass.data.text === 'Ok') {
+                await axiosJWT.post(API_URL + `notification-room`, {
+                    userEmail: studentEmail.current.value,
+                });
+                toggleModal();
+            }
+            handleGetStudentOfClass();
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -184,7 +190,7 @@ const TeacherManageStudents = () => {
                                     {/* username */}
                                     <div className='flex flex-col gap-3'>
                                         {addStatus === 'No ok' && (
-                                            <span className='text-red-500'>Can't add student.</span>
+                                            <span className='text-red-500'>{messageError}</span>
                                         )}
                                         <input
                                             ref={studentEmail}
