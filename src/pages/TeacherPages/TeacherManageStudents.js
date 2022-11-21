@@ -63,9 +63,9 @@ const TeacherManageStudents = () => {
 
     const handleGetStudentOfClass = useCallback(async () => {
         try {
-            const res = axiosJWT.get(API_URL + `student/class/${classId}`);
+            const res = await axiosJWT.get(API_URL + `student/class/${classId}`);
             setStudentList(res.data);
-            setStudentInfo(res.data[0]);
+            res.data?.length > 0 && setStudentInfo(res.data[0]);
             setFilteredStudentList(res.data);
         } catch (error) {
             console.log(error);
@@ -85,7 +85,6 @@ const TeacherManageStudents = () => {
             setFilteredStudentList(studentList.filter((student) => student?.averageScore < 50));
         }
     };
-    console.log(studentInfo);
 
     const handleAddStudent = async () => {
         try {
