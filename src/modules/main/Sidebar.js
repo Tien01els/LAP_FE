@@ -91,8 +91,6 @@ const Sidebar = () => {
           <StudentMenu />
         )}
       </div>
-
-      <ToastContainer />
       {/* bottom */}
       <div className="flex flex-row gap-3 items-center justify-between">
         <img
