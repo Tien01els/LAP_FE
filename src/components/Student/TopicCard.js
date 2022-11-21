@@ -18,7 +18,6 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
     const decodedToken = useMemo(() => {
         return accessToken && jwtDecode(accessToken);
     }, [accessToken]);
-
     const handleRequestOpen = () => {
         !isRequested && setIsOpenModalRequest(!isOpenModalRequest);
     };
@@ -28,7 +27,8 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
             senderId: decodedToken?.accountId,
             userId: decodedToken?.userId,
             topicId: topicInfo?.topicId,
-            typeHandle: 'Student_Topic',
+            tableHandle: 'Student_Topic',
+            idTableHandle: topicInfo.id,
         });
         setIsOpenModalRequest(!isOpenModalRequest);
         setIsRequested(true);
@@ -36,7 +36,8 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
 
     useEffect(() => {
         setIsRequested(topicInfo?.notificationContentId);
-    }, [topicInfo?.notificationContentId]);
+    }, [topicInfo]);
+    
     return (
         <div className='w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3'>
             <ConfirmModal

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { useCallback } from 'react';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -11,6 +12,7 @@ import TokenExpire from '../../components/Modals/TokenExpire';
 import TopicCard from '../../components/Student/TopicCard';
 import { API_URL } from '../../constant';
 import createAxiosJWT from '../../createAxiosJWT';
+import { SocketContext } from '../../App';
 import GrowingTextArea from '../TeacherPages/GrowingTextArea';
 
 const axiosJWT = createAxiosJWT();
@@ -115,6 +117,12 @@ const SkillInTopics = ({ isTeacher, val, getTopicOfClass }) => {
 const topicImage =
     'https://thumbs.dreamstime.com/b/letter-block-word-topic-wood-background-business-concept-170764857.jpg';
 const StudentClass = () => {
+    const socket = useContext(SocketContext);
+    const accessToken = localStorage.getItem('access_token');
+    const decodedToken = useMemo(() => {
+        return accessToken && jwtDecode(accessToken);
+    }, [accessToken]);
+
     const { classId } = useParams();
     const [topicsOfClass, setTopicsOfClass] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -174,6 +182,18 @@ const StudentClass = () => {
     useEffect(() => {
         getTopicOfClass();
     }, [getTopicOfClass]);
+
+    useEffect(() => {
+        socket?.on('get-handle-request-notification', (data) => {
+            if (
+                data?.senderId !== decodedToken?.accountId &&
+                data?.tableHandle === 'Student_Topic'
+            ) {
+                getTopicOfClass();
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket, decodedToken]);
 
     return (
         <div className='flex flex-row h-screen'>
