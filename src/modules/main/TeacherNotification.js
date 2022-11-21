@@ -24,9 +24,9 @@ const TeacherNotification = ({ value }) => {
     };
 
     useEffect(() => {
-        setIsOpenButtonHandle(value?.isAnswer);
-    }, [value?.isAnswer]);
-    
+        setIsOpenButtonHandle(value?.isAnswered);
+    }, [value?.isAnswered]);
+
     return (
         value && (
             <div className='flex flex-row p-3 select-none hover:bg-gray-100 transition-all gap-4'>
