@@ -36,7 +36,8 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
 
     useEffect(() => {
         setIsRequested(topicInfo?.notificationContentId);
-    }, [topicInfo?.notificationContentId]);
+    }, [topicInfo]);
+    
     return (
         <div className='w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3'>
             <ConfirmModal
@@ -45,7 +46,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
                 yesConfirm={handleSendRequestUnlock}
                 message='Confirm to send request to open this topic.'
             />
-            {!topicInfo?.isUnlock && !isTeacher && topicInfo?.isUnlock === null && (
+            {!topicInfo?.isUnlock && !isTeacher && (
                 <div
                     onClick={() => handleRequestOpen()}
                     className={`w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 z-1 ${
