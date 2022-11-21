@@ -14,6 +14,8 @@ import StudentMenu from './StudentMenu'
 import createAxiosJWT from '../../createAxiosJWT'
 import { SocketContext } from '../../App'
 import jwtDecode from 'jwt-decode'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const axiosJWT = createAxiosJWT()
 const Sidebar = () => {
@@ -70,11 +72,19 @@ const Sidebar = () => {
     rooms && socket?.emit('rooms', rooms)
   }, [socket, rooms])
 
+  const notify = () => toast('Test')
+
   return (
     <div className="w-[240px] items-center h-full fixed top-0 left-0 bg-white shadow-sm flex flex-col p-5 gap-10 justify-between">
       {/* logo */}
       <div className="flex flex-col justify-center items-center gap-20">
-        <img src={logo} alt="" className="w-[200px] h-[100px] bg-cover"></img>
+        <img
+          onClick={() => notify()}
+          src={logo}
+          alt=""
+          className="w-[200px] h-[100px] bg-cover"
+        ></img>
+        {/* Same as */}
         {decodedToken && decodedToken.roleId === 2 ? (
           <TeacherMenu />
         ) : (
@@ -82,6 +92,7 @@ const Sidebar = () => {
         )}
       </div>
 
+      <ToastContainer />
       {/* bottom */}
       <div className="flex flex-row gap-3 items-center justify-between">
         <img

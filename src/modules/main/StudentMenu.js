@@ -92,7 +92,7 @@ const StudentSidebar = () => {
         to={'/profile'}
         className={({ isActive }) =>
           isActive
-            ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'
+            ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all text-gray-600 bg-[#f9fbfc]'
             : 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all hover:bg-gray-100 text-gray-600'
         }
       >
