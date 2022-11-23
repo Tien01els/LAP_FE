@@ -12,7 +12,7 @@ const TeacherExams = () => {
         isOpen={openAssignStudent}
         setIsOpen={setOpenAssignStudent}
       />
-      {/* right */}
+      {/* left */}
       <div className="flex flex-col gap-5 h-[97%] w-[60%] bg-white rounded-lg shadow lg px-5 py-4">
         <div className="flex flex-col gap-5">
           <span className="text-4xl text-gray-800">Exams Title</span>
@@ -69,7 +69,7 @@ const TeacherExams = () => {
           </div>
         </div>
       </div>
-      {/* left */}
+      {/* right */}
       <div className="flex flex-col gap-3 h-fit w-[40%] bg-white rounded-lg shadow lg px-5 py-4">
         <div className="flex flex-row items-center justify-between">
           <span className="text-2xl">Exams</span>
@@ -78,9 +78,14 @@ const TeacherExams = () => {
         <div className="flex flex-wrap gap-5 py-3">
           {new Array(5).fill(0).map((val, i) => {
             return (
-              <div className="border h-fit w-full flex flex-row cursor-pointer select-none justify-between items-center rounded-lg px-3 py-2">
-                <span>Mid Term</span>
-                <span className="text-sm text-primary">View</span>
+              <div className="border h-fit w-full flex flex-row cursor-pointer select-none justify-between items-baseline rounded-lg px-3 py-2">
+                <span className="w-[250px] whitespace-normal break-words">
+                  Mid Term ádasdakdjalkdasjdt test
+                </span>
+                <div className="flex flex-row gap-3 text-sm">
+                  <span>Status</span>
+                  <span className=" text-primary">View</span>
+                </div>
               </div>
             )
           })}

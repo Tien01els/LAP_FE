@@ -82,7 +82,7 @@ const AssignmentInfo = ({
   }, [assignmentId])
 
   return (
-    <div>
+    <div className="h-fit">
       <div className="flex flex-col justify-between gap-3">
         <input
           className="text-xl min-w-[360px] transition-all max-w-[360px] font-medium outline-none border-b-2 resize-x py-2 px-1"
@@ -101,53 +101,56 @@ const AssignmentInfo = ({
           }}
           style={{ width: `${assignmentName.length}ch` }}
         />
-        <label htmlFor="time">Date due</label>
-        <div className="flex flex-row gap-5 items-center">
+
+        <div className="flex flex-row gap-4 items-center justify-between w-full">
+          <label>Will due on next</label>
           <input
-            type="time"
-            name="time"
-            value={time}
-            onChange={(e) => {
-              setTime(e.target.value)
-            }}
-            className="outline-none border transition-all border-gray-500 px-2 py-1 rounded-md cursor-pointer"
-          />
-          <DatePicker
-            colorPrimary="#75b9cc"
-            value={selectedDay}
-            onChange={setSelectedDay}
-            inputPlaceholder="Select a day"
-            formatInputText={formatInputValue}
-            minimumDate={utils().getToday()}
-            inputClassName="daypicker"
-            style={{
-              fontSize: '1.5rem',
-              lineHeight: '2rem',
-              zIndex: '-5 !important',
-            }}
-            className="text-2xl"
+            type="number"
+            min="0"
+            max="200"
+            className="outline-none border-b-2 px-1 py-[3px] w-[30%] duration-300 transition-all"
           />
         </div>
-        <div className="flex flex-row gap-10 items-center">
-          <div className="flex gap-2 items-center">
-            <span>Exam time in:</span>
-            <input
-              className="outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all"
-              value={examTime}
-              onChange={handleExamTime}
-            />
-            <span>m</span>
+        <div className="flex flex-row gap-4 items-center justify-between w-full">
+          <label>Pass score</label>
+          <input
+            type="number"
+            min="0"
+            className="outline-none border-b-2 px-1 py-[3px] w-[30%] duration-300 transition-all"
+          />
+        </div>
+        <div className="flex flex-row gap-4 items-center justify-between w-full">
+          <label>Pass score</label>
+          <input
+            type="number"
+            min="0"
+            className="outline-none border-b-2 px-1 py-[3px] w-[30%] duration-300 transition-all"
+          />
+        </div>
+        <div className="flex flex-row gap-10 items-center ">
+          <div className="flex items-center justify-between w-full">
+            <span>Exam time in</span>
+            <div className="w-[30%] flex flex-row gap-2 items-center">
+              <input
+                className="outline-none border-b-2 px-2 py-[3px] justify-center items-center w-[50px] text-right duration-300 transition-all"
+                value={examTime}
+                onChange={handleExamTime}
+              />
+              <span>m</span>
+            </div>
           </div>
         </div>
         <div className="flex flex-row gap-10 items-center">
-          <div className="flex gap-2 items-center">
-            <span>Redo:</span>
-            <input
-              className="outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all"
-              value={redo}
-              onChange={handleRedo}
-            />
-            <span>time{redo > 1 ? 's' : ''}</span>
+          <div className="flex gap-2 items-center w-full justify-between">
+            <span>Redo</span>
+            <div className="w-[30%] flex flex-row gap-2 items-center">
+              <input
+                className="outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all"
+                value={redo}
+                onChange={handleRedo}
+              />
+              <span>time{redo > 1 ? 's' : ''}</span>
+            </div>
           </div>
         </div>
       </div>
