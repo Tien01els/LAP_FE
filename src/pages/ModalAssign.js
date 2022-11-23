@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
-import moment from 'moment';
-
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
-import { utils } from 'react-modern-calendar-datepicker';
-import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 
 import { API_URL } from '../constant';
 import Button from '../components/Button';
@@ -16,18 +12,7 @@ import createAxiosJWT from '../createAxiosJWT';
 const axiosJWT = createAxiosJWT();
 
 const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentName }) => {
-    const currentDate = moment();
     const navigate = useNavigate();
-    const [selectedDay, setSelectedDay] = useState({
-        day: currentDate.date(),
-        month: currentDate.month() + 1,
-        year: currentDate.year(),
-    });
-    const [time, setTime] = useState(() => {
-        const hours = currentDate.hours();
-        const minutes = currentDate.minutes();
-        return `${hours > 9 ? hours : '0' + hours}:${minutes > 9 ? minutes : '0' + minutes}`;
-    });
     const [isExpired, setIsExpired] = useState(false);
 
     const {
@@ -36,11 +21,6 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
         reset: resetCreate,
         formState: formStateCreate,
     } = useForm();
-
-    const formatInputValue = () => {
-        if (!selectedDay) return '';
-        return `${selectedDay.month}/${selectedDay.day}/${selectedDay.year}`;
-    };
 
     const handleCloseModalAssign = () => {
         setAssignIsOpen(false);
@@ -80,23 +60,12 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
         if (formStateCreate.isSubmitSuccessful) {
             resetCreate({
                 assignmentName: '',
-                time: 0,
+                dueTime: 0,
+                doTime: 0,
                 totalScore: 100,
+                passScore: 0,
                 redo: 0,
             });
-            setSelectedDay({
-                day: currentDate.date(),
-                month: currentDate.month() + 1,
-                year: currentDate.year(),
-            });
-            setTime(() => {
-                const hours = currentDate.hours();
-                const minutes = currentDate.minutes();
-                return `${hours > 9 ? hours : '0' + hours}:${
-                    minutes > 9 ? minutes : '0' + minutes
-                }`;
-            });
-
             handleCloseModalAssign();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

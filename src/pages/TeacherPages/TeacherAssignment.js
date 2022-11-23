@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 // import { utils } from 'react-modern-calendar-datepicker';
-import moment from 'moment';
 // import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 import axios from 'axios';
 import Modal from 'react-modal';
