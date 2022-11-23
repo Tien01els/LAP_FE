@@ -55,16 +55,13 @@ const ModalAssign = ({
 
   const handleCreateAssignment = async (data) => {
     try {
-      const due = new Date(
-        `${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${time}`,
-      )
       const assignment = {
         assignmentName: data.assignmentName,
-        time: data.time,
+        dueTime: data.dueTime,
+        doTime: data.doTime,
+        passScore: data.passScore,
         totalScore: data.totalScore,
         redo: data.redo,
-        dateDue: moment(due).format('YYYY-MM-DD HH:mm:ss'),
-        teacherId: 1,
       }
       const newAssignment = await axiosJWT.post(
         API_URL + `assignment`,
@@ -175,53 +172,43 @@ const ModalAssign = ({
               />
             </div>
             <div className="flex flex-row items-center">
-              <label htmlFor="time" className="w-[50%] font-[500]">
+              <label htmlFor="time" className="w-[45%] font-[500]">
                 Date due
               </label>
-              <div className="flex flex-row gap-5">
+              <div className="flex flex-row w-full items-center gap-2">
                 <input
-                  type="time"
-                  name="time"
-                  value={time}
-                  onChange={(e) => {
-                    setTime(e.target.value)
-                  }}
-                  className="outline-none border transition-all border-gray-500 px-2 py-1 rounded-md cursor-pointer"
+                  type="number"
+                  className="border form-control focus:outline-primary px-2 py-1 w-[80%] rounded-md border-gray-500 placeholder:text-sm"
+                  placeholder="Will due next ... days since opened"
+                  {...registerCreate('dueTime', {
+                    min: 1,
+                    max: 100,
+                    value: 1,
+                  })}
                 />
-                <DatePicker
-                  colorPrimary="#75b9cc"
-                  value={selectedDay}
-                  onChange={setSelectedDay}
-                  inputPlaceholder="Select a day"
-                  formatInputText={formatInputValue}
-                  minimumDate={utils().getToday()}
-                  inputClassName="daypicker"
-                  style={{
-                    fontSize: '1.5rem',
-                    lineHeight: '2rem',
-                  }}
-                  calendarPopperPosition="bottom"
-                  className="text-2xl"
-                />
+                <span>days</span>
               </div>
             </div>
-            <div className="flex flex-row items-center">
-              <div className="flex flex-col font-[500] w-[31%] gap-4">
+            <div className="flex flex-row items-center w-full">
+              <div className="flex flex-col font-[500] w-[45%] gap-4">
                 <label htmlFor="totalScore" className="py-1">
                   Total Score
                 </label>
+                <label htmlFor="passScore" className="py-1">
+                  Pass Score
+                </label>
                 <label htmlFor="time" className="py-1">
-                  Time
+                  Time to do
                 </label>
                 <label htmlFor="redo" className="py-1">
                   Allow redo
                 </label>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 w-full">
                 <input
                   type="number"
                   name="totalScore"
-                  className="border form-control focus:outline-primary px-2 py-1 rounded-md border-gray-500"
+                  className="border form-control focus:outline-primary px-2 py-1 w-[80%] rounded-md border-gray-500"
                   {...registerCreate('totalScore', {
                     min: 0,
                     max: 100,
@@ -234,25 +221,45 @@ const ModalAssign = ({
                 />
                 <input
                   type="number"
-                  name="time"
-                  className="border focus:outline-primary px-2 py-1 rounded-md border-gray-500"
-                  {...registerCreate('time', {
+                  name="passScore"
+                  className="border form-control focus:outline-primary px-2 py-1 w-[80%] rounded-md border-gray-500"
+                  {...registerCreate('passScore', {
                     min: 0,
                     max: 100,
-                    value: 0,
-                  })}
-                />
-                <input
-                  type="number"
-                  name="redo"
-                  className="border form-control focus:outline-primary px-2 py-1 rounded-md border-gray-500"
-                  {...registerCreate('redo', {
-                    min: 0,
-                    max: 100,
-                    value: 0,
+                    value: 10,
                     valueAsNumber: true,
+                    validate: (value) =>
+                      (value >= 0 && value <= 100) ||
+                      'Please enter from 0 to 100',
                   })}
                 />
+                <div className="flex flex-row gap-2 items-center w-full">
+                  <input
+                    type="number"
+                    name="time"
+                    className="border focus:outline-primary px-2 py-1 rounded-md w-[80%] border-gray-500"
+                    {...registerCreate('doTime', {
+                      min: 1,
+                      max: 100,
+                      value: 0,
+                    })}
+                  />
+                  <span>min(s)</span>
+                </div>
+                <div className="flex flex-row gap-2 items-center w-full">
+                  <input
+                    type="number"
+                    name="redo"
+                    className="border form-control focus:outline-primary px-2 py-1 rounded-md w-[80%] border-gray-500"
+                    {...registerCreate('redo', {
+                      min: 0,
+                      max: 100,
+                      value: 0,
+                      valueAsNumber: true,
+                    })}
+                  />
+                  <span>time(s)</span>
+                </div>
               </div>
             </div>
           </div>

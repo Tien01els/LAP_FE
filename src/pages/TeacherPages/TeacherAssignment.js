@@ -62,6 +62,8 @@ const TeacherAssignment = () => {
 
   const [selectedAssignmentName, setSelectedAssignmentName] = useState('')
   const [selectedTotalScore, setSelectedTotalScore] = useState('')
+  const [selectedPassScore, setSelectedPassScore] = useState('')
+  const [selectedDueTime, setSelectedDueTime] = useState('')
   const [selectedTimeDo, setSelectedTimeDo] = useState('')
   const [selectedRedo, setSelectedRedo] = useState('')
   const [selectedTimeDue, setSelectedTimeDue] = useState('')
@@ -438,10 +440,12 @@ const TeacherAssignment = () => {
           </div>
         </div>
         <div className="flex flex-col my-4 gap-3">
-          <div className="bg-white h-[280px] w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between">
+          <div className="bg-white w-[400px] p-7 rounded-lg shadow-lg flex flex-col justify-between">
             <AssignmentInfo
               setSelectedAssignmentName={setSelectedAssignmentName}
               setSelectedTotalScore={setSelectedTotalScore}
+              setSelectedPassScore={setSelectedPassScore}
+              setSelectedDueTime={setSelectedDueTime}
               setSelectedTimeDo={setSelectedTimeDo}
               setSelectedRedo={setSelectedRedo}
               setSelectedTimeDue={setSelectedTimeDue}

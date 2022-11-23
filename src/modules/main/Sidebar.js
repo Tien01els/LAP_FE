@@ -99,7 +99,7 @@ const Sidebar = () => {
           className="w-[50px] h-[50px] bg-cover rounded-full"
         ></img>
         <div className="flex flex-col justify-center text-gray-600">
-          <span className="font-semibold text-sm max-w-[100px] truncate">
+          <span className="font-semibold text-sm w-[100px] truncate">
             {user?.name}
           </span>
           <span className="text-xs">{user?.role}</span>
