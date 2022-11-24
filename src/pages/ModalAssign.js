@@ -11,7 +11,13 @@ import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
 
-const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentName }) => {
+const ModalAssign = ({
+    modalAssignIsOpen,
+    setAssignIsOpen,
+    assignId,
+    assignmentName,
+    typeAssignment,
+}) => {
     const navigate = useNavigate();
     const [isExpired, setIsExpired] = useState(false);
 
@@ -35,6 +41,7 @@ const ModalAssign = ({ modalAssignIsOpen, setAssignIsOpen, assignId, assignmentN
                 passScore: data.passScore,
                 totalScore: data.totalScore,
                 redo: data.redo,
+                typeAssignment,
             };
             const newAssignment = await axiosJWT.post(API_URL + `assignment`, assignment);
             const newSkillAssignment = await axiosJWT.post(API_URL + `skill-assignment`, {

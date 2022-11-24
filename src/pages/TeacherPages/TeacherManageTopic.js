@@ -399,6 +399,7 @@ const SkillInTopics = ({ isTeacher, val, getTopicOfClass }) => {
                 setAssignIsOpen={setAssignIsOpen}
                 assignId={val.id}
                 assignmentName={val.skillName}
+                typeAssignment={'Skill'}
             />
             <div className='flex flex-col gap-4'>
                 {assignmentsOfSkill?.map((val, i) => {
