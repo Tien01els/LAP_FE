@@ -25,6 +25,9 @@ const TeacherManageTopic = lazy(() =>
 )
 const AssignmentView = lazy(() => import('./pages/TeacherPages/AssignmentView'))
 const TeacherExams = lazy(() => import('./pages/TeacherPages/TeacherExams'))
+const TeacherCreateExam = lazy(() =>
+  import('./pages/TeacherPages/TeacherCreateExam'),
+)
 
 // Students
 const StudentDashboard = lazy(() =>
@@ -85,6 +88,10 @@ export default function AppRouter() {
               element={<AssignmentView />}
             />
             <Route path="/class/:classId/exams" element={<TeacherExams />} />
+            <Route
+              path="/class/:classId/create-exam"
+              element={<TeacherCreateExam />}
+            />
             <Route path="/test2" element={<Test />} />
           </>
         ) : decodedToken?.roleId === 3 ? (

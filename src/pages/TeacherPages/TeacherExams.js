@@ -1,19 +1,27 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button'
+import ExamQuestion from '../../components/Teacher/ExamQuestion'
 
 //
 import AssignExamModal from '../../components/Modals/AssignExamModal'
+import CreateExamModal from '../../components/Modals/CreateExamModal'
+
+//
 
 const TeacherExams = () => {
   const [openAssignStudent, setOpenAssignStudent] = useState(false)
+  const [openCreateExam, setOpenCreateExam] = useState(false)
+  const navigate = useNavigate()
   return (
     <div className="px-10 py-7 flex h-[100vh] flex-row gap-5">
       <AssignExamModal
         isOpen={openAssignStudent}
         setIsOpen={setOpenAssignStudent}
       />
+      <CreateExamModal isOpen={openCreateExam} setIsOpen={setOpenCreateExam} />
       {/* left */}
-      <div className="flex flex-col gap-5 h-[97%] w-[60%] bg-white rounded-lg shadow lg px-5 py-4">
+      <div className="flex flex-col gap-5 h-fit w-[60%] bg-white rounded-lg shadow lg px-5 py-4">
         <div className="flex flex-col gap-5">
           <span className="text-4xl text-gray-800">Exams Title</span>
           {/* infos */}
@@ -42,23 +50,16 @@ const TeacherExams = () => {
           <div className="flex flex-col gap-5">
             <div className="flex flex-row items-base justify-between">
               <span className="font-[500]">Questions</span>
-              <Button className="text-sm flex gap-3 items-center">
+              <Button
+                onClick={() => navigate('/class/1/create-exam')}
+                className="text-sm flex gap-3 items-center"
+              >
                 <i class="fa-solid fa-pen-to-square"></i> Edit questions
               </Button>
             </div>
             <div className="flex flex-col h-[300px] py-3 px-2 gap-4 overflow-y-auto">
               {new Array(7).fill(0).map((val, i) => {
-                return (
-                  <div className="flex flex-row bg-[#f4f7f9] justify-between shadow rounded-lg px-4 py-3">
-                    <span className="">Question {i}</span>
-                    <div className="flex flex-row gap-4">
-                      <span className="bg-primary text-white rounded-full px-2 text-xs flex items-center">
-                        Multi choice
-                      </span>
-                      <span className="text-gray-500">5pt</span>
-                    </div>
-                  </div>
-                )
+                return <ExamQuestion key={i} />
               })}
             </div>
             <div className="flex flex-row-reverse">
@@ -73,18 +74,33 @@ const TeacherExams = () => {
       <div className="flex flex-col gap-3 h-fit w-[40%] bg-white rounded-lg shadow lg px-5 py-4">
         <div className="flex flex-row items-center justify-between">
           <span className="text-2xl">Exams</span>
-          <Button className="text-xs">Create new exam</Button>
+          <Button
+            onClick={() => setOpenCreateExam(!openCreateExam)}
+            className="text-xs"
+          >
+            Create new exam
+          </Button>
         </div>
         <div className="flex flex-wrap gap-5 py-3">
           {new Array(5).fill(0).map((val, i) => {
             return (
               <div className="border h-fit w-full flex flex-row cursor-pointer select-none justify-between items-baseline rounded-lg px-3 py-2">
-                <span className="w-[250px] whitespace-normal break-words">
-                  Mid Term ádasdakdjalkdasjdt test
-                </span>
-                <div className="flex flex-row gap-3 text-sm">
-                  <span>Status</span>
-                  <span className=" text-primary">View</span>
+                <div className="flex flex-col gap-3">
+                  <span className="w-[250px] truncate">
+                    Mid Term ádasdakdjalkdasjdt test
+                  </span>
+                  <div className="flex flex-row gap-3 text-xs text-gray-500">
+                    <span>
+                      <i class="fa-regular fa-calendar"></i> 25 April 2022
+                    </span>
+                    <span>
+                      <i class="fa-regular fa-clock"></i> 30 mins
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-between gap-3">
+                  <span className="text-sm text-primary">View</span>
+                  <span className="text-xs text-gray-500">Status</span>
                 </div>
               </div>
             )
