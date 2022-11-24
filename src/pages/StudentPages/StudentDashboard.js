@@ -45,11 +45,10 @@ const StudentDashboard = () => {
             .catch((err) => console.log(err));
 
         axiosJWT
-            .get(API_URL + 'student-topic')
+            .get(API_URL + 'student-topic/percent-skill')
             .then((res) => {
                 // setAssignments(res?.data)
                 // handleDays(res?.data)
-                console.log(res.data);
                 setTopicsOfStudent(res.data);
             })
             .catch((err) => console.log(err));
