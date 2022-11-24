@@ -135,7 +135,7 @@ const StudentClass = () => {
     const getTopicOfClass = useCallback(async () => {
         try {
             const topicsOfStudent = await axiosJWT.put(
-                API_URL + `student-topic/student/class/${classId}`
+                API_URL + `student-topic/class/${classId}`
             );
             const result = topicsOfStudent.data;
             if (result.length > 0 && result[0]?.topicId && !currentTopicId)
