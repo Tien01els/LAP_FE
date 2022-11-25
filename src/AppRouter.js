@@ -28,6 +28,9 @@ const TeacherExams = lazy(() => import('./pages/TeacherPages/TeacherExams'))
 const TeacherCreateExam = lazy(() =>
   import('./pages/TeacherPages/TeacherCreateExam'),
 )
+const TeacherReviewAnswers = lazy(() =>
+  import('./pages/TeacherPages/TeacherReviewAnswers'),
+)
 
 // Students
 const StudentDashboard = lazy(() =>
@@ -91,6 +94,14 @@ export default function AppRouter() {
             <Route
               path="/class/:classId/create-exam"
               element={<TeacherCreateExam />}
+            />
+            <Route
+              path="/assignment/:assignmentId/review"
+              element={<TeacherReviewAnswers />}
+            />
+            <Route
+              path="/assignment/:assignmentId/student/:studentId/result"
+              element={<AssignmentResult />}
             />
             <Route path="/test2" element={<Test />} />
           </>
