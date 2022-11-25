@@ -139,11 +139,11 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
                 return prev.filter((item) => item !== id);
             }
             setQuestionBank((prevQuestions) => {
-                const question = valueQuestionBank.filter(
+                const question = valueQuestionBank.find(
                     (questionInBank) => questionInBank.id === id
                 );
-                handleReviewQuestionBank(...question);
-                return [...prevQuestions, ...question];
+                handleReviewQuestionBank(question);
+                return question ? [...prevQuestions, question] : prevQuestions;
             });
             return [...prev, id];
         });

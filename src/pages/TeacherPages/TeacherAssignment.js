@@ -240,7 +240,7 @@ const TeacherAssignment = () => {
   }
 
   useEffect(() => {
-    axios.get(API_URL + `skill/${skillId}`).then((res) => {
+    skillId &&  axios.get(API_URL + `skill/${skillId}`).then((res) => {
       setSelectedGrade(res.data.gradeId)
       setSelectedTopic(res.data.topicId)
       setSelectedSkills([res.data.id])

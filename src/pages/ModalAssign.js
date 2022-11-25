@@ -34,6 +34,7 @@ const ModalAssign = ({
 
     const handleCreateAssignment = async (data) => {
         try {
+            console.log(data)
             const assignment = {
                 assignmentName: data.assignmentName,
                 dueTime: data.dueTime,
