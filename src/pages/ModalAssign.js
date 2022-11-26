@@ -1,239 +1,198 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import Modal from 'react-modal';
-import 'react-modern-calendar-datepicker/lib/DatePicker.css';
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import Modal from 'react-modal'
+import 'react-modern-calendar-datepicker/lib/DatePicker.css'
 
-import { API_URL } from '../constant';
-import Button from '../components/Button';
-import TokenExpire from '../components/Modals/TokenExpire';
-import createAxiosJWT from '../createAxiosJWT';
+import { API_URL } from '../constant'
+import Button from '../components/Button'
+import TokenExpire from '../components/Modals/TokenExpire'
+import createAxiosJWT from '../createAxiosJWT'
 
-const axiosJWT = createAxiosJWT();
+const axiosJWT = createAxiosJWT()
 
 const ModalAssign = ({
-    modalAssignIsOpen,
-    setAssignIsOpen,
-    assignId,
-    assignmentName,
-    typeAssignment,
+  modalAssignIsOpen,
+  setAssignIsOpen,
+  assignId,
+  assignmentName,
+  typeAssignment,
 }) => {
-    const navigate = useNavigate();
-    const [isExpired, setIsExpired] = useState(false);
+  const navigate = useNavigate()
+  const [isExpired, setIsExpired] = useState(false)
 
-    const {
-        register: registerCreate,
-        handleSubmit: handleSubmitCreate,
-        reset: resetCreate,
-        formState: formStateCreate,
-    } = useForm();
+  const {
+    register: registerCreate,
+    handleSubmit: handleSubmitCreate,
+    reset: resetCreate,
+    formState: formStateCreate,
+  } = useForm()
 
-    const handleCloseModalAssign = () => {
-        setAssignIsOpen(false);
-    };
+  const handleCloseModalAssign = () => {
+    setAssignIsOpen(false)
+  }
 
-    const handleCreateAssignment = async (data) => {
-        try {
-            console.log(data)
-            const assignment = {
-                assignmentName: data.assignmentName,
-                dueTime: data.dueTime,
-                doTime: data.doTime,
-                passScore: data.passScore,
-                totalScore: data.totalScore,
-                redo: data.redo,
-                typeAssignment,
-            };
-            const newAssignment = await axiosJWT.post(API_URL + `assignment`, assignment);
-            const newSkillAssignment = await axiosJWT.post(API_URL + `skill-assignment`, {
-                assignmentId: newAssignment.data?.id,
-                skillId: assignId,
-            });
-            navigate(
-                `/skill/${newSkillAssignment.data?.skillId}/assignment/${newSkillAssignment.data?.assignmentId}/`
-            );
-        } catch (error) {
-            console.log(error);
-            if (error.response.status === 401) setIsExpired(true);
-        }
-    };
-
-    useEffect(() => {
-        resetCreate({
-            assignmentName: assignmentName,
-        });
-    }, [resetCreate, assignmentName]);
-
-    useEffect(() => {
-        if (formStateCreate.isSubmitSuccessful) {
-            resetCreate({
-                assignmentName: '',
-                dueTime: 0,
-                doTime: 0,
-                totalScore: 100,
-                passScore: 0,
-                redo: 0,
-            });
-            handleCloseModalAssign();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formStateCreate, resetCreate]);
-
-    const customStyles = {
-        overlay: {
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(165, 165, 165, 0.6)',
+  const handleCreateAssignment = async (data) => {
+    try {
+      console.log(data)
+      const assignment = {
+        assignmentName: data.assignmentName,
+        dueTime: data.dueTime,
+        doTime: data.doTime,
+        passScore: data.passScore,
+        totalScore: data.totalScore,
+        redo: data.redo,
+        typeAssignment,
+      }
+      const newAssignment = await axiosJWT.post(
+        API_URL + `assignment`,
+        assignment,
+      )
+      const newSkillAssignment = await axiosJWT.post(
+        API_URL + `skill-assignment`,
+        {
+          assignmentId: newAssignment.data?.id,
+          skillId: assignId,
         },
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            border: 'none',
-            borderRadius: '8px',
-            overflow: 'visible',
-        },
-    };
+      )
+      navigate(
+        `/skill/${newSkillAssignment.data?.skillId}/assignment/${newSkillAssignment.data?.assignmentId}/`,
+      )
+    } catch (error) {
+      console.log(error)
+      if (error.response.status === 401) setIsExpired(true)
+    }
+  }
 
-    return (
-        <Modal
-            isOpen={modalAssignIsOpen}
-            style={customStyles}
-            contentLabel='Example Modal'
-            ariaHideApp={false}
-        >
-            <div className='flex justify-end'>
-                <button onClick={handleCloseModalAssign}>
-                    <i className='fas fa-times'></i>
-                </button>
-            </div>
-            <div className='flex justify-center'>
-                <form
-                    className='flex flex-col w-[500px]'
-                    onSubmit={handleSubmitCreate(handleCreateAssignment)}
-                >
-                    <div className='flex flex-col gap-4'>
-                        <div className='flex justify-center'>
-                            <h2 className='text-2xl font-semibold'>Create assignment</h2>
-                        </div>
-                        <div className='flex flex-col gap-2'>
-                            <label htmlFor='assignmentName' className='font-[500]'>
-                                Assignment name
-                            </label>
-                            <input
-                                type='text'
-                                name='assignmentName'
-                                placeholder='Enter assignment name'
-                                className='focus:outline-primary border border-gray-500 px-2 py-1 rounded'
-                                {...registerCreate('assignmentName')}
-                            />
-                        </div>
-                        <div className='flex flex-row items-center'>
-                            <label htmlFor='time' className='w-[45%] font-[500]'>
-                                Date due
-                            </label>
-                            <div className='flex flex-row w-full items-center gap-2'>
-                                <input
-                                    type='number'
-                                    className='border form-control focus:outline-primary px-2 py-1 w-[80%] rounded-md border-gray-500 placeholder:text-sm'
-                                    placeholder='Will due next ... days since opened'
-                                    {...registerCreate('dueTime', {
-                                        min: 1,
-                                        max: 100,
-                                        value: 1,
-                                    })}
-                                />
-                                <span>days</span>
-                            </div>
-                        </div>
-                        <div className='flex flex-row items-center w-full'>
-                            <div className='flex flex-col font-[500] w-[45%] gap-4'>
-                                <label htmlFor='totalScore' className='py-1'>
-                                    Total Score
-                                </label>
-                                <label htmlFor='passScore' className='py-1'>
-                                    Pass Score
-                                </label>
-                                <label htmlFor='time' className='py-1'>
-                                    Exam time in
-                                </label>
-                                <label htmlFor='redo' className='py-1'>
-                                    Allow redo
-                                </label>
-                            </div>
-                            <div className='flex flex-col gap-4 w-full'>
-                                <input
-                                    type='number'
-                                    name='totalScore'
-                                    className='border form-control focus:outline-primary px-2 py-1 w-[80%] rounded-md border-gray-500'
-                                    {...registerCreate('totalScore', {
-                                        min: 0,
-                                        max: 100,
-                                        value: 100,
-                                        valueAsNumber: true,
-                                        validate: (value) =>
-                                            (value >= 0 && value <= 100) ||
-                                            'Please enter from 0 to 100',
-                                    })}
-                                />
-                                <input
-                                    type='number'
-                                    name='passScore'
-                                    className='border form-control focus:outline-primary px-2 py-1 w-[80%] rounded-md border-gray-500'
-                                    {...registerCreate('passScore', {
-                                        min: 0,
-                                        max: 100,
-                                        value: 10,
-                                        valueAsNumber: true,
-                                        validate: (value) =>
-                                            (value >= 0 && value <= 100) ||
-                                            'Please enter from 0 to 100',
-                                    })}
-                                />
-                                <div className='flex flex-row gap-2 items-center w-full'>
-                                    <input
-                                        type='number'
-                                        name='time'
-                                        className='border focus:outline-primary px-2 py-1 rounded-md w-[80%] border-gray-500'
-                                        {...registerCreate('doTime', {
-                                            min: 1,
-                                            max: 100,
-                                            value: 0,
-                                        })}
-                                    />
-                                    <span>min(s)</span>
-                                </div>
-                                <div className='flex flex-row gap-2 items-center w-full'>
-                                    <input
-                                        type='number'
-                                        name='redo'
-                                        className='border form-control focus:outline-primary px-2 py-1 rounded-md w-[80%] border-gray-500'
-                                        {...registerCreate('redo', {
-                                            min: 0,
-                                            max: 100,
-                                            value: 0,
-                                            valueAsNumber: true,
-                                        })}
-                                    />
-                                    <span>time(s)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='flex justify-center'>
-                        <Button className='border-none bg-primary mt-5 w-[50%]'>Create</Button>
-                    </div>
-                </form>
-            </div>
-            <TokenExpire isOpen={isExpired} />
-        </Modal>
-    );
-};
+  useEffect(() => {
+    resetCreate({
+      assignmentName: assignmentName,
+    })
+  }, [resetCreate, assignmentName])
 
-export default ModalAssign;
+  useEffect(() => {
+    if (formStateCreate.isSubmitSuccessful) {
+      resetCreate({
+        assignmentName: '',
+        dueTime: 0,
+        doTime: 0,
+        totalScore: 100,
+        passScore: 0,
+        redo: 0,
+      })
+      handleCloseModalAssign()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formStateCreate, resetCreate])
+
+  const customStyles = {
+    overlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(165, 165, 165, 0.6)',
+    },
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      border: 'none',
+      borderRadius: '8px',
+      overflow: 'visible',
+    },
+  }
+
+  return (
+    <Modal
+      isOpen={modalAssignIsOpen}
+      style={customStyles}
+      contentLabel="Example Modal"
+      ariaHideApp={false}
+    >
+      <div className="flex flex-row justify-between mb-5">
+        <span className="text-2xl font-medium">Create Assignment</span>
+        <button onClick={handleCloseModalAssign}>
+          <i className="fas fa-times"></i>
+        </button>
+      </div>
+      <form
+        onSubmit={handleSubmitCreate(handleCreateAssignment)}
+        className="flex flex-col text-gray-600 gap-4"
+      >
+        <div className="flex flex-col px-5 w-full gap-4">
+          <div className="flex flex-col gap-2 w-full">
+            <span>Exams title</span>
+            <input
+              type="text"
+              {...registerCreate('assignmentName', { required: true })}
+              placeholder="Title"
+              className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+            />
+          </div>
+          <div className="flex flex-row w-full gap-5">
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Time to do exams</span>
+              <input
+                type="number"
+                {...registerCreate('doTime', { required: true, min: 0 })}
+                placeholder="min(s)"
+                className="outline-none px-3  py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
+            </div>
+            {/* due */}
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Will due on next</span>
+              <input
+                type="number"
+                {...registerCreate('dueTime', { required: true, min: 0 })}
+                placeholder="day(s)"
+                className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
+            </div>
+          </div>
+          <div className="flex flex-row w-full gap-5">
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Total Score</span>
+              <input
+                type="number"
+                {...registerCreate('totalScore', { required: true, min: 0 })}
+                placeholder="Ex : 100"
+                className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
+            </div>
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Pass Score</span>
+              <input
+                type="number"
+                {...registerCreate('passScore', { required: true, min: 0 })}
+                placeholder="Ex : 10"
+                className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 w-[50%]">
+            <span>Allow redo</span>
+            <input
+              type="number"
+              {...registerCreate('redo', { required: true, min: 1 })}
+              placeholder="Ex : 10"
+              className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+            />
+          </div>
+        </div>
+        {/* submit */}
+        <div className="flex flex-row-reverse gap-5">
+          <Button type="submit">Create</Button>
+        </div>
+      </form>
+      <TokenExpire isOpen={isExpired} />
+    </Modal>
+  )
+}
+
+export default ModalAssign
