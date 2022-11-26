@@ -7,8 +7,6 @@ import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
 
 const customStyles = {
-    right: 0,
-    bottom: 0,
     overlay: {
         position: 'fixed',
         top: 0,
