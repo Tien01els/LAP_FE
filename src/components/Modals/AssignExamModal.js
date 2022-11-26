@@ -28,7 +28,14 @@ const customStyles = {
 };
 
 const axiosJWT = createAxiosJWT();
-const AssignExamModal = ({ isOpen, setIsOpen, classId }) => {
+const AssignExamModal = ({
+    isOpen,
+    setIsOpen,
+    classId,
+    assignmentId,
+    studentsOfAssignment,
+    getAssignmentOfClass,
+}) => {
     const [students, setStudents] = useState([]);
     const [assignStudents, setAssignStudents] = useState([]);
     const [isExpired, setIsExpired] = useState(false);
@@ -36,7 +43,6 @@ const AssignExamModal = ({ isOpen, setIsOpen, classId }) => {
     const getStudentsOfClass = useCallback(async () => {
         try {
             const result = await axiosJWT.get(API_URL + `student/class/${classId}`);
-            console.log(result.data);
             setStudents(result.data);
         } catch (error) {
             console.log(error);
@@ -54,11 +60,14 @@ const AssignExamModal = ({ isOpen, setIsOpen, classId }) => {
 
     const assignForStudents = async () => {
         try {
-            const result = await axiosJWT.get(API_URL + `student/class/${classId}`, {
-                listStudent: assignStudents,
-            });
-            console.log(result.data);
-            setStudents(result.data);
+            console.log(assignStudents);
+            await axiosJWT.put(
+                API_URL + `student-assignment/assignment/${assignmentId}/assign-list-student`,
+                {
+                    listStudentId: assignStudents,
+                }
+            );
+            getAssignmentOfClass(assignmentId);
         } catch (error) {
             console.log(error);
             if (error.response.status === 401) setIsExpired(true);
@@ -68,6 +77,17 @@ const AssignExamModal = ({ isOpen, setIsOpen, classId }) => {
     useEffect(() => {
         getStudentsOfClass();
     }, [getStudentsOfClass]);
+
+    useEffect(() => {
+        if (studentsOfAssignment && students) {
+            const listAssignedStudent = [];
+            for (let i = 0; i < studentsOfAssignment.length; ++i) {
+                if (students.find((student) => student.id === studentsOfAssignment[i].studentId))
+                    listAssignedStudent.push(studentsOfAssignment[i].studentId);
+            }
+            setAssignStudents(listAssignedStudent);
+        }
+    }, [students, studentsOfAssignment]);
 
     return (
         <Modal
