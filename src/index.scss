@@ -4,6 +4,7 @@
 @layer base {
   body {
     @apply font-primary text-base bg-[#f4f7f9];
+    foo: bar;
   }
 }
 @layer components {
@@ -11,6 +12,30 @@
     max-width: 1440px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .daypicker {
+    @apply rounded-md font-semibold transition-all border-gray-500 border #{!important};
+  }
+
+  .daypicker:hover {
+    @apply border border-primary cursor-pointer  text-gray-500 duration-500 #{!important};
+    foo: bar;
+  }
+
+  .daypicker:focus {
+    @apply outline-primary #{!important};
+    foo: bar;
+  }
+
+  .achievementSwiper {
+    @apply py-5 #{!important};
+    foo: bar;
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply text-primary #{!important};
+    foo: bar;
   }
 }
 
@@ -99,20 +124,6 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
-.daypicker {
-  @apply rounded-md font-semibold transition-all border border-gray-500 #{!important};
-}
-
-.daypicker:hover {
-  @apply border border-primary cursor-pointer duration-500 text-gray-500 #{!important};
-}
-
-.daypicker:focus {
-  @apply outline-primary #{!important};
-}
-.achievementSwiper {
-  @apply py-5 #{!important};
 }
 
 .dropdown-content {
@@ -211,13 +222,9 @@
   object-fit: cover;
 }
 
-.swiper-button-prev,
-.swiper-button-next {
-  @apply text-primary #{!important};
-}
-
 #Bank-modal-formula {
   @apply border max-h-[200px] rounded-md mt-2;
+  foo: bar;
 }
 
 .Calendar {
