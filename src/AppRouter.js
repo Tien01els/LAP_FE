@@ -15,7 +15,6 @@ const TeacherManageStudents = lazy(() => import('./pages/TeacherPages/TeacherMan
 const TeacherManageTopic = lazy(() => import('./pages/TeacherPages/TeacherManageTopic'));
 const AssignmentView = lazy(() => import('./pages/TeacherPages/AssignmentView'));
 const TeacherExams = lazy(() => import('./pages/TeacherPages/TeacherExams'));
-const TeacherCreateExam = lazy(() => import('./pages/TeacherPages/TeacherCreateExam'));
 const TeacherReviewAnswers = lazy(() => import('./pages/TeacherPages/TeacherReviewAnswers'));
 
 // Students

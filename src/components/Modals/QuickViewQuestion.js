@@ -71,13 +71,14 @@ const answers = {
     ],
 };
 
-const QuickViewQuestion = ({ isOpen, setIsOpen }) => {
-    const renderAnswer = (questionTypeId) => {
+const QuickViewQuestion = ({ isOpen, setIsOpen, question }) => {
+    const renderAnswer = (questionTypeId, options) => {
+        options = JSON.parse(options);
         switch (questionTypeId) {
             case 1:
-                return answers && <MultiChoice answers={answers} setAnswers={() => {}} Preview />;
+                return answers && <MultiChoice answers={options} setAnswers={() => {}} Preview />;
             case 2:
-                return answers && <TrueFalse answers={answers} />;
+                return answers && <TrueFalse answers={options} />;
             case 3:
                 return (
                     answers && (
@@ -85,18 +86,18 @@ const QuickViewQuestion = ({ isOpen, setIsOpen }) => {
                             <span className=''>
                                 Correct answer
                                 <br />
-                                {answers.input[0].answer}
+                                {options.input[0].answer}
                             </span>
                         </div>
                     )
                 );
             case 4:
-                return answers && <MultiSelectAnswers answers={answers} />;
+                return answers && <MultiSelectAnswers answers={options} />;
             default:
                 return <div>404</div>;
         }
     };
-
+    console.log(question);
     return (
         <Modal
             isOpen={isOpen}
@@ -108,14 +109,21 @@ const QuickViewQuestion = ({ isOpen, setIsOpen }) => {
             <div className='flex flex-col gap-5 w-[600px] h-fit'>
                 <div className='flex flex-col'>
                     <span className='text-xl font-semibold w-[450px] whitespace-normal break-words text-gray-700'>
-                        Question
+                        {question.content}
                     </span>
                     <div className='flex flex-row gap-5 items-center text-sm text-gray-500'>
-                        <span>Multi choice</span>
-                        <span>5pt</span>
+                        <span className='bg-primary text-white rounded-full px-2 text-xs flex items-center'>
+                            {(question.questionTypeId === 1 && 'Multi Choice') ||
+                                (question.questionTypeId === 2 && 'True False') ||
+                                (question.questionTypeId === 3 && 'Input') ||
+                                (question.questionTypeId === 4 && 'Multi Select')}
+                        </span>
+                        <span className='text-gray-500'>{question.score} pt</span>
                     </div>
                     {/* answers */}
-                    <div className='pt-10'>{renderAnswer(1)}</div>
+                    <div className='pt-10'>
+                        {renderAnswer(question.questionTypeId, question.option)}
+                    </div>
                 </div>
                 <div className='flex flex-row-reverse'>
                     <Button className='w-[30%]'>Cancel</Button>

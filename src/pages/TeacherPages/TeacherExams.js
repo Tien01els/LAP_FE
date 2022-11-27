@@ -25,10 +25,13 @@ const TeacherExams = () => {
             try {
                 const { data } = await axiosJWT.get(API_URL + `class-assignment/class/${classId}`);
                 setAssignments(data);
-                (currentAssignmentId &&
-                    data?.length &&
-                    setCurrentAssignment(currentAssignmentId)) ||
-                    (data?.length && setCurrentAssignment(data[0]));
+                if (data?.length) {
+                    const assignment = data?.find(
+                        (assign) => assign.assignment.id === currentAssignmentId
+                    );
+                    if (assignment) setCurrentAssignment(assignment);
+                    else setCurrentAssignment(data[0]);
+                }
             } catch (error) {
                 console.log(error);
                 if (error.response.status === 401) setIsExpired(true);
@@ -39,7 +42,8 @@ const TeacherExams = () => {
 
     useEffect(() => {
         getAssignmentOfClass();
-    }, [getAssignmentOfClass]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className='px-10 py-7 flex h-[100vh] flex-row gap-5'>
@@ -50,9 +54,9 @@ const TeacherExams = () => {
                 typeAssignment='Class'
             />
             {/* left */}
-            <div className='flex flex-col gap-5 h-[100%] w-[60%] bg-white rounded-lg shadow lg px-5 py-4'>
+            <div className='flex flex-col gap-5 h-full w-[60%] bg-white rounded-lg shadow lg px-5 py-4'>
                 {currentAssignment?.assignment && (
-                    <div className='flex flex-col gap-5'>
+                    <div className='flex flex-col gap-5 h-full'>
                         <AssignExamModal
                             isOpen={openAssignStudent}
                             setIsOpen={setOpenAssignStudent}
@@ -109,7 +113,7 @@ const TeacherExams = () => {
                             </div>
                         </div>
                         {/* Question */}
-                        <div className='flex flex-col gap-5'>
+                        <div className='flex flex-col h-full gap-5 '>
                             <div className='flex flex-row items-base justify-between'>
                                 <span className='font-[500]'>Questions</span>
                                 <Button
@@ -123,7 +127,7 @@ const TeacherExams = () => {
                                     <i className='fa-solid fa-pen-to-square'></i> Edit questions
                                 </Button>
                             </div>
-                            <div className='flex flex-col h-[300px] py-3 px-2 gap-4 overflow-y-auto'>
+                            <div className='flex flex-col h-[380px] py-3 px-2 gap-4 overflow-y-auto'>
                                 {currentAssignment?.assignment?.assignmentQuestion &&
                                     currentAssignment?.assignment?.assignmentQuestion.map(
                                         (val, i) => {
