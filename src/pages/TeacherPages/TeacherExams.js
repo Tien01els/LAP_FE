@@ -19,7 +19,6 @@ const TeacherExams = () => {
     const [assignments, setAssignments] = useState([]);
     const [currentAssignment, setCurrentAssignment] = useState({});
     const navigate = useNavigate();
-
     const getAssignmentOfClass = useCallback(
         async (currentAssignmentId) => {
             try {
@@ -187,7 +186,11 @@ const TeacherExams = () => {
                                     </div>
                                     <div className='flex flex-col justify-between gap-3'>
                                         <span className='text-sm text-primary'>View</span>
-                                        <span className='text-xs text-gray-500'>Status</span>
+                                        <span className='text-xs text-gray-500'>
+                                            {val.dateDue && moment(val.dateDue) > moment()
+                                                ? moment(val.dateDue).format('MMMM Do YY')
+                                                : 'Overdue'}
+                                        </span>
                                     </div>
                                 </div>
                             );

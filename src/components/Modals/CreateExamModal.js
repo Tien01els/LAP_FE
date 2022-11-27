@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import Button from '../Button';
+import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
 import DatePicker from '@hassanmojab/react-modern-calendar-datepicker';
 
+import Button from '../Button';
 import { API_URL } from '../../constant';
 import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
@@ -49,16 +50,29 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
                 passScore: parseInt(data.passScore),
                 totalScore: parseInt(data.totalScore),
                 redo: parseInt(data.redo),
-                dateOpen: selectedDay,
                 typeAssignment,
             };
+            const dateOpen =
+                (selectedDay &&
+                    moment(`${selectedDay.year}-${selectedDay.month}-${selectedDay.day}`).format(
+                        'YYYY-MM-DD'
+                    )) ||
+                new Date();
+            const dateDue =
+                (selectedDay &&
+                    moment(`${selectedDay.year}-${selectedDay.month}-${selectedDay.day}`)
+                        .add(parseInt(data.dueTime), 'days')
+                        .format('YYYY-MM-DD')) ||
+                new Date().setDate(new Date().getDate() + parseInt(data.dueTime));
+
             const newAssignment = await axiosJWT.post(API_URL + `assignment`, assignment);
             if (typeAssignment === 'Class') {
                 console.log(assignId);
                 const newClassAssignment = await axiosJWT.post(API_URL + `class-assignment`, {
                     assignmentId: newAssignment.data?.id,
                     classId: assignId,
-                    dateOpen: new Date(),
+                    dateOpen,
+                    dateDue,
                 });
                 navigate(
                     `/class/${newClassAssignment.data?.classId}/assignment/${newClassAssignment.data?.assignmentId}/`
