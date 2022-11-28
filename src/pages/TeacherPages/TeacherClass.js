@@ -6,12 +6,14 @@ import moment from 'moment'
 import { API_URL } from '../../constant'
 import Button from '../../components/Button'
 import DetailsCard from '../../components/Teacher/DetailsCard'
+import DeleteClassModal from '../../components/Modals/DeleteClassModal'
 
 const TeacherClass = () => {
-  const noti = 2
   const navigate = useNavigate()
   const { classId } = useParams()
   const [classInfo, setClassInfo] = useState({})
+
+  const [openModalDeleteClass, setOpenModalDeleteClass] = useState(false)
 
   useEffect(() => {
     axios.get(API_URL + `class/${classId}}`).then((res) => {
@@ -36,20 +38,18 @@ const TeacherClass = () => {
               All Classes
             </span>
           </div>
-          <Button className="bg-white text-black border-none shadow-lg relative flex flex-row justify-center items-center gap-3">
-            Open Requests
-            {noti !== 0 ? (
-              <div className="relative shadow-md shadow-red-300 flex justify-center mb-1 bg-red-500 w-6 h-6 rounded-full">
-                <span className="absolute translate-y-[3px] text-xs font-semibold text-white font-sans">
-                  {noti <= 9 ? noti : '9+'}
-                </span>
-              </div>
-            ) : (
-              ''
-            )}
+          <Button
+            onClick={() => setOpenModalDeleteClass(true)}
+            className="bg-red-500 text-white border-none shadow-lg relative flex flex-row justify-center items-center gap-3"
+          >
+            Delete Class
           </Button>
+          <DeleteClassModal
+            isOpen={openModalDeleteClass}
+            setIsOpen={setOpenModalDeleteClass}
+            classId={classId}
+          />
         </div>
-
         {/* class infos */}
         <div className="flex flex-col justify-center items-center">
           <img

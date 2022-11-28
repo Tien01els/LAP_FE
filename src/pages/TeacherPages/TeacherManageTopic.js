@@ -235,7 +235,7 @@ const TeacherManageTopic = () => {
         </div>
         {/* image */}
         <div
-          className={`relative rounded-lg min-h-[300px] overflow-hidden flex items-center justify-center bg-center w-full select-none  cursor-pointer transition-all`}
+          className={`relative rounded-lg min-h-[300px] overflow-hidden flex items-center justify-center bg-center w-full select-none cursor-pointer transition-all`}
         >
           <img
             src={currentTopic?.topicImg || topicImage}
