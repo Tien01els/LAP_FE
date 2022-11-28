@@ -67,7 +67,6 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
 
             const newAssignment = await axiosJWT.post(API_URL + `assignment`, assignment);
             if (typeAssignment === 'Class') {
-                console.log(assignId);
                 const newClassAssignment = await axiosJWT.post(API_URL + `class-assignment`, {
                     assignmentId: newAssignment.data?.id,
                     classId: assignId,
