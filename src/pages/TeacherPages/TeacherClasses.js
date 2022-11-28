@@ -3,7 +3,7 @@ import ClassCard from '../../components/Teacher/ClassCard'
 import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
 import Button from '../../components/Button'
-import CreateClassModal from '../../components/Modals/CreateClassModal'
+import ManageClassModal from '../../components/Modals/ManageClassModal'
 
 const axiosJWT = createAxiosJWT()
 const TeacherClasses = () => {
@@ -43,7 +43,7 @@ const TeacherClasses = () => {
   }, [teacherId])
 
   return (
-    <div className="flex flex-col mt-10 gap-5 h-[100vh]">
+    <div className="flex flex-col mt-10 gap-5 h-[100%]">
       <div className="flex flex-col px-10 ml-7 pt-2">
         <div className="flex flex-row justify-between items-center mr-[4.2rem]">
           <span className="text-2xl font-[500]">Active Class</span>
@@ -56,7 +56,7 @@ const TeacherClasses = () => {
             >
               Create a class
             </Button>
-            <CreateClassModal
+            <ManageClassModal
               isOpen={openCreateClassModal}
               setIsOpen={setOpenCreateClassModal}
             />

@@ -27,15 +27,20 @@ const customStyles = {
   },
 }
 
-const CreateClassModal = ({ isOpen, setIsOpen }) => {
+const ManageClassModal = ({ isOpen, setIsOpen, edit }) => {
   const { register, handleSubmit } = useForm()
 
   const onSubmit = (data) => {
     const classInfo = {
       className: data.className,
-      year: new Date().getFullYear(),
+      year: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
       classImg: '',
     }
+
+    if (edit) {
+      return console.log('do edit', classInfo)
+    }
+    // else add
     console.log(classInfo)
   }
 
@@ -48,7 +53,7 @@ const CreateClassModal = ({ isOpen, setIsOpen }) => {
       ariaHideApp={false}
     >
       <div className="flex flex-col w-[500px] h-fit gap-5">
-        <span className="text-2xl">Create class</span>
+        <span className="text-2xl">{edit ? `Edit` : `Create`} class</span>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
           {/* class name */}
           <div className="flex flex-col items-center">
@@ -88,7 +93,7 @@ const CreateClassModal = ({ isOpen, setIsOpen }) => {
           {/*  */}
           <div className="w-full flex flex-row-reverse gap-5">
             <Button onClick={() => setIsOpen(!isOpen)}>Cancel</Button>
-            <Button type="submit">Create</Button>
+            <Button type="submit">{edit ? `Save` : `Create`}</Button>
           </div>
         </form>
       </div>
@@ -96,4 +101,4 @@ const CreateClassModal = ({ isOpen, setIsOpen }) => {
   )
 }
 
-export default CreateClassModal
+export default ManageClassModal

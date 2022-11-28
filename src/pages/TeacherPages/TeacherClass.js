@@ -7,6 +7,7 @@ import { API_URL } from '../../constant'
 import Button from '../../components/Button'
 import DetailsCard from '../../components/Teacher/DetailsCard'
 import DeleteClassModal from '../../components/Modals/DeleteClassModal'
+import ManageClassModal from '../../components/Modals/ManageClassModal'
 
 const TeacherClass = () => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const TeacherClass = () => {
   const [classInfo, setClassInfo] = useState({})
 
   const [openModalDeleteClass, setOpenModalDeleteClass] = useState(false)
+  const [openModalEditClass, setOpenEditDeleteClass] = useState(false)
 
   useEffect(() => {
     axios.get(API_URL + `class/${classId}}`).then((res) => {
@@ -38,16 +40,31 @@ const TeacherClass = () => {
               All Classes
             </span>
           </div>
-          <Button
-            onClick={() => setOpenModalDeleteClass(true)}
-            className="bg-red-500 text-white border-none shadow-lg relative flex flex-row justify-center items-center gap-3"
-          >
-            Delete Class
-          </Button>
+          <div className="flex flex-row gap-5">
+            <Button
+              onClick={() => setOpenModalDeleteClass(true)}
+              className="bg-red-500 text-white border-none shadow-lg relative flex flex-row justify-center items-center gap-3"
+            >
+              Delete Class
+            </Button>
+            <Button
+              onClick={() => {
+                setOpenEditDeleteClass(true)
+              }}
+              className="bg-white text-primary border-none shadow-lg relative flex flex-row justify-center items-center gap-3"
+            >
+              Edit Class
+            </Button>
+          </div>
           <DeleteClassModal
             isOpen={openModalDeleteClass}
             setIsOpen={setOpenModalDeleteClass}
             classId={classId}
+          />
+          <ManageClassModal
+            isOpen={openModalEditClass}
+            setIsOpen={setOpenEditDeleteClass}
+            edit
           />
         </div>
         {/* class infos */}
