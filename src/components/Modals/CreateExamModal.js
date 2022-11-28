@@ -67,30 +67,23 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
             .format('YYYY-MM-DD')) ||
         new Date().setDate(new Date().getDate() + parseInt(data.dueTime))
 
-      const newAssignment = await axiosJWT.post(
-        API_URL + `assignment`,
-        assignment,
-      )
-      if (typeAssignment === 'Class') {
-        console.log(assignId)
-        const newClassAssignment = await axiosJWT.post(
-          API_URL + `class-assignment`,
-          {
-            assignmentId: newAssignment.data?.id,
-            classId: assignId,
-            dateOpen,
-            dateDue,
-          },
-        )
-        navigate(
-          `/class/${newClassAssignment.data?.classId}/assignment/${newClassAssignment.data?.assignmentId}/`,
-        )
-      }
-    } catch (error) {
-      console.log(error)
-      if (error.response.status === 401) setIsExpired(true)
-    }
-  }
+            const newAssignment = await axiosJWT.post(API_URL + `assignment`, assignment);
+            if (typeAssignment === 'Class') {
+                const newClassAssignment = await axiosJWT.post(API_URL + `class-assignment`, {
+                    assignmentId: newAssignment.data?.id,
+                    classId: assignId,
+                    dateOpen,
+                    dateDue,
+                });
+                navigate(
+                    `/class/${newClassAssignment.data?.classId}/assignment/${newClassAssignment.data?.assignmentId}/`
+                );
+            }
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
+    };
 
   return (
     <Modal
