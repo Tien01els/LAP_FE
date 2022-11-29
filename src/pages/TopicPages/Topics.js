@@ -39,10 +39,9 @@ const Topics = () => {
     const [itemOffset, setItemOffset] = useState(0);
     const [modalIsOpen, setIsOpen] = useState(false);
 
-    const handleDeleteClassTopic = (id) => {
-        axios.delete(API_URL + `class-topic/${id}`).then((res) => {
-            getTopicOfClass();
-        });
+    const handleDeleteClassTopic = async (id) => {
+        await axios.delete(API_URL + `class-topic/${id}`);
+        getTopicOfClass();
     };
 
     const handleViewDetailTopic = (id) => {
