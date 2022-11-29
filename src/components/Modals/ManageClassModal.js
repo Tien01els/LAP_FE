@@ -3,6 +3,7 @@ import React from 'react'
 import Modal from 'react-modal'
 import Button from '../Button'
 import { useForm } from 'react-hook-form'
+import Select from 'react-select'
 
 import classroomBackground from './../../assets/image/classroom-background.jpg'
 
@@ -33,6 +34,7 @@ const ManageClassModal = ({ isOpen, setIsOpen, edit }) => {
   const onSubmit = (data) => {
     const classInfo = {
       className: data.className,
+      grade: data.grade,
       year: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
       classImg: '',
     }
@@ -43,6 +45,12 @@ const ManageClassModal = ({ isOpen, setIsOpen, edit }) => {
     // else add
     console.log(classInfo)
   }
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+  ]
 
   return (
     <Modal
@@ -56,14 +64,29 @@ const ManageClassModal = ({ isOpen, setIsOpen, edit }) => {
         <span className="text-2xl">{edit ? `Edit` : `Create`} class</span>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
           {/* class name */}
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col gap-2 px-2 w-full">
+            <span className="px-2">Class name</span>
             <input
               type="text"
               {...register('className', { required: true })}
               placeholder="Type in class name"
-              className="outline-none px-3 py-1 border-b-2 w-[80%] border-opacity-0 transition-all focus:border-primary"
+              className="outline-none px-3 py-1 border-b-2  border-opacity-0 transition-all focus:border-primary"
             />
           </div>
+          {/* grade */}
+          {edit ? (
+            <></>
+          ) : (
+            <div className="flex flex-col gap-2 px-2">
+              <span className="px-2">Grade</span>
+              <Select
+                options={options}
+                type="text"
+                {...register('grade', { required: true })}
+                placeholder="Pick a grade"
+              />
+            </div>
+          )}
           {/* class image */}
           <div className="flex items-center justify-center w-full">
             <div
