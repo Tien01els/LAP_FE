@@ -61,7 +61,7 @@ const TopicCard = ({ topicInfo, onDeleteTopic, isTeacher, setCurrentTopicId }) =
             <img
                 src={topicInfo?.topicImg || imgsrc}
                 alt={''}
-                className='object-fill h-32 w-36 rounded-lg'
+                className='object-cover h-32 w-36 rounded-lg '
             />
             <div className='flex flex-col justify-evenly w-full h-full'>
                 <div className='flex flex-row items-center'>

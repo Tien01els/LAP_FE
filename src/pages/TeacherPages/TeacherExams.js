@@ -7,9 +7,9 @@ import Button from '../../components/Button';
 import ExamQuestion from '../../components/Teacher/ExamQuestion';
 import AssignExamModal from '../../components/Modals/AssignExamModal';
 import CreateExamModal from '../../components/Modals/CreateExamModal';
+import ExamItem from '../../components/Teacher/ExamItem';
 import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
-import ExamItem from '../../components/Teacher/ExamItem';
 
 const axiosJWT = createAxiosJWT();
 const TeacherExams = () => {
@@ -66,7 +66,7 @@ const TeacherExams = () => {
                             isOpen={openAssignStudent}
                             setIsOpen={setOpenAssignStudent}
                             classId={classId}
-                            assignmentId={currentAssignment.assignment.id}
+                            currentAssignment={currentAssignment}
                             studentsOfAssignment={currentAssignment.assignment.studentAssignment}
                             getAssignmentOfClass={getAssignmentOfClass}
                         />
@@ -171,6 +171,7 @@ const TeacherExams = () => {
                                     val={val}
                                     currentAssignment={currentAssignment}
                                     setCurrentAssignment={setCurrentAssignment}
+                                    getAssignmentOfClass={getAssignmentOfClass}
                                 />
                             );
                         })}

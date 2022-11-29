@@ -1,6 +1,5 @@
 import React, { Suspense, useState, useEffect, createContext } from 'react';
 import { io } from 'socket.io-client';
-
 import AppRouter from './AppRouter';
 import { API_URL } from './constant';
 

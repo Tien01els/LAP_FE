@@ -39,7 +39,9 @@ const TeacherDashBoard = () => {
         axiosJWT
             .get(API_URL + `class/teacher`)
             .then((res) => {
-                setClasses(res.data);
+                const listClass = res.data;
+                const listClassDashBoard = listClass.slice(0, 3);
+                setClasses(listClassDashBoard);
             })
             .catch((err) => console.log(err));
 

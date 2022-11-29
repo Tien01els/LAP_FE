@@ -34,29 +34,8 @@ const StudentDashboard = () => {
 
     const [topicsOfStudent, setTopicsOfStudent] = useState([]);
 
-    useEffect(() => {
-        axiosJWT
-            .get(API_URL + 'student-assignment')
-            .then((res) => {
-                // setAssignments(res?.data)
-                // handleDays(res?.data)
-                console.log(res.data);
-            })
-            .catch((err) => console.log(err));
-
-        axiosJWT
-            .get(API_URL + 'student-topic/percent-skill')
-            .then((res) => {
-                // setAssignments(res?.data)
-                // handleDays(res?.data)
-                setTopicsOfStudent(res.data);
-            })
-            .catch((err) => console.log(err));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const handleDays = async (assignments) => {
-        let days = [];
+        const days = [];
         // [
         //   {
         //     year: 2022,
@@ -74,9 +53,29 @@ const StudentDashboard = () => {
                 className: 'deadline',
             });
         }
-
         setAssignmentsDays(days);
     };
+
+    useEffect(() => {
+        axiosJWT
+            .get(API_URL + 'student-assignment/student/deadline')
+            .then((res) => {
+                setAssignments(res.data);
+                res.data?.length && handleDays(res.data);
+                console.log(res.data);
+            })
+            .catch((err) => console.log(err));
+
+        axiosJWT
+            .get(API_URL + 'student-topic/percent-skill')
+            .then((res) => {
+                // setAssignments(res?.data)
+                // handleDays(res?.data)
+                setTopicsOfStudent(res.data);
+            })
+            .catch((err) => console.log(err));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const averageScore = 68;
     return (
@@ -235,11 +234,10 @@ const StudentDashboard = () => {
                                             </span>
                                             <div className='flex flex-row gap-2 items-center text-xs text-gray-500'>
                                                 <span>
-                                                    {selectedDay.day +
-                                                        '-' +
-                                                        moment(
+                                                    {moment(
+                                                        selectedDay?.day +
                                                             selectedDay?.month.toString()
-                                                        ).format('MMM')}
+                                                    ).format('DD-MMM')}
                                                 </span>
                                                 <span>
                                                     Due : {moment(item.dateDue).format('hh:mm A')}

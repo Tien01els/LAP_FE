@@ -236,7 +236,7 @@ const TeacherAssignment = () => {
       questionIds,
     })
 
-    if (classId)
+    if (classId) {
       await axiosJWT.put(
         API_URL +
           `class-assignment/class/${classId}/assignment/${assignmentId}`,
@@ -244,6 +244,14 @@ const TeacherAssignment = () => {
           dueDay: selectedDueTime,
         },
       )
+      await axiosJWT.put(
+        API_URL +
+          `student-assignment/assignment/${assignmentId}/class/${classId}/date-due`,
+        {
+          dueDay: selectedDueTime,
+        },
+      )
+    }
     navigate(`/assignment/${assignmentId}/review`)
   }
 

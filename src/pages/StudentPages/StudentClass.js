@@ -253,7 +253,7 @@ const StudentClass = () => {
                 >
                     <img
                         src={currentTopic?.topicImg || topicImage}
-                        className='h-[300px] w-full'
+                        className='h-[300px] w-full object-contain'
                         alt=''
                     />
                 </div>
