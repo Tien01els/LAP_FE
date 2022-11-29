@@ -16,7 +16,12 @@ const ExamItem = ({ val, currentAssignment, setCurrentAssignment }) => {
       onClick={() => {
         setCurrentAssignment(val)
       }}
-      className="border h-fit w-full hover:bg-gray-100 transition-all flex flex-row cursor-pointer select-none justify-between items-baseline rounded-lg px-3 py-2"
+      className={`border h-fit w-full hover:bg-gray-100 transition-all flex flex-row cursor-pointer select-none justify-between items-baseline rounded-lg px-3 py-2
+      ${
+        currentAssignment?.assignmentId === val?.assignmentId
+          ? `bg-gray-200`
+          : ``
+      }`}
     >
       <div className="flex flex-col gap-3">
         <span className="w-[250px] truncate">
@@ -54,11 +59,6 @@ const ExamItem = ({ val, currentAssignment, setCurrentAssignment }) => {
               setModalConfirmDelete(!modalConfirmDelete)
             }}
           />
-          <span className="text-sm text-primary">
-            {currentAssignment?.assignmentId === val?.assignmentId
-              ? `Current`
-              : ``}
-          </span>
         </div>
         <span className="text-xs text-gray-500 flex flex-row-reverse">
           {val.dateDue && moment(val.dateDue) > moment()

@@ -74,24 +74,24 @@ const EditProfileModal = ({ isOpen, setIsOpen }) => {
               className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
             />
           </div>
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col gap-2">
+            <span>Gender</span>
+            <Select
+              options={options}
+              onChange={setSelectedGender}
+              type="text"
+              placeholder="Pick a gender"
+            />
+          </div>
+          <div className="flex flex-col gap-2 z-0 w-full">
             <span>Date of birth</span>
             <DatePicker
               value={selectedDay}
               onChange={setSelectedDay}
               inputPlaceholder="Select a day"
               calendarClassName="pickday h-[100px] full"
-              wrapperClassName="pickday full"
+              wrapperClassName="pickday full z-0 cursor-pointer"
               inputClassName={`w-full border-b-2 outline-none`}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="px-2">Gender</span>
-            <Select
-              options={options}
-              onChange={setSelectedGender}
-              type="text"
-              placeholder="Pick a gender"
             />
           </div>
         </form>

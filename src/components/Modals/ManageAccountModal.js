@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Modal from 'react-modal'
 import Button from '../Button'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import Select from 'react-select'
 
 const customStyles = {
@@ -34,7 +34,7 @@ const options = [
 ]
 
 const ManageAccountModal = ({ isOpen, setIsOpen, edit }) => {
-  const { register, handleSubmit } = useForm()
+  const { control, register, handleSubmit } = useForm()
 
   const createAccount = (data) => {
     console.log(data)
@@ -56,10 +56,17 @@ const ManageAccountModal = ({ isOpen, setIsOpen, edit }) => {
         >
           <div className="flex flex-col gap-2 px-2">
             <span className="px-2">Role</span>
-            <Select
-              options={options}
-              {...register('role', { required: true })}
-              placeholder="Pick a role"
+            <Controller
+              name="role"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={options}
+                  placeholder="Pick a role"
+                />
+              )}
             />
           </div>
           {/* class name */}
