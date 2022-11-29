@@ -41,6 +41,7 @@ const TeacherClass = () => {
             </span>
           </div>
           <div className="flex flex-row gap-5">
+            s
             <Button
               onClick={() => setOpenModalDeleteClass(true)}
               className="bg-red-500 text-white border-none shadow-lg relative flex flex-row justify-center items-center gap-3"
