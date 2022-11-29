@@ -1,4 +1,4 @@
-import Reactm, { useRef } from 'react'
+import React, { useRef } from 'react'
 import { useState } from 'react'
 import Modal from 'react-modal'
 import Button from '../Button'
