@@ -19,11 +19,10 @@ const ModalCreateTopic = ({ modalTopicIsOpen, setTopicIsOpen, getTopicOfGrade })
     const [grades, setGrades] = useState([]);
     const [prerequisiteTopicGrades, setPrerequisiteTopicGrades] = useState([]);
 
-    function getAllGrades() {
-        axios.get(API_URL + `grade`).then((res) => {
-            setGrades(res.data);
-        });
-    }
+    const getAllGrades = async () => {
+        const res = await axiosJWT.get(API_URL + `grade`);
+        setGrades(res.data);
+    };
     function getPrerequisiteTopicOfGrade() {
         axiosJWT.get(API_URL + `topic/teacher/grade/1`).then((res) => {
             setPrerequisiteTopicGrades(res.data);

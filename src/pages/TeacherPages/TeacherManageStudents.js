@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import useCollapse from 'react-collapsed';
 
 import Button from '../../components/Button';
 import StudentCard from '../../components/Teacher/StudentCard';

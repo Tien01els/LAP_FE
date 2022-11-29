@@ -8,6 +8,8 @@ const ClassCard = ({ classInfo }) => {
     const navigate = useNavigate();
     const image = classroomBackground;
     // 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzDRXFhE3aK7cERNPeEkefjyjTnQCqXLxxIBvi_h77ieGirPLbfO1D7I7km_BFVYFjGIA&usqp=CAU'
+    console.log(classInfo);
+
     return (
         <motion.div
             animate={{ opacity: 1 }}
@@ -22,10 +24,13 @@ const ClassCard = ({ classInfo }) => {
         >
             <div className='flex justify-center pt-5'>
                 <img
-                    // classInfo?.classImg ||
-                    src={image}
+                    src={classInfo?.classImg || image}
+                    onError={({ currentTarget }) => {
+                        currentTarget.onerror = null;
+                        currentTarget.src = image;
+                    }}
                     alt=''
-                    className='rounded-md w-[200px] h-[100px] cursor-pointer'
+                    className='rounded-md w-[200px] h-[100px] cursor-pointer object-cover'
                 ></img>
             </div>
             <div className='flex flex-col ml-6 mr-5'>
@@ -34,12 +39,9 @@ const ClassCard = ({ classInfo }) => {
                 </span>
             </div>
             <div className='flex flex-row justify-between mx-6'>
+                <span className='text-sm no-underline cursor-default'>{classInfo?.year}</span>
                 <span className='text-sm no-underline cursor-default'>
-                    {classInfo?.year}
-                </span>
-                <span className='text-sm no-underline cursor-default'>
-                    Grade{' '}
-                    <span className='font-semibold'>{classInfo?.grade}</span>
+                    Grade: <span className='font-semibold'>{classInfo?.grade?.gradeName}</span>
                 </span>
             </div>
         </motion.div>

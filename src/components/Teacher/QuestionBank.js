@@ -11,7 +11,9 @@ import MultiChoice from './AnswerType/MultiChoice';
 import TrueFalse from './AnswerType/TrueFalse';
 import InputAnswer from './AnswerType/InputAnswer';
 import MultiSelect from './AnswerType/MultiSelect';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank }) => {
     const thead = [
         {
@@ -205,7 +207,7 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
     };
 
     const getAllGrades = () => {
-        axios.get(API_URL + `grade`).then((res) => {
+        axiosJWT.get(API_URL + `grade`).then((res) => {
             const grades = res.data;
             const option = [];
             option.push({
@@ -219,7 +221,7 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
     };
 
     const getAllTopics = () => {
-        axios.get(API_URL + `topic`).then((res) => {
+        axiosJWT.get(API_URL + `topic`).then((res) => {
             const topics = res.data;
             const option = [];
             option.push({

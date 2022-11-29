@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Button from '../../components/Button';
+import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
@@ -41,26 +42,35 @@ const ModalCreateSkill = ({
         formState: formStateCreate,
     } = useForm();
 
+    const [isExpired, setIsExpired] = useState(false);
     const [standards, setStandards] = useState([]);
 
     const handleCloseModalCreateSkill = () => {
         setCreateSkillIsOpen(false);
     };
 
-    const handleCreateSkill = (data) => {
-        const skill = {
-            ...data,
-            topicId,
-        };
-        axiosJWT.post(API_URL + `skill`, skill).then((res) => {
+    const handleCreateSkill = async (data) => {
+        try {
+            const skill = {
+                ...data,
+                topicId,
+            };
+            await axiosJWT.post(API_URL + `skill`, skill);
             getTopicOfClass();
-        });
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
     };
 
-    const getStandards = () => {
-        axios.get(API_URL + `standard`).then((res) => {
+    const getStandards = async () => {
+        try {
+            const res = await axios.get(API_URL + `standard`);
             setStandards(res.data);
-        });
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
     };
 
     useEffect(() => {
@@ -143,6 +153,7 @@ const ModalCreateSkill = ({
                 </div>
                 <Button className='border-none bg-primary w-full mt-5'>Create</Button>
             </form>
+            <TokenExpire isOpen={isExpired} />
         </Modal>
     );
 };
