@@ -4,6 +4,7 @@ import React, {
   useContext,
   useCallback,
   useEffect,
+  useRef,
 } from 'react'
 import { NavLink } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
@@ -17,6 +18,25 @@ import 'react-toastify/dist/ReactToastify.css'
 
 const axiosJWT = createAxiosJWT()
 
+function useOutsideAlerter(ref, setIsOpenNoti) {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setIsOpenNoti(false)
+      }
+    }
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [ref])
+}
+
 const StudentSidebar = () => {
   const accessToken = localStorage.getItem('access_token')
   const decodedToken = useMemo(() => {
@@ -27,6 +47,9 @@ const StudentSidebar = () => {
 
   const [isOpenNoti, setIsOpenNoti] = useState(false)
   const [notifications, setNotifications] = useState([])
+
+  const wrapperRef = useRef(null)
+  useOutsideAlerter(wrapperRef, setIsOpenNoti)
 
   useEffect(() => {
     socket?.on('get-handle-request-notification', (data) => {
@@ -91,7 +114,7 @@ const StudentSidebar = () => {
         <span className="font-semibold ml-1 text-sm">Class</span>
       </NavLink>
 
-      <div className="relative">
+      <div className="relative" ref={wrapperRef}>
         <ToastContainer />
         <div
           onClick={() => setIsOpenNoti(!isOpenNoti)}

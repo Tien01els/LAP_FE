@@ -26,7 +26,6 @@ const customStyles = {
 
 const ExamModal = ({ isOpen, setIsOpen, val }) => {
   const handleCancel = () => {
-    console.log(isOpen)
     setIsOpen(false)
   }
   const handleDoAssignment = () => {}
@@ -55,8 +54,8 @@ const ExamModal = ({ isOpen, setIsOpen, val }) => {
         </div>
         <span>30 questions</span>
         <div className="flex flex-row justify-between">
-          <span>total score</span>
-          <span>pass score</span>
+          <span>Total score : </span>
+          <span>Pass score : </span>
         </div>
       </div>
       <div className="flex flex-row-reverse mt-5 gap-5">
