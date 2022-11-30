@@ -51,7 +51,7 @@ const ModalAssign = ({
       const newSkillAssignment = await axiosJWT.post(
         API_URL + `skill-assignment`,
         {
-          assignmentId: newAssignment.data?.id,
+          assignmentId: newAssignment.data?.result?.id,
           skillId: assignId,
         },
       )

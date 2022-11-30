@@ -68,7 +68,7 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
                             .format('YYYY-MM-DD')) ||
                     new Date().setDate(new Date().getDate() + parseInt(data.dueTime));
                 const newClassAssignment = await axiosJWT.post(API_URL + `class-assignment`, {
-                    assignmentId: newAssignment.data?.id,
+                    assignmentId: newAssignment.data?.result?.id,
                     classId: assignId,
                     dateOpen,
                     dateDue,

@@ -32,7 +32,7 @@ const TeacherExams = () => {
                     );
                     if (assignment) setCurrentAssignment(assignment);
                     else setCurrentAssignment(data[0]);
-                }
+                } else setCurrentAssignment({});
             } catch (error) {
                 console.log(error);
                 if (error.response.status === 401) setIsExpired(true);
