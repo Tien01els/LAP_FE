@@ -8,6 +8,7 @@ import Select from 'react-select';
 import classroomBackground from './../../assets/image/classroom-background.jpg';
 import axios from 'axios';
 import { API_URL } from '../../constant';
+import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
@@ -32,17 +33,46 @@ const customStyles = {
     },
 };
 
-const ManageClassModal = ({ isOpen, setIsOpen, edit, getClassOfTeacher, classInfo }) => {
+const ManageClassModal = ({
+    isOpen,
+    setIsOpen,
+    edit,
+    getClassOfTeacher,
+    classInfo,
+    setClassInfo,
+}) => {
     const { register, handleSubmit } = useForm();
+    const [isExpired, setIsExpired] = useState(false);
     const [grades, setGrades] = useState([]);
     const [image, setImage] = React.useState([]);
     const [gradeId, setGradeId] = useState();
 
     const onSubmit = async (data) => {
-        if (edit && classInfo) {
-            const res = (image?.length &&
-                image[0]?.file &&
-                (await axios.post(
+        try {
+            if (edit && classInfo) {
+                const res = (image?.length &&
+                    image[0]?.file &&
+                    (await axios.post(
+                        API_URL + 'file/image',
+                        {
+                            image: image?.length && image[0]?.file,
+                        },
+                        {
+                            headers: { 'Content-Type': 'multipart/form-data' },
+                        }
+                    ))) || { data: classInfo.classImg };
+                const updateClass = {
+                    className: data.className,
+                    classImg: res.data || '',
+                };
+                await axiosJWT.put(API_URL + `class/${classInfo.id}`, updateClass);
+
+                const classInfoAfterUpdated = await axiosJWT.get(
+                    API_URL + `class/${classInfo.id}}`
+                );
+                setClassInfo(classInfoAfterUpdated.data);
+            } else {
+                const res = await axios.post(
                     API_URL + 'file/image',
                     {
                         image: image?.length && image[0]?.file,
@@ -50,32 +80,21 @@ const ManageClassModal = ({ isOpen, setIsOpen, edit, getClassOfTeacher, classInf
                     {
                         headers: { 'Content-Type': 'multipart/form-data' },
                     }
-                ))) || { data: classInfo.classImg };
-                const updateClass = {
+                );
+                const createClass = {
                     className: data.className,
                     classImg: res.data || '',
+                    year: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
+                    gradeId: gradeId,
                 };
-            await axiosJWT.put(API_URL + `class/${classInfo.id}`, updateClass);
-        } else {
-            const res = await axios.post(
-                API_URL + 'file/image',
-                {
-                    image: image?.length && image[0]?.file,
-                },
-                {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                }
-            );
-            const createClass = {
-                className: data.className,
-                classImg: res.data || '',
-                year: `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`,
-                gradeId: gradeId,
-            };
-            await axiosJWT.post(API_URL + `class`, createClass);
-            getClassOfTeacher();
+                await axiosJWT.post(API_URL + `class`, createClass);
+                getClassOfTeacher();
+            }
+            setIsOpen(!isOpen);
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
         }
-        setIsOpen(!isOpen);
     };
 
     useEffect(() => {
@@ -170,6 +189,7 @@ const ManageClassModal = ({ isOpen, setIsOpen, edit, getClassOfTeacher, classInf
                     </div>
                 </form>
             </div>
+            <TokenExpire isOpen={isExpired} />
         </Modal>
     );
 };
