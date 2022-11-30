@@ -38,6 +38,7 @@ const AnswerQuestion = lazy(() => import('./pages/AnswerQuestion'))
 const AssignmentResult = lazy(() =>
   import('./pages/StudentPages/AssignmentResult'),
 )
+const StudentExams = lazy(() => import('./pages/StudentPages/StudentExams'))
 
 //admin
 const ManageAccount = lazy(() => import('./pages/AdminPages/ManageAccount'))
@@ -137,6 +138,7 @@ export default function AppRouter() {
             element={<AssignmentResult />}
           />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/exams" element={<StudentExams />} />
         </>
       )
     }
