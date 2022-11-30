@@ -74,7 +74,7 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
                     dateDue,
                 });
                 navigate(
-                    `/class/${newClassAssignment.data?.classId}/assignment/${newClassAssignment.data?.assignmentId}/`
+                    `/class/${newClassAssignment.data?.result?.classId}/assignment/${newClassAssignment.data?.result?.assignmentId}/`
                 );
             }
         } catch (error) {
