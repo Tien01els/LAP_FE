@@ -59,6 +59,7 @@ const TeacherManageTopic = () => {
     const getTopicOfClass = useCallback(async () => {
         try {
             const res = await axiosJWT.get(API_URL + `class-topic/teacher/class/${classId}`);
+            console.log(res)
             const result = res.data;
             if (result.length > 0 && result[0]?.topicId && !currentTopicId)
                 setCurrentTopicId(result[0].topicId);

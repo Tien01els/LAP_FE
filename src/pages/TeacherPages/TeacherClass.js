@@ -68,6 +68,7 @@ const TeacherClass = () => {
                         isOpen={openModalEditClass}
                         setIsOpen={setOpenEditDeleteClass}
                         classInfo={classInfo}
+                        setClassInfo={setClassInfo}
                         edit
                     />
                 </div>

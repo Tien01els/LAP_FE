@@ -39,8 +39,12 @@ const ModalAddTopic = ({ classId, modalIsOpen, setIsOpen, getTopicOfClass }) => 
         formState: formStateAdd,
     } = useForm();
 
-    const handleCreateClassTopic = async (classTopic) => {
+    const handleCreateClassTopic = async (data) => {
         try {
+            const classTopic = {
+                topicId: data.topicId,
+                isUnlock: 0,
+            };
             await axios.post(API_URL + `class-topic`, { ...classTopic, classId });
             getTopicOfClass();
         } catch (error) {
