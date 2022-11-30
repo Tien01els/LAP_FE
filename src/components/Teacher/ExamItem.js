@@ -13,7 +13,6 @@ const ExamItem = ({ val, currentAssignment, setCurrentAssignment, getAssignmentO
     const [modalConfirmDelete, setModalConfirmDelete] = useState(false);
     const handleDeleteExam = async (id, assignmentId) => {
         try {
-            await axiosJWT.delete(API_URL + `assignment/${assignmentId}`);
             await axiosJWT.delete(API_URL + `class-assignment/${id}`);
             setModalConfirmDelete(!modalConfirmDelete);
             getAssignmentOfClass();

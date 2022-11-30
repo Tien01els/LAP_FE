@@ -10,7 +10,7 @@ import TopicCard from '../../components/Student/TopicCard';
 import GrowingTextArea from './GrowingTextArea';
 import ModalAddTopic from '../TopicPages/ModalAddTopic';
 import ModalCreateSkill from '../SkillPages/ModalCreateSkill';
-import ModalAssign from '../ModalAssign';
+import ModalAssign from '../../components/Modals/ModalAssign';
 import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
 

@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import Modal from 'react-modal'
 import 'react-modern-calendar-datepicker/lib/DatePicker.css'
 
-import { API_URL } from '../constant'
-import Button from '../components/Button'
-import TokenExpire from '../components/Modals/TokenExpire'
-import createAxiosJWT from '../createAxiosJWT'
+import { API_URL } from '../../constant'
+import Button from '../Button'
+import TokenExpire from './TokenExpire'
+import createAxiosJWT from '../../createAxiosJWT'
 
 const axiosJWT = createAxiosJWT()
 
