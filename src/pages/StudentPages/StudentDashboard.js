@@ -17,14 +17,11 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper'
 
 import achievementImg from '../../assets/image/achievement.png'
-import axios from 'axios'
 import { API_URL } from '../../constant'
 import moment from 'moment'
-import jwtDecode from 'jwt-decode'
 import createAxiosJWT from '../../createAxiosJWT'
 
 const axiosJWT = createAxiosJWT()
-const studentId = jwtDecode(localStorage.getItem('access_token'))?.userId
 
 const StudentDashboard = () => {
   const [selectedDay, setSelectedDay] = useState(null)
@@ -62,7 +59,6 @@ const StudentDashboard = () => {
       .then((res) => {
         setAssignments(res.data)
         res.data?.length && handleDays(res.data)
-        console.log(res.data)
       })
       .catch((err) => console.log(err))
 
@@ -232,8 +228,8 @@ const StudentDashboard = () => {
                     className="bg-white w-full px-5 py-3 h-[60px] flex justify-between items-center rounded-lg font-inter font-semibold text-gray-600"
                   >
                     <div className="flex flex-col max-w-[200px] gap-2">
-                      <span className="text-sm truncate">
-                        {item?.assignmentName}
+                      <span className="text-sm truncate text-primary">
+                        {item?.assignment?.assignmentName}
                       </span>
                       <div className="flex flex-row gap-2 items-center text-xs text-gray-500">
                         <span>
@@ -247,7 +243,9 @@ const StudentDashboard = () => {
                       </div>
                     </div>
                     <div>
-                      <span className="text-xs cursor-pointer">View</span>
+                      <span className="text-xs cursor-pointer text-primary">
+                        View
+                      </span>
                     </div>
                   </motion.div>
                 )
