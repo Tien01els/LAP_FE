@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode'
 import moment from 'moment'
 import Button from '../../components/Button'
 
-const TeacherNotification = ({ value }) => {
+const TeacherNotification = ({ value, seenNoti }) => {
   const accessToken = localStorage.getItem('access_token')
   const decodedToken = accessToken && jwtDecode(accessToken)
   const socket = useContext(SocketContext)
@@ -21,6 +21,7 @@ const TeacherNotification = ({ value }) => {
       answer: answer,
     })
     setIsOpenButtonHandle(true)
+    seenNoti(value?.id)
   }
 
   useEffect(() => {
@@ -29,7 +30,10 @@ const TeacherNotification = ({ value }) => {
 
   return (
     value && (
-      <div className="flex flex-row p-3 select-none hover:bg-gray-100 transition-all gap-4">
+      <div
+        className={`flex flex-row p-3 select-none hover:bg-gray-100 transition-all gap-4 
+        ${value?.isSeen === false ? `bg-blue-100 bg-opacity-50` : ``}`}
+      >
         <i className="fa-solid fa-square-check text-2xl text-green-400"></i>
         <div className="flex flex-col gap-2">
           <span className="max-w-[260px] pt-1 text-sm whitespace-normal break-words text-gray-600">
