@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useContext,
+  useRef,
 } from 'react'
 import { NavLink } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
@@ -17,6 +18,25 @@ import 'react-toastify/dist/ReactToastify.css'
 
 const axiosJWT = createAxiosJWT()
 
+function useOutsideAlerter(ref, setIsOpenNoti) {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setIsOpenNoti(false)
+      }
+    }
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [ref])
+}
+
 const TeacherMenu = () => {
   const accessToken = localStorage.getItem('access_token')
   const decodedToken = useMemo(() => {
@@ -26,6 +46,8 @@ const TeacherMenu = () => {
 
   const [isOpenNoti, setIsOpenNoti] = useState(false)
   const [notifications, setNotifications] = useState([])
+
+  const newNotification = true
 
   useEffect(() => {
     socket?.on('get-request-unlock-topic', (data) => {
@@ -65,6 +87,9 @@ const TeacherMenu = () => {
     getNotificationsOfUser()
   }, [getNotificationsOfUser])
 
+  const wrapperRef = useRef(null)
+  useOutsideAlerter(wrapperRef, setIsOpenNoti)
+
   return (
     <div className="flex flex-col gap-3">
       <NavLink
@@ -90,7 +115,7 @@ const TeacherMenu = () => {
         <span className="font-semibold ml-[3px] text-sm">Classes</span>
       </NavLink>
 
-      <div className="relative">
+      <div className="relative" ref={wrapperRef}>
         <ToastContainer />
         <div
           onClick={() => setIsOpenNoti(!isOpenNoti)}
@@ -102,16 +127,23 @@ const TeacherMenu = () => {
         >
           <i className="fa-regular fa-bell text-xl"></i>
           <span className="font-semibold ml-1 text-sm">Notification</span>
-          <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
+          {newNotification && (
+            <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
+          )}
         </div>
         <div
           className={`${
             isOpenNoti ? `` : `hidden`
-          }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-screen wibu:h-screen translate-x-[220px] wibu:-translate-y-[365px] -translate-y-[365px] z-[1000px]`}
+          }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-screen wibu:h-screen translate-x-[210px] wibu:-translate-y-[365px] -translate-y-[365px] z-[1000px]`}
         >
-          <span className="text-xl text-gray-600 font-[500] px-5 py-3">
-            Notifications
-          </span>
+          <div className="flex flex-row justify-between items-center">
+            <span className="text-xl text-gray-600 font-[500] px-5 py-3">
+              Notifications
+            </span>
+            <span className="text-sm text-primary pr-3 pt-1 select-none cursor-pointer">
+              Mark as read all
+            </span>
+          </div>
           <div className="flex flex-col overflow-y-auto">
             {notifications?.map((val, i) => {
               return <TeacherNotification key={val.id} value={val} />
