@@ -34,6 +34,7 @@ function useOutsideAlerter(ref, setIsOpenNoti) {
       // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref])
 }
 
@@ -47,10 +48,10 @@ const TeacherMenu = () => {
   const [isOpenNoti, setIsOpenNoti] = useState(false)
   const [notifications, setNotifications] = useState([])
 
-  const newNotification = true
+  const [newNoti, setNewNoti] = useState(false)
 
   useEffect(() => {
-    socket?.on('get-request-unlock-topic', (data) => {
+    socket?.on('get-request-unlock-topic', async (data) => {
       if (data.senderId !== decodedToken?.accountId) {
         setNotifications((prev) => [data, ...prev])
         toast.info(data?.content, {
@@ -63,6 +64,7 @@ const TeacherMenu = () => {
           progress: undefined,
           theme: 'light',
         })
+        setNewNoti(true)
       }
     })
     return () => {
@@ -77,10 +79,14 @@ const TeacherMenu = () => {
           API_URL + `notification-content/receiver/${decodedToken.accountId}`,
         )
         setNotifications(res.data)
+        if (res.data.some((e) => e.isSeen === false)) {
+          setNewNoti(true)
+        } else setNewNoti(false)
       }
     } catch (error) {
       console.log(error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decodedToken])
 
   useEffect(() => {
@@ -89,6 +95,30 @@ const TeacherMenu = () => {
 
   const wrapperRef = useRef(null)
   useOutsideAlerter(wrapperRef, setIsOpenNoti)
+
+  const seenNoti = async (notiId) => {
+    try {
+      await axiosJWT.put(
+        API_URL + `notification-content/${notiId}/seen-notification`,
+      )
+      getNotificationsOfUser()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const seenAll = async () => {
+    try {
+      await axiosJWT.put(
+        API_URL +
+          `notification-content/receiver/${decodedToken.accountId}/seen-all-notification`,
+      )
+      setNewNoti(false)
+      getNotificationsOfUser()
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -127,7 +157,7 @@ const TeacherMenu = () => {
         >
           <i className="fa-regular fa-bell text-xl"></i>
           <span className="font-semibold ml-1 text-sm">Notification</span>
-          {newNotification && (
+          {newNoti && (
             <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
           )}
         </div>
@@ -140,13 +170,22 @@ const TeacherMenu = () => {
             <span className="text-xl text-gray-600 font-[500] px-5 py-3">
               Notifications
             </span>
-            <span className="text-sm text-primary pr-3 pt-1 select-none cursor-pointer">
+            <span
+              onClick={seenAll}
+              className="text-sm text-primary pr-3 pt-1 select-none cursor-pointer"
+            >
               Mark as read all
             </span>
           </div>
           <div className="flex flex-col overflow-y-auto">
             {notifications?.map((val, i) => {
-              return <TeacherNotification key={val.id} value={val} />
+              return (
+                <TeacherNotification
+                  seenNoti={seenNoti}
+                  key={val.id}
+                  value={val}
+                />
+              )
             })}
           </div>
         </div>

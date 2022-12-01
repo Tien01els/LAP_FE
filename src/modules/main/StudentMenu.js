@@ -34,6 +34,7 @@ function useOutsideAlerter(ref, setIsOpenNoti) {
       // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref])
 }
 
@@ -47,6 +48,7 @@ const StudentSidebar = () => {
 
   const [isOpenNoti, setIsOpenNoti] = useState(false)
   const [notifications, setNotifications] = useState([])
+  const [newNoti, setNewNoti] = useState(false)
 
   const wrapperRef = useRef(null)
   useOutsideAlerter(wrapperRef, setIsOpenNoti)
@@ -65,6 +67,7 @@ const StudentSidebar = () => {
           progress: undefined,
           theme: 'light',
         })
+        setNewNoti(true)
       }
     })
     return () => {
@@ -79,6 +82,10 @@ const StudentSidebar = () => {
           API_URL + `notification-content/receiver/${decodedToken.accountId}`,
         )
         setNotifications(res.data)
+        console.log('lay cai moi')
+        if (res.data.some((e) => e.isSeen === false)) {
+          setNewNoti(true)
+        } else setNewNoti(false)
       }
     } catch (error) {
       console.log(error)
@@ -88,6 +95,23 @@ const StudentSidebar = () => {
   useEffect(() => {
     getNotificationsOfUser()
   }, [getNotificationsOfUser])
+
+  const seenNoti = (notiId) => {
+    axiosJWT
+      .put(API_URL + `notification-content/${notiId}/seen-notification`)
+      .catch((err) => console.log(err))
+    getNotificationsOfUser()
+  }
+
+  const seenAll = () => {
+    axiosJWT
+      .put(
+        API_URL +
+          `notification-content/receiver/${decodedToken.accountId}/seen-all-notification`,
+      )
+      .catch((err) => console.log(err))
+    getNotificationsOfUser()
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -126,19 +150,31 @@ const StudentSidebar = () => {
         >
           <i className="fa-regular fa-bell text-xl"></i>
           <span className="font-semibold ml-1 text-sm">Notification</span>
-          <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
+          {newNoti && (
+            <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
+          )}
         </div>
         <div
           className={`${
             isOpenNoti ? `` : `hidden`
           }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-screen wibu:h-screen translate-x-[215px] -translate-y-[365px] wibu:-translate-y-[365px] z-[1000px]`}
         >
-          <span className="text-xl text-gray-600 font-[500] px-5 py-3">
-            Notifications
-          </span>
+          <div className="flex flex-row items-center justify-between px-3 py-3">
+            <span className="text-xl text-gray-600 font-[500] ">
+              Notifications
+            </span>
+            <span
+              onClick={seenAll}
+              className="text-xs text-primary cursor-pointer select-none"
+            >
+              Mark as read all
+            </span>
+          </div>
           <div className="flex flex-col overflow-y-auto">
             {notifications.map((val, i) => {
-              return <StudentNotification key={i} value={val} />
+              return (
+                <StudentNotification seenNoti={seenNoti} key={i} value={val} />
+              )
             })}
           </div>
         </div>
