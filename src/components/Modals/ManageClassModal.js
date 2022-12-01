@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import Select from 'react-select';
 
 import classroomBackground from './../../assets/image/classroom-background.jpg';
-import axios from 'axios';
 import { API_URL } from '../../constant';
 import TokenExpire from '../../components/Modals/TokenExpire';
 import createAxiosJWT from '../../createAxiosJWT';
@@ -52,7 +51,7 @@ const ManageClassModal = ({
             if (edit && classInfo) {
                 const res = (image?.length &&
                     image[0]?.file &&
-                    (await axios.post(
+                    (await axiosJWT.post(
                         API_URL + 'file/image',
                         {
                             image: image?.length && image[0]?.file,
@@ -72,7 +71,7 @@ const ManageClassModal = ({
                 );
                 setClassInfo(classInfoAfterUpdated.data);
             } else {
-                const res = await axios.post(
+                const res = await axiosJWT.post(
                     API_URL + 'file/image',
                     {
                         image: image?.length && image[0]?.file,

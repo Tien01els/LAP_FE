@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-modal';
-import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Button from '../../components/Button';
@@ -65,7 +64,7 @@ const ModalCreateSkill = ({
 
     const getStandards = async () => {
         try {
-            const res = await axios.get(API_URL + `standard`);
+            const res = await axiosJWT.get(API_URL + `standard`);
             setStandards(res.data);
         } catch (error) {
             console.log(error);

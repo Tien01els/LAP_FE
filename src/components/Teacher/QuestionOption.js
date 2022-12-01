@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import Select from 'react-select';
 
 import { API_URL } from '../../constant';
@@ -67,7 +66,7 @@ const QuestionOption = ({
 
     useEffect(() => {
         if (selectedTopic)
-            axios.get(API_URL + `skill/topic/${selectedTopic}`).then((res) => {
+            axiosJWT.get(API_URL + `skill/topic/${selectedTopic}`).then((res) => {
                 const skills = res.data;
                 const option = [];
                 for (let i = 0; i < skills.length; i++)

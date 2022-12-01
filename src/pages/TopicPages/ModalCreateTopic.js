@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-modal';
-import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Button from '../../components/Button';
@@ -51,12 +50,11 @@ const ModalCreateTopic = ({ modalTopicIsOpen, setTopicIsOpen, getTopicOfGrade })
     }, [formStateCreate, resetCreate]);
 
     function handleCreateTopic(data) {
-        console.log(data);
         const topic = {
             ...data,
             teacherId: 1,
         };
-        axios.post(API_URL + `topic`, topic).then((res) => {
+        axiosJWT.post(API_URL + `topic`, topic).then((res) => {
             getTopicOfGrade();
         });
     }

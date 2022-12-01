@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-modal';
-import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Button from '../../components/Button';
@@ -45,7 +44,7 @@ const ModalAddTopic = ({ classId, modalIsOpen, setIsOpen, getTopicOfClass }) => 
                 topicId: data.topicId,
                 isUnlock: 0,
             };
-            await axios.post(API_URL + `class-topic`, { ...classTopic, classId });
+            await axiosJWT.post(API_URL + `class-topic`, { ...classTopic, classId });
             getTopicOfClass();
         } catch (error) {
             console.log(error.message);
