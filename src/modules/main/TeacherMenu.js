@@ -43,6 +43,32 @@ const TeacherMenu = () => {
 
     const [newNoti, setNewNoti] = useState(false);
 
+    const seenNoti = async (notiId) => {
+        try {
+            await axiosJWT.put(API_URL + `notification-content/${notiId}/seen-notification`);
+            setNewNoti(false);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const seenAll = async () => {
+        try {
+            await axiosJWT.put(
+                API_URL +
+                    `notification-content/receiver/${decodedToken.accountId}/seen-all-notification`
+            );
+            setNewNoti(false);
+            getNotificationsOfUser();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const checkNewNoti = (notification) => {
+        if (notification?.some((e) => e.isSeen === 0)) setNewNoti(true);
+        else setNewNoti(false);
+    };
     useEffect(() => {
         socket?.on('get-request-unlock-topic', async (data) => {
             if (data.senderId !== decodedToken?.accountId) {
@@ -72,9 +98,7 @@ const TeacherMenu = () => {
                     API_URL + `notification-content/receiver/${decodedToken.accountId}`
                 );
                 setNotifications(res.data);
-                console.log(res.data[0]);
-                if (res.data?.some((e) => e.isSeen === 0)) setNewNoti(true);
-                else setNewNoti(false);
+                checkNewNoti(res.data);
             }
         } catch (error) {
             console.log(error);
@@ -88,28 +112,6 @@ const TeacherMenu = () => {
 
     const wrapperRef = useRef(null);
     useOutsideAlerter(wrapperRef, setIsOpenNoti);
-
-    const seenNoti = async (notiId) => {
-        try {
-            await axiosJWT.put(API_URL + `notification-content/${notiId}/seen-notification`);
-            getNotificationsOfUser();
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const seenAll = async () => {
-        try {
-            await axiosJWT.put(
-                API_URL +
-                    `notification-content/receiver/${decodedToken.accountId}/seen-all-notification`
-            );
-            setNewNoti(false);
-            getNotificationsOfUser();
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
     return (
         <div className='flex flex-col gap-3'>
