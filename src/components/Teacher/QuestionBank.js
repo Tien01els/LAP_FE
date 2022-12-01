@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ReactPaginate from 'react-paginate';
-import axios from 'axios';
 import Select from 'react-select';
 import Modal from 'react-modal';
 
@@ -182,7 +181,7 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
     };
 
     const getQuestionBank = (gradeId, topicId, skillId, level) => {
-        axios
+        axiosJWT
             .get(
                 API_URL +
                     `question/question-bank?gradeId=${gradeId}&topicId=${topicId}&skillId=${skillId}&level=${level}`
@@ -235,7 +234,7 @@ const QuestionBank = ({ questionsBank, onUpdateQuestionBank, onCloseModalBank })
     };
 
     const getAllSkills = () => {
-        axios.get(API_URL + `skill`).then((res) => {
+        axiosJWT.get(API_URL + `skill`).then((res) => {
             const skills = res.data;
             const option = [];
             option.push({

@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
 
 import { API_URL } from '../../constant'
 // components
@@ -35,7 +34,7 @@ const TeacherManageTopic = () => {
   const [isExpired, setIsExpired] = useState(false)
 
   const handleChangeImage = async (e) => {
-    const res = await axios.post(
+    const res = await axiosJWT.post(
       API_URL + 'file/image',
       {
         image: e.target.files[0],

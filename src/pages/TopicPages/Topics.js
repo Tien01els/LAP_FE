@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import axios from 'axios';
 
 import { API_URL } from '../../constant';
 import Table from '../../components/Table';
@@ -40,7 +39,7 @@ const Topics = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
 
     const handleDeleteClassTopic = async (id) => {
-        await axios.delete(API_URL + `class-topic/${id}`);
+        await axiosJWT.delete(API_URL + `class-topic/${id}`);
         getTopicOfClass();
     };
 

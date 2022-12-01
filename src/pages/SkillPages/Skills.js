@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import axios from 'axios';
 import moment from 'moment';
 
 import Table from '../../components/Table';
 import { API_URL } from '../../constant';
 import ModalCreateSkill from './ModalCreateSkill';
+import createAxiosJWT from '../../createAxiosJWT';
 
+const axiosJWT = createAxiosJWT();
 const Skills = () => {
     const thead = [
         {
@@ -37,13 +38,13 @@ const Skills = () => {
     const [modalCreateSkillIsOpen, setCreateSkillIsOpen] = useState(false);
 
     const handleDeleteSkill = (id) => {
-        axios.delete(API_URL + `skill/${id}`).then((res) => {
+        axiosJWT.delete(API_URL + `skill/${id}`).then((res) => {
             getSkillsOfTopic();
         });
     };
 
     const getSkillsOfTopic = useCallback(() => {
-        axios.get(API_URL + `skill/topic/${topicId}`).then((res) => {
+        axiosJWT.get(API_URL + `skill/topic/${topicId}`).then((res) => {
             let result = res.data;
             let arrayResult = [];
             for (let i = 0; i < result.length; ++i) {
@@ -67,7 +68,7 @@ const Skills = () => {
     };
 
     const handleAssignSkill = (skillId) => {
-        axios.get(API_URL + `skill-assignment/skill/${skillId}`).then((res) => {
+        axiosJWT.get(API_URL + `skill-assignment/skill/${skillId}`).then((res) => {
             if (!res.data) {
                 const skill = valueSkills.find((value) => value.id === skillId);
                 const assignment = {
@@ -78,8 +79,8 @@ const Skills = () => {
                     dateDue: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                     teacherId: 1,
                 };
-                axios.post(API_URL + `assignment`, assignment).then((res) => {
-                    axios
+                axiosJWT.post(API_URL + `assignment`, assignment).then((res) => {
+                    axiosJWT
                         .post(API_URL + `skill-assignment`, {
                             assignmentId: res.data.id,
                             skillId: skillId,
@@ -102,7 +103,7 @@ const Skills = () => {
     };
 
     useEffect(() => {
-        axios.get(API_URL + `topic/${topicId}`).then((res) => {
+        axiosJWT.get(API_URL + `topic/${topicId}`).then((res) => {
             setTopic(res.data);
         });
     }, [topicId]);
