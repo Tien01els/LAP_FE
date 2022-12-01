@@ -41,21 +41,40 @@ const ExamModal = ({ isOpen, setIsOpen, val }) => {
         <span className="text-2xl font-medium text-primary">
           {val?.assignmentName}
         </span>
-        <span className=" ">
-          <i className="fa-regular fa-clock"></i>{' '}
-          <span>{val?.doTime} mins</span>
-        </span>
-        <div className="flex flex-row justify-between">
-          <span className=" text-gray-500">
-            <i className="fa-regular fa-calendar"></i>{' '}
+        <div className="flex flex-row ">
+          <div className="flex flex-row gap-3 items-center w-[50%]">
+            <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
+              <i className="fa-regular fa-clock text-primary"></i>
+            </div>
+            <span>{val?.doTime} mins</span>
+          </div>
+          <div className="flex flex-row gap-3 items-center ">
+            <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
+              <i className="fa-regular fa-calendar text-primary"></i>{' '}
+            </div>
             <span>{val?.dateDue}</span>
-          </span>
-          <span className=" text-gray-500"> status</span>
+          </div>
         </div>
-        <span>30 questions</span>
-        <div className="flex flex-row justify-between">
-          <span>Total score : </span>
-          <span>Pass score : </span>
+        <div className="flex flex-row ">
+          <div className="flex flex-row gap-3 items-center w-[50%]">
+            <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
+              <i className="fa-solid fa-clipboard-question text-primary"></i>
+            </div>
+            <span>30 question</span>
+          </div>
+          <div className="flex flex-row gap-3 items-center">
+            <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
+              <i className="fa-regular fa-star text-primary"></i>
+            </div>
+            <span>Pass score : 30/100 </span>
+          </div>
+        </div>
+
+        <div className="flex flex-row gap-3 items-center">
+          <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
+            <i className="fa-brands fa-cloudsmith text-primary"></i>
+          </div>
+          <span className=" text-gray-500"> status</span>
         </div>
       </div>
       <div className="flex flex-row-reverse mt-5 gap-5">
