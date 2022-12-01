@@ -6,6 +6,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
   const [answerB, setAnswerB] = useState('')
   const [answerC, setAnswerC] = useState('')
   const [answerD, setAnswerD] = useState('')
+  console.log(Preview)
 
   // const handleOnChange = (e) => {
   //     setValue(e.target.value);
@@ -42,6 +43,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
       prev.multiChoice[3].isTrue = value === 'd' ? true : false
       return prev
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, setAnswers])
 
   useEffect(() => {
@@ -49,12 +51,14 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
       prev['multiChoice'][0]['answer'] = answerA
       return prev
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerA, setAnswers])
   useEffect(() => {
     setAnswers((prev) => {
       prev['multiChoice'][1]['answer'] = answerB
       return prev
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerB, setAnswers])
 
   useEffect(() => {
@@ -69,6 +73,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
       prev['multiChoice'][3]['answer'] = answerD
       return prev
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerD, setAnswers])
 
   return (
@@ -81,6 +86,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
           name="right-answer"
           value="a"
           id="option-a"
+          disabled={Preview ? true : false}
         />
         <input
           type="radio"
@@ -89,6 +95,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
           name="right-answer"
           value="b"
           id="option-b"
+          disabled={Preview ? true : false}
         />
         <input
           type="radio"
@@ -97,6 +104,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
           name="right-answer"
           value="c"
           id="option-c"
+          disabled={Preview ? true : false}
         />
         <input
           type="radio"
@@ -105,6 +113,7 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
           name="right-answer"
           value="d"
           id="option-d"
+          disabled={Preview ? true : false}
         />
       </div>
       <div className="grid grid-cols-2 gap-5 my-5">

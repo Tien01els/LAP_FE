@@ -81,11 +81,15 @@ const QuickViewQuestion = ({ isOpen, setIsOpen, question }) => {
       case 1:
         return (
           answers && (
-            <MultiChoice answers={options} setAnswers={() => {}} Preview />
+            <MultiChoice
+              answers={options}
+              setAnswers={() => {}}
+              Preview={true}
+            />
           )
         )
       case 2:
-        return answers && <TrueFalse answers={options} />
+        return answers && <TrueFalse answers={options} Review={true} />
       case 3:
         return (
           answers && (
@@ -98,7 +102,7 @@ const QuickViewQuestion = ({ isOpen, setIsOpen, question }) => {
           )
         )
       case 4:
-        return answers && <MultiSelectAnswers answers={options} />
+        return answers && <MultiSelectAnswers answers={options} review />
       default:
         return <div>404</div>
     }
