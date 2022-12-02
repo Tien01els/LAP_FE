@@ -306,7 +306,7 @@ const TeacherAssignment = () => {
     ` +
         question +
         String.raw`
-    \end{ multline }`,
+    \end{multline}`,
     )
   }, [question])
 

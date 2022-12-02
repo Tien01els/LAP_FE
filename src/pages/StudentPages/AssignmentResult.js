@@ -4,6 +4,7 @@ import moment from 'moment'
 
 import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
+import Result from '../../components/Student/Result'
 
 const axiosJWT = createAxiosJWT()
 const AssignmentResult = () => {
@@ -165,54 +166,14 @@ const AssignmentResult = () => {
         <div className="flex flex-col gap-5 pb-5 ">
           {listQuestionOfStudent.map((questionOfStudent, i) => {
             return (
-              <div
-                id={`question-${i}`}
+              <Result
+                questionOfStudent={questionOfStudent}
+                index={i}
                 key={i}
-                className="flex flex-row gap-5 w-full bg-white rounded-lg shadow px-3 py-3"
-              >
-                <div className="w-[80px] h-[80px] flex items-center justify-center bg-primary rounded-lg select-none">
-                  <span className="text-white text-xl font-semibold">
-                    {i + 1}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-row justify-between">
-                    <div className="flex flex-col gap-3">
-                      <span className="text-xl w-[480px]">
-                        {questionOfStudent.content}
-                      </span>
-                      <span>
-                        Correct Answer:{' '}
-                        {getCorrectAnswerOfQuestion(
-                          listQuestionOfAssignment.find(
-                            (questionOfAssignment) =>
-                              questionOfAssignment.questionId ===
-                              questionOfStudent.questionId,
-                          ),
-                        )}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-400 pt-1">
-                      {questionOfStudent.score}pt
-                    </span>
-                  </div>
-                  <div className="text-sm flex flex-row items-center gap-5">
-                    <div className="bg-[#dcedfd] w-[480px] flex justify-between px-3 py-5 rounded-lg">
-                      <span className="max-w-[430px] break-words whitespace-normal">
-                        Your Answer: {checkStudentAnswered(questionOfStudent)}
-                      </span>
-                    </div>
-                    {/* sai nao thi lay do */}
-                    <div>
-                      {questionOfStudent?.answerOfStudent?.isCorrect ? (
-                        <i className="fa-solid fa-circle-check text-xl text-green-400"></i>
-                      ) : (
-                        <i className="fa-solid fa-circle-xmark text-xl text-red-500"></i>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                getCorrectAnswerOfQuestion={getCorrectAnswerOfQuestion}
+                listQuestionOfAssignment={listQuestionOfAssignment}
+                checkStudentAnswered={checkStudentAnswered}
+              />
             )
           })}
         </div>
