@@ -301,12 +301,40 @@ const TeacherAssignment = () => {
 
   useEffect(() => {
     const mf = document.querySelector('#formula')
-    mf.setValue(question)
+    mf.setValue(
+      String.raw`\begin{multline}
+    ` +
+        question +
+        String.raw`
+    \end{ multline }`,
+    )
   }, [question])
+
+  const handleAddFraction = () => {
+    setQuestion(question + String.raw`\frac{1}{2}`)
+  }
+
+  const handleAddSquareRoot = () => {
+    setQuestion(question + String.raw`\sqrt{2}`)
+  }
+
+  const handleAddNormalText = () => {
+    setQuestion(question + String.raw`\text{Example text}`)
+  }
+
+  const handleNextLine = () => {
+    setQuestion(question + String.raw`\\`)
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleNextLine()
+    }
+  }
 
   return (
     <div className="flex flex-col items-center gap-7 justify-center h-full">
-      <div className="flex flex-row gap-7 justify-center w-full h-full">
+      <div className="flex flex-row gap-7 justify-center w-full h-fit">
         <div className="w-[800px] bg-white rounded-lg shadow-lg flex flex-col justify-between my-4 px-10 py-5">
           <div className="flex flex-col gap-4">
             <div className="h-[88px]">
@@ -340,33 +368,29 @@ const TeacherAssignment = () => {
               readonly
             ></math-field>
 
-            <motion.div
-              layout
-              animate={{ opacity: 1 }}
-              initial={{ opacity: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="duration-300 h-[48px]"
-            >
-              {enableHint && (
-                <div className="px-6 py-3 text-white flex flex-row gap-4 items-center bg-primary rounded-md overflow-hidden w-full break-words">
-                  <i className="far fa-lightbulb"></i>
-                  <span className=" whitespace-pre-line">
-                    {hint ? hint : 'Hint'}
-                  </span>
-                </div>
-              )}
-            </motion.div>
+            {enableHint && (
+              <div className="px-6 py-3 text-white flex flex-row gap-4 h-fit items-baseline bg-primary rounded-md w-full">
+                <i className="far fa-lightbulb"></i>
+                <span className="whitespace-normal break-words w-[90%]">
+                  {hint ? hint : 'Hint'}
+                </span>
+              </div>
+            )}
+            <div className="flex flex-row gap-5">
+              <Button onClick={handleAddFraction}>Add Fraction</Button>
+              <Button onClick={handleAddSquareRoot}>Square root</Button>
+              <Button onClick={handleAddNormalText}>Write normal text</Button>
+            </div>
             <textarea
               id="latex"
               className="outline-none focus:shadow-md duration-300 shadow-sm bg-gray-100 rounded-lg resize-none px-4 py-[0.5rem] h-36"
               onChange={(e) => {
                 setQuestion(e.target.value)
               }}
+              onKeyDown={(e) => handleKeyDown(e)}
               value={question || ''}
               placeholder="Type your question"
             />
-
             <div className="flex flex-row gap-5 items-baseline duration-500">
               <div className="flex flex-row items-baseline gap-5 h-[72px]">
                 <input
