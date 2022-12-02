@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { API_URL } from '../../constant'
 // components
@@ -33,19 +33,19 @@ const TeacherManageTopic = () => {
   const [openAddTopic, setOpenAddTopic] = useState(false)
   const [isExpired, setIsExpired] = useState(false)
 
-  const handleChangeImage = async (e) => {
-    const res = await axiosJWT.post(
-      API_URL + 'file/image',
-      {
-        image: e.target.files[0],
-      },
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    )
-    currentTopic.topicImg = res.data
-    handleUpdateInfoTopic()
-  }
+    const handleChangeImage = async (e) => {
+        const res = await axiosJWT.post(
+            API_URL + 'file/image',
+            {
+                image: e.target.files[0],
+            },
+            {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            }
+        );
+        currentTopic.topicImg = res.data;
+        handleUpdateInfoTopic();
+    };
 
   const handleDeleteClassTopic = async (id) => {
     try {
@@ -56,36 +56,33 @@ const TeacherManageTopic = () => {
     }
   }
 
-  const getTopicOfClass = useCallback(async () => {
-    try {
-      const res = await axiosJWT.get(
-        API_URL + `class-topic/teacher/class/${classId}`,
-      )
-      console.log(res)
-      const result = res.data
-      if (result.length > 0 && result[0]?.topicId && !currentTopicId)
-        setCurrentTopicId(result[0].topicId)
-      let valueTopics = []
-      for (let i = 0; i < result.length; ++i) {
-        valueTopics = [
-          ...valueTopics,
-          {
-            id: result[i].topicId,
-            topicName: result[i].topicName,
-            description: result[i].description,
-            topicImg: result[i].topicImg,
-            prerequisiteTopicName: result[i].prerequisiteTopicName,
-            classTopicId: result[i].id,
-          },
-        ]
-      }
-      setTopics(valueTopics)
-      setTopicsOfClass(result)
-    } catch (error) {
-      console.log(error)
-      if (error.response.status === 401) setIsExpired(true)
-    }
-  }, [classId, currentTopicId])
+    const getTopicOfClass = useCallback(async () => {
+        try {
+            const res = await axiosJWT.get(API_URL + `class-topic/teacher/class/${classId}`);
+            const result = res.data;
+            if (result.length > 0 && result[0]?.topicId && !currentTopicId)
+                setCurrentTopicId(result[0].topicId);
+            let valueTopics = [];
+            for (let i = 0; i < result.length; ++i) {
+                valueTopics = [
+                    ...valueTopics,
+                    {
+                        id: result[i].topicId,
+                        topicName: result[i].topicName,
+                        description: result[i].description,
+                        topicImg: result[i].topicImg,
+                        prerequisiteTopicName: result[i].prerequisiteTopicName,
+                        classTopicId: result[i].id,
+                    },
+                ];
+            }
+            setTopics(valueTopics);
+            setTopicsOfClass(result);
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
+    }, [classId, currentTopicId]);
 
   useEffect(() => {
     getTopicOfClass()

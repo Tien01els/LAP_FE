@@ -74,7 +74,7 @@ const StudentClass = () => {
     try {
       if (currentTopicId) {
         const res = await axiosJWT.get(
-          API_URL + `skill/topic/${currentTopicId}`,
+          API_URL + `student-skill/student/topic/${currentTopicId}`,
         )
         setSkills(res.data)
         setCurrentTopic(
@@ -94,8 +94,6 @@ const StudentClass = () => {
   useEffect(() => {
     getTopicOfClass()
   }, [getTopicOfClass])
-
-  console.log(currentTopic)
 
   useEffect(() => {
     socket?.on('get-handle-request-notification', (data) => {
@@ -156,31 +154,20 @@ const StudentClass = () => {
         {currentTopic ? (
           <>
             <div className="flex flex-row gap-3 justify-center items-center">
-              <span className="text-2xl text-primary h-[100px] whitespace-normal break-words line-clamp-3">
+              <span className="text-2xl text-primary">
                 {currentTopic?.topicName}
               </span>
             </div>
             {/* image */}
             <div
-              className={`rounded-lg min-h-[300px] overflow-hidden flex items-center justify-center bg-center w-full select-none transition-all`}
+              className={`relative w-full min-h-[400px] overflow-hidden flex items-center justify-center bg-center select-none transition-all`}
             >
               <img
                 src={currentTopic?.topicImg || topicImage}
-                className="h-[300px] w-full"
+                className="w-[500px] rounded-lg h-fit object-contain"
                 alt=""
               />
             </div>
-            {/* prerequisite  */}
-            {currentTopic.prerequisiteTopicName && (
-              <div className="flex flex-col gap-3 items-center">
-                <span className="text-2xl font-medium text-gray-700">
-                  Prerequisite Topic
-                </span>
-                <span className="w-full whitespace-normal break-words">
-                  {currentTopic.prerequisiteTopicName}
-                </span>
-              </div>
-            )}
             {/* topic des */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-row justify-between items-center">
