@@ -47,7 +47,7 @@ const SkillInTopics = ({ isTeacher, val, getTopicOfClass }) => {
   return (
     <div className="flex flex-col gap-3 px-2 py-3 ">
       <div className="flex border-b p-y-2 pb-2 flex-row justify-between items-center">
-        <span className="text-xl">{val.skillName}</span>
+        <span className="text-xl w-[80%] truncate">{val.skillName}</span>
         <div className="flex flex-row gap-5 items-center">
           <span className="text-primary text-sm">{val.standardName}</span>
           {isTeacher && (
@@ -84,7 +84,7 @@ const SkillInTopics = ({ isTeacher, val, getTopicOfClass }) => {
           return (
             <div key={i} className="flex flex-row items-center justify-between">
               <span
-                className="cursor-pointer"
+                className="cursor-pointer w-[80%] truncate"
                 onClick={() => {
                   navigate(`/assignment-summary/${val.id}/`)
                 }}

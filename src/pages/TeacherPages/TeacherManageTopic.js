@@ -258,6 +258,15 @@ const TeacherManageTopic = () => {
             <span className="text-2xl">Click to edit</span>
           </label>
         </div>
+        {/*  */}
+        {currentTopic.prerequisiteTopicName && (
+          <div className="flex flex-col gap-3 items-center">
+            <span className="text-2xl font-medium text-gray-700">
+              Prerequisite Topic
+            </span>
+            <span className="">{currentTopic.prerequisiteTopicName}</span>
+          </div>
+        )}
         {/* topic des */}
         <div className="flex flex-col gap-3">
           <div className="flex flex-row justify-between items-center">

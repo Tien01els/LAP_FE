@@ -95,6 +95,8 @@ const StudentClass = () => {
     getTopicOfClass()
   }, [getTopicOfClass])
 
+  console.log(currentTopic)
+
   useEffect(() => {
     socket?.on('get-handle-request-notification', (data) => {
       if (
@@ -154,20 +156,31 @@ const StudentClass = () => {
         {currentTopic ? (
           <>
             <div className="flex flex-row gap-3 justify-center items-center">
-              <span className="text-2xl text-primary">
+              <span className="text-2xl text-primary h-[100px] whitespace-normal break-words line-clamp-3">
                 {currentTopic?.topicName}
               </span>
             </div>
             {/* image */}
             <div
-              className={`relative w-full min-h-[400px] overflow-hidden flex items-center justify-center bg-center select-none transition-all`}
+              className={`rounded-lg min-h-[300px] overflow-hidden flex items-center justify-center bg-center w-full select-none transition-all`}
             >
               <img
                 src={currentTopic?.topicImg || topicImage}
-                className="w-[500px] rounded-lg h-fit object-contain"
+                className="h-[300px] w-full"
                 alt=""
               />
             </div>
+            {/* prerequisite  */}
+            {currentTopic.prerequisiteTopicName && (
+              <div className="flex flex-col gap-3 items-center">
+                <span className="text-2xl font-medium text-gray-700">
+                  Prerequisite Topic
+                </span>
+                <span className="w-full whitespace-normal break-words">
+                  {currentTopic.prerequisiteTopicName}
+                </span>
+              </div>
+            )}
             {/* topic des */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-row justify-between items-center">
