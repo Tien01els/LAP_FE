@@ -27,6 +27,7 @@
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.39.1",
         "react-images-uploading": "^3.1.7",
+        "react-mathlive": "^3.0.5-preview.1",
         "react-modal": "^3.15.1",
         "react-modern-calendar-datepicker": "^3.1.6",
         "react-move": "^6.5.0",
