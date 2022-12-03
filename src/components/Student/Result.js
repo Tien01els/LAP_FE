@@ -27,7 +27,7 @@ const Result = ({
       </div>
       <div className="flex flex-col gap-3 w-[80%]">
         <div className="flex flex-row  justify-between">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-[90%]">
             <math-field
               id={`formula-${index}`}
               style={{
