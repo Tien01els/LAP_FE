@@ -50,15 +50,18 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
 
   const onSubmit = async (data) => {
     try {
+      let dateDue = `${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${data.hour}:${data.minute}:00`
       const assignment = {
         assignmentName: data.assignmentName,
-        dueTime: parseInt(data.dueTime),
-        doTime: parseInt(data.doTime),
-        passScore: parseInt(data.passScore),
-        totalScore: parseInt(data.totalScore),
-        redo: parseInt(data.redo),
+        dateDue: dateDue,
+        doTime: data.doTime,
+        passScore: data.passScore,
+        totalScore: data.totalScore,
+        redo: data.redo,
         typeAssignment,
       }
+
+      // console.log(assignment)
 
       const newAssignment = await axiosJWT.post(
         API_URL + `assignment`,
@@ -117,81 +120,94 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col text-gray-600 gap-4"
         >
-          <div className="flex flex-col px-5 w-full gap-4">
-            <div className="flex flex-col gap-2 w-full">
-              <span>Exams title</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span>Exams title</span>
+            <input
+              type="text"
+              {...register('assignmentName', { required: true })}
+              placeholder="Title"
+              className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+            />
+          </div>
+          <div className="flex flex-row w-full gap-5">
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Time to do exams</span>
               <input
-                type="text"
-                {...register('assignmentName', { required: true })}
-                placeholder="Title"
+                type="number"
+                {...register('doTime', { required: true, min: 0 })}
+                placeholder="min(s)"
+                className="outline-none px-3  py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
+            </div>
+            {/* redo */}
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Allow redo</span>
+              <input
+                type="number"
+                {...register('redo', { required: true, min: 1 })}
+                placeholder="Ex : 10"
                 className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
               />
             </div>
-            <div className="flex flex-row w-full gap-5">
-              <div className="flex flex-col gap-2 w-[50%]">
-                <span>Pick open day</span>
-                {/* datepicker */}
-                <DatePicker
-                  value={selectedDay}
-                  onChange={setSelectedDay}
-                  inputPlaceholder="Select a day"
-                  calendarPopperPosition="bottom"
-                  calendarClassName="pickday h-[100px] full"
-                  wrapperClassName="pickday full"
-                  inputClassName={`w-full border-b-2 outline-none`}
-                  minimumDate={utils().getToday()}
-                  shouldHighlightWeekends
-                />
-              </div>
-              {/* due */}
-              <div className="flex flex-col gap-2 w-[50%]">
-                <span>Will due on next</span>
-                <input
-                  type="number"
-                  {...register('dueTime', { required: true, min: 0 })}
-                  placeholder="day(s)"
-                  className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
-                />
-              </div>
+          </div>
+          <div className="flex flex-row w-full gap-5">
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Total Score</span>
+              <input
+                type="number"
+                {...register('totalScore', { required: true, min: 0 })}
+                placeholder="Ex : 100"
+                className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
             </div>
-            <div className="flex flex-row w-full gap-5">
-              <div className="flex flex-col gap-2 w-[50%]">
-                <span>Total Score</span>
-                <input
-                  type="number"
-                  {...register('totalScore', { required: true, min: 1 })}
-                  placeholder="Ex : 100"
-                  className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
-                />
-              </div>
-              <div className="flex flex-col gap-2 w-[50%]">
-                <span>Pass Score</span>
-                <input
-                  type="number"
-                  {...register('passScore', { required: true, min: 1 })}
-                  placeholder="Ex : 10"
-                  className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
-                />
-              </div>
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Pass Score</span>
+              <input
+                type="number"
+                {...register('passScore', { required: true, min: 0 })}
+                placeholder="Ex : 10"
+                className="outline-none px-3 py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+              />
             </div>
-            {/* Time to do exam */}
-            <div className="flex flex-row w-full gap-5">
-              <div className="flex flex-col gap-2 w-[50%]">
-                <span>Time to do exams</span>
+          </div>
+          <div className="flex flex-row w-full gap-5">
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Date due</span>
+              <DatePicker
+                value={selectedDay}
+                onChange={setSelectedDay}
+                inputPlaceholder="Select a day"
+                calendarPopperPosition="top"
+                calendarClassName="pickday h-[100px] full"
+                wrapperClassName="pickday full"
+                inputClassName={`w-full border-b-2 outline-none`}
+                minimumDate={utils().getToday()}
+                shouldHighlightWeekends
+              />
+            </div>
+            <div className="flex flex-col gap-2 w-[50%]">
+              <span>Due time</span>
+              <div className="flex flex-row gap-5">
                 <input
                   type="number"
-                  {...register('doTime', { required: true, min: 1 })}
-                  placeholder="min(s)"
-                  className="outline-none px-3  py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+                  placeholder="End hour"
+                  {...register('hour', {
+                    required: true,
+                    min: 0,
+                    max: 24,
+                  })}
+                  className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"
                 />
-              </div>
-              <div className="flex flex-col gap-2 w-[50%]">
-                <span>Allow redo</span>
+                :
                 <input
                   type="number"
-                  {...register('redo', { required: true, min: 1 })}
-                  placeholder="number of times"
-                  className="outline-none px-3  py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+                  placeholder="End minute"
+                  {...register('minute', {
+                    required: true,
+                    min: 1,
+                    max: 60,
+                  })}
+                  className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"
                 />
               </div>
             </div>
