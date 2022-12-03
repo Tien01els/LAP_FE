@@ -102,12 +102,6 @@ const AnswerQuestion = ({ isStudent }) => {
                     answer: answers,
                 }
             );
-            await axiosJWT.put(
-              API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
-              {
-                  answer: answers,
-              }
-          );
             handleQuestionOfAssignmentForStudent(currentQuestion?.index);
             setIsConfirm(true);
         } catch (error) {
@@ -117,7 +111,15 @@ const AnswerQuestion = ({ isStudent }) => {
     };
 
     const handleConfirmSubmitAssignmet = async () => {
-        navigate(`/assignment/${assignmentId}/result`);
+        try {
+            await axiosJWT.put(
+                API_URL + `student-assignment/student/assignment/${assignmentId}/submit`
+            );
+            navigate(`/assignment/${assignmentId}/result`);
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
     };
 
     useEffect(() => {

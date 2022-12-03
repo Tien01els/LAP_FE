@@ -3,7 +3,6 @@ import 'mathlive';
 import Select from 'react-select';
 import { motion } from 'framer-motion';
 // import { utils } from 'react-modern-calendar-datepicker';
-// import moment from 'moment';
 import axios from 'axios';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 
