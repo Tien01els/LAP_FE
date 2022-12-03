@@ -30,11 +30,27 @@ const AnswerQuestion = ({ isStudent }) => {
     const [timeDown, setTimeDown] = useState();
     const [doTime, setDoTime] = useState('00:00:00');
 
-    const convertMinutes = (minutesDo) => {
-        const h = (minutesDo / 3600) | 0,
-            m = (minutesDo / 60) | 0,
-            s = minutesDo % 60 | 0;
-        return moment.utc().hours(h).minutes(m).seconds(s).format('HH : mm : ss');
+    // const convertMinutes = (minutesDo) => {
+    //     const h = (minutesDo / 3600) | 0,
+    //         m = (minutesDo / 60) | 0,
+    //         s = minutesDo % 60 | 0;
+    //     return moment.utc().hours(h).minutes(m).seconds(s).format('HH : mm : ss');
+    // };
+
+    const formatCountDown = (duration) => {
+        const hours =
+            duration.hours() && duration.hours() > 9
+                ? `${duration.hours()}:`
+                : `0${duration.hours()}:` || '';
+        const minutes =
+            duration.minutes() && duration.minutes() > 9
+                ? `${duration.minutes()}:`
+                : `0${duration.minutes()}:` || '';
+        const seconds =
+            duration.seconds() && duration.seconds() > 9
+                ? `${duration.seconds()}`
+                : `0${duration.seconds()}` || '';
+        return hours + minutes + seconds;
     };
 
     const checkStudentAnswered = (questionOfAssignment) => {
@@ -142,23 +158,24 @@ const AnswerQuestion = ({ isStudent }) => {
                 API_URL + `student-assignment/student/assignment/${assignmentId}/do-time`
             );
             const minutesDo = res.data?.doTime;
-
             return setInterval(() => {
-                const duration = moment.duration(
-                    timeDown ? minutesDo * 1000 - 1000 : timeDown - 1000,
-                    'milliseconds'
-                );
-                setTimeDown(duration);
-                const time = convertMinutes(duration);
-                console.log(time);
-                setDoTime(time);
-                return;
+                console.log(minutesDo * 1000 - 1000);
+                setTimeDown((prev) => {
+                    const duration = moment.duration(
+                        prev ? prev - 1000 : minutesDo * 60 * 1000 - 1000,
+                        'milliseconds'
+                    );
+                    const time = formatCountDown(duration);
+                    setDoTime(time);
+                    return duration;
+                });
             }, 1000);
         };
+        const timerId = countDownTime();
         return () => {
-            clearInterval(countDownTime());
+            clearInterval(timerId);
         };
-    }, []);
+    }, [assignmentId]);
 
     useEffect(() => {
         setCurrentQuestion(
