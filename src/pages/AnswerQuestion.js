@@ -29,6 +29,7 @@ const AnswerQuestion = ({ isStudent }) => {
     const [answers, setAnswers] = useState();
     const [timeDown, setTimeDown] = useState();
     const [doTime, setDoTime] = useState('00:00:00');
+    const [isSubmit, setIsSubmit] = useState(true);
 
     // const convertMinutes = (minutesDo) => {
     //     const h = (minutesDo / 3600) | 0,
@@ -37,21 +38,21 @@ const AnswerQuestion = ({ isStudent }) => {
     //     return moment.utc().hours(h).minutes(m).seconds(s).format('HH : mm : ss');
     // };
 
-    const formatCountDown = (duration) => {
-        const hours =
-            duration.hours() && duration.hours() > 9
-                ? `${duration.hours()}:`
-                : `0${duration.hours()}:` || '';
-        const minutes =
-            duration.minutes() && duration.minutes() > 9
-                ? `${duration.minutes()}:`
-                : `0${duration.minutes()}:` || '';
-        const seconds =
-            duration.seconds() && duration.seconds() > 9
-                ? `${duration.seconds()}`
-                : `0${duration.seconds()}` || '';
-        return hours + minutes + seconds;
-    };
+    // const formatCountDown = (duration) => {
+    //     const hours =
+    //         duration.hours() && duration.hours() > 9
+    //             ? `${duration.hours()}:`
+    //             : `0${duration.hours()}:` || '';
+    //     const minutes =
+    //         duration.minutes() && duration.minutes() > 9
+    //             ? `${duration.minutes()}:`
+    //             : `0${duration.minutes()}:` || '';
+    //     const seconds =
+    //         duration.seconds() && duration.seconds() > 9
+    //             ? `${duration.seconds()}`
+    //             : `0${duration.seconds()}` || '';
+    //     return hours + minutes + seconds;
+    // };
 
     const checkStudentAnswered = (questionOfAssignment) => {
         const questionType = ['', 'multiChoice', 'trueFalse', 'input', 'multiSelect'];
@@ -120,7 +121,7 @@ const AnswerQuestion = ({ isStudent }) => {
         [assignmentId]
     );
 
-    const handleSubmitAssignmet = async () => {
+    const handleSubmitAssignment = async () => {
         try {
             await axiosJWT.put(
                 API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
@@ -136,17 +137,25 @@ const AnswerQuestion = ({ isStudent }) => {
         }
     };
 
-    const handleConfirmSubmitAssignmet = async () => {
+    const handleConfirmSubmitAssignmet = useCallback(async () => {
         try {
-            await axiosJWT.put(
-                API_URL + `student-assignment/student/assignment/${assignmentId}/submit`
-            );
+            !isSubmit &&
+                (await axiosJWT.put(
+                    API_URL + `student-assignment/student/assignment/${assignmentId}/submit`
+                ));
             navigate(`/assignment/${assignmentId}/result`);
         } catch (error) {
             console.log(error);
             if (error.response.status === 401) setIsExpired(true);
         }
-    };
+    }, [assignmentId, navigate, isSubmit]);
+
+    useEffect(() => {
+        if (timeDown && timeDown < 0) {
+            setDoTime('00:00:00');
+            handleConfirmSubmitAssignmet();
+        }
+    }, [timeDown, handleConfirmSubmitAssignmet]);
 
     useEffect(() => {
         handleQuestionOfAssignmentForStudent();
@@ -157,24 +166,27 @@ const AnswerQuestion = ({ isStudent }) => {
             const res = await axiosJWT.get(
                 API_URL + `student-assignment/student/assignment/${assignmentId}/do-time`
             );
-            const minutesDo = res.data?.doTime;
-            return setInterval(() => {
-                console.log(minutesDo * 1000 - 1000);
-                setTimeDown((prev) => {
-                    const duration = moment.duration(
-                        prev ? prev - 1000 : minutesDo * 60 * 1000 - 1000,
-                        'milliseconds'
-                    );
-                    const time = formatCountDown(duration);
-                    setDoTime(time);
-                    return duration;
-                });
+            const assignmentStudent = res.data;
+            setIsSubmit(!!assignmentStudent?.dateComplete);
+            if (!!assignmentStudent?.dateComplete) {
+                navigate(`/assignment/${assignmentId}/result`);
+                return;
+            }
+            const currentTimerId = setInterval(() => {
+                const dateEnd = moment(assignmentStudent?.dateEnd).diff(moment());
+                const diff = moment(dateEnd).utcOffset(0).format('HH:mm:ss');
+                setTimeDown(dateEnd);
+                setDoTime(diff);
+                console.log(dateEnd);
+                console.log(diff);
             }, 1000);
+            return () => {
+                clearInterval(currentTimerId);
+            };
         };
-        const timerId = countDownTime();
-        return () => {
-            clearInterval(timerId);
-        };
+        const clearTimer = countDownTime();
+        return () => clearTimer.then((clearTimerId) => clearTimerId && clearTimerId());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assignmentId]);
 
     useEffect(() => {
@@ -344,7 +356,7 @@ const AnswerQuestion = ({ isStudent }) => {
                                 })}
                             </div>
                         </div>
-                        <Button className='border-none w-[70%]' onClick={handleSubmitAssignmet}>
+                        <Button className='border-none w-[70%]' onClick={handleSubmitAssignment}>
                             Submit
                         </Button>
                     </div>
