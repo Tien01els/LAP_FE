@@ -367,7 +367,6 @@ const TeacherAssignment = () => {
               }}
               readonly
             ></math-field>
-
             {enableHint && (
               <div className="px-6 py-3 text-white flex flex-row gap-4 h-fit items-baseline bg-primary rounded-md w-full">
                 <i className="far fa-lightbulb"></i>

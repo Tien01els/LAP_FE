@@ -6,7 +6,6 @@ const MultiChoice = ({ answers, setAnswers, Preview }) => {
   const [answerB, setAnswerB] = useState('')
   const [answerC, setAnswerC] = useState('')
   const [answerD, setAnswerD] = useState('')
-  console.log(Preview)
 
   // const handleOnChange = (e) => {
   //     setValue(e.target.value);
