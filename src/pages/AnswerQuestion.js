@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'mathlive';
+import moment from 'moment';
 
 import { API_URL } from '../constant';
 import Button from '../components/Button';
@@ -26,6 +27,15 @@ const AnswerQuestion = ({ isStudent }) => {
     const [currentQuestionId, setCurrentQuestionId] = useState();
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
     const [answers, setAnswers] = useState();
+    const [timeDown, setTimeDown] = useState();
+    const [doTime, setDoTime] = useState('00:00:00');
+
+    const convertMinutes = (minutesDo) => {
+        const h = (minutesDo / 3600) | 0,
+            m = (minutesDo / 60) | 0,
+            s = minutesDo % 60 | 0;
+        return moment.utc().hours(h).minutes(m).seconds(s).format('HH : mm : ss');
+    };
 
     const checkStudentAnswered = (questionOfAssignment) => {
         const questionType = ['', 'multiChoice', 'trueFalse', 'input', 'multiSelect'];
@@ -125,6 +135,30 @@ const AnswerQuestion = ({ isStudent }) => {
     useEffect(() => {
         handleQuestionOfAssignmentForStudent();
     }, [handleQuestionOfAssignmentForStudent]);
+
+    useEffect(() => {
+        const countDownTime = async () => {
+            const res = await axiosJWT.get(
+                API_URL + `student-assignment/student/assignment/${assignmentId}/do-time`
+            );
+            const minutesDo = res.data?.doTime;
+
+            return setInterval(() => {
+                const duration = moment.duration(
+                    timeDown ? minutesDo * 1000 - 1000 : timeDown - 1000,
+                    'milliseconds'
+                );
+                setTimeDown(duration);
+                const time = convertMinutes(duration);
+                console.log(time);
+                setDoTime(time);
+                return;
+            }, 1000);
+        };
+        return () => {
+            clearInterval(countDownTime());
+        };
+    }, []);
 
     useEffect(() => {
         setCurrentQuestion(
@@ -271,7 +305,7 @@ const AnswerQuestion = ({ isStudent }) => {
                 <div className='flex flex-col gap-5 w-[35%]'>
                     <div className='flex flex-col h-[450px] pt-7 px-5 pb-5 items-center bg-white justify-between rounded-lg shadow'>
                         <div className='flex flex-col items-center gap-3 h-full '>
-                            <span className='font-semibold text-2xl text-primary'>01 : 10</span>
+                            <span className='font-semibold text-2xl text-primary'>{doTime}</span>
                             <div className='flex flex-wrap gap-5 max-h-[300px] px-5 overflow-y-auto py-3'>
                                 {listQuestionOfAssignment.map((questionOfAssignment, i) => {
                                     return (
