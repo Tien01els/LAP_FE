@@ -8,6 +8,7 @@ import createAxiosJWT from '../../createAxiosJWT'
 import DatePicker, {
   utils,
 } from '@hassanmojab/react-modern-calendar-datepicker'
+import moment from 'moment'
 
 const axiosJWT = createAxiosJWT()
 const AssignmentInfo = ({
@@ -21,12 +22,15 @@ const AssignmentInfo = ({
   const { assignmentId } = useParams()
 
   const [assignmentName, setAssignmentName] = useState('')
-  const [dueTime, setDueTime] = useState(0)
   const [doTime, setDoTime] = useState(0)
   const [passScore, setPassScore] = useState(0)
   const [totalScore, setTotalScore] = useState(0)
   const [redo, setRedo] = useState(0)
   const [selectedDay, setSelectedDay] = useState(utils().getToday())
+  const [dueTime, setDueTime] = useState({
+    hour: '',
+    minute: '',
+  })
 
   useEffect(() => {
     setSelectedAssignmentName(assignmentName)
@@ -38,7 +42,9 @@ const AssignmentInfo = ({
     setSelectedTotalScore(totalScore)
   }, [setSelectedTotalScore, totalScore])
   useEffect(() => {
-    setSelectedDueTime(dueTime)
+    let newDueTime = `${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ${dueTime.hour}:${dueTime.minute}:00`
+    setSelectedDueTime(newDueTime)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setSelectedDueTime, dueTime])
   useEffect(() => {
     setSelectedDoTime(doTime)
@@ -52,13 +58,15 @@ const AssignmentInfo = ({
       const assignment = res.data
       if (assignment) {
         setAssignmentName(assignment.assignmentName)
-        setDueTime(assignment.dueTime)
+        setDueTime({
+          hour: moment(assignment.dateDue).hour(),
+          minute: moment(assignment.dateDue).minute(),
+        })
         setDoTime(assignment.doTime)
         setPassScore(assignment.passScore)
         setTotalScore(assignment.totalScore)
         setRedo(assignment.redo)
       }
-      console.log(assignment)
     })
   }, [assignmentId])
 
@@ -100,19 +108,27 @@ const AssignmentInfo = ({
           </div>
         </div>
         <div className="flex flex-row gap-4 items-center justify-between w-full">
-          <label>Date Due</label>
+          <label>Due Time</label>
           <div className="flex flex-row gap-3 items-center w-[60%]">
             <div className="flex flex-row gap-5">
               <input
                 type="number"
                 placeholder="hour"
-                className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"
+                value={dueTime.hour}
+                onChange={(e) =>
+                  setDueTime({ ...dueTime, hour: e.target.value })
+                }
+                className="outline-none px-3 py-1 w-[50%] text-right border-b-2 border-opacity-0 transition-all focus:border-primary"
               />
               :
               <input
                 type="number"
                 placeholder="minute"
-                className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"
+                value={dueTime.minute}
+                onChange={(e) =>
+                  setDueTime({ ...dueTime, minute: e.target.value })
+                }
+                className="outline-none px-3 py-1 w-[50%] text-right border-b-2 border-opacity-0 transition-all focus:border-primary"
               />
             </div>
           </div>
@@ -122,7 +138,7 @@ const AssignmentInfo = ({
           <input
             type="number"
             min="0"
-            className="outline-none border-b-2 px-1 py-[3px] w-[30%] duration-300 transition-all"
+            className="outline-none border-b-2 text-right focus:border-primary px-1 py-[3px] w-[30%] duration-300 transition-all"
             value={totalScore}
             onChange={(e) => {
               setTotalScore(e.target.value)
@@ -134,7 +150,7 @@ const AssignmentInfo = ({
           <input
             type="number"
             min="0"
-            className="outline-none border-b-2 px-1 py-[3px] w-[30%] duration-300 transition-all"
+            className="outline-none border-b-2 text-right focus:border-primary px-1 py-[3px] w-[30%] duration-300 transition-all"
             value={passScore}
             onChange={(e) => {
               setPassScore(e.target.value)
@@ -148,7 +164,7 @@ const AssignmentInfo = ({
               <input
                 type="number"
                 min="0"
-                className="outline-none border-b-2 px-2 py-[3px] justify-center items-center w-[50px] text-right duration-300 transition-all"
+                className="outline-none border-b-2 focus:border-primary px-2 py-[3px] justify-center items-center w-[50px] text-right duration-300 transition-all"
                 value={doTime}
                 onChange={(e) => {
                   setDoTime(e.target.value)
@@ -165,7 +181,7 @@ const AssignmentInfo = ({
               <input
                 type="number"
                 min="0"
-                className="outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all"
+                className="outline-none border-b-2 px-[10px] focus:border-primary py-[3px] justify-center items-center text-right w-[50px] duration-300 transition-all"
                 value={redo}
                 onChange={(e) => {
                   setRedo(e.target.value)
