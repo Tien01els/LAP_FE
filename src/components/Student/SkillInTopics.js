@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { API_URL } from '../../constant';
 import createAxiosJWT from '../../createAxiosJWT';
 import Button from '../Button';
@@ -25,8 +26,13 @@ const SkillInTopics = ({ val }) => {
     }, [val?.skill?.id]);
 
     const handleDoAssignment = async (id) => {
-        await axiosJWT.put(API_URL + `student-assignment/student/assignment/${id}/start`);
-        navigate(`/assignment/${id}/question/`);
+        try {
+            await axiosJWT.put(API_URL + `student-assignment/student/assignment/${id}/start`);
+            navigate(`/assignment/${id}/question/`);
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) setIsExpired(true);
+        }
     };
 
     useEffect(() => {

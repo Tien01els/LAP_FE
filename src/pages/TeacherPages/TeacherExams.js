@@ -158,7 +158,7 @@ const TeacherExams = () => {
                 <Button
                   onClick={() =>
                     navigate(
-                      `/class/${classId}/assignment/${currentAssignment.assignment.id}`,
+                      `/class/${classId}/assignment/${currentAssignment?.assignment?.id}`,
                     )
                   }
                   className="text-sm flex gap-3 items-center"
