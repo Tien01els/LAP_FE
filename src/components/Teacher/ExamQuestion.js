@@ -16,7 +16,7 @@ const ExamQuestion = ({ question }) => {
           onClick={() => setOpenQuickView(!openQuickView)}
           className="flex flex-row bg-[#f4f7f9] justify-between select-non cursor-pointer shadow rounded-lg px-4 py-3"
         >
-          <span className="">{question.content}</span>
+          <span className="w-[70%] truncate">{question.content}</span>
           <div className="flex flex-row gap-4">
             <span className="bg-primary text-white rounded-full px-2 text-xs flex items-center">
               {(question.questionTypeId === 1 && 'Multi Choice') ||

@@ -139,7 +139,12 @@ const QuickViewQuestion = ({ isOpen, setIsOpen, question }) => {
               fontFamily: 'Poppins',
             }}
             id="viewQ"
-            value={question.content}
+            value={
+              String.raw`\begin{multline}
+            ` +
+              question.content +
+              String.raw`\end{multline}`
+            }
             readOnly
           ></math-field>
           {/* <span className="text-2xl font-semibold w-[450px] whitespace-normal break-words text-gray-700">
