@@ -144,18 +144,7 @@ const ModalCreateTopic = ({
               })}
             </select>
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="lock">Lock topic on create</label>
-            <select
-              name="lock"
-              className="border border-gray-500 rounded px-2"
-              defaultValue="-1"
-              {...registerCreate('isLock')}
-            >
-              <option value={true}>Lock</option>
-              <option value={false}>Don't lock</option>
-            </select>
-          </div>
+
           <div className="flex flex-col gap-2">
             <label htmlFor="prerequisiteTopic">Prerequisite topic</label>
             <select
