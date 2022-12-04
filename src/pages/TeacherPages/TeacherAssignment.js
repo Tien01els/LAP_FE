@@ -21,6 +21,9 @@ import GenerateQuestionForAssignenment from '../../components/Teacher/GenerateQu
 import QuestionOption from '../../components/Teacher/QuestionOption'
 import createAxiosJWT from '../../createAxiosJWT'
 import ConfirmModal from '../../components/Modals/ConfirmModal'
+import { insertTextAtCurrentCursor } from '../../utils/utils'
+import { useCaretPosition } from 'react-use-caret-position'
+import { useRef } from 'react'
 
 const axiosJWT = createAxiosJWT()
 const TeacherAssignment = () => {
@@ -298,6 +301,7 @@ const TeacherAssignment = () => {
   //     if (selectedLevel.toLowerCase() === 'hard') setScore(20)
   //   }
   // }, [selectedLevel, score])
+  const mathLiveRef = useRef(null)
 
   useEffect(() => {
     const mf = document.querySelector('#formula')
@@ -310,20 +314,54 @@ const TeacherAssignment = () => {
     )
   }, [question])
 
-  const handleAddFraction = () => {
-    setQuestion(question + String.raw`\frac{1}{2}`)
+  const handleMathLiveChange = (e) => {
+    setQuestion(e.target.value)
   }
 
-  const handleAddSquareRoot = () => {
-    setQuestion(question + String.raw`\sqrt{2}`)
+  const handleAddMath = (math) => {
+    let mathString = ``
+    if (math === 'fraction') {
+      mathString = String.raw`\frac{x1}{x2}`
+    }
+    if (math === 'squareRoot') {
+      mathString = String.raw`\sqrt{x}`
+    }
+    if (math === 'sin') {
+      mathString = String.raw`\sin{x}`
+    }
+    if (math === 'cos') {
+      mathString = String.raw`\cos{x}`
+    }
+    if (math === 'tan') {
+      mathString = String.raw`\tan{x}`
+    }
+    if (math === 'text') {
+      mathString = String.raw`\text{Example}`
+    }
+    if (math === 'pow') {
+      mathString = `x^1`
+    }
+    if (math === 'degree') {
+      mathString = String.raw`\degree`
+    }
+    setQuestion(
+      insertTextAtCurrentCursor(
+        mathLiveRef.current.selectionStart,
+        question,
+        mathString,
+      ),
+    )
   }
 
-  const handleAddNormalText = () => {
-    setQuestion(question + String.raw`\text{Example text}`)
-  }
-
+  // String.raw`\\`
   const handleNextLine = () => {
-    setQuestion(question + String.raw`\\`)
+    setQuestion(
+      insertTextAtCurrentCursor(
+        mathLiveRef.current.selectionStart,
+        question,
+        String.raw`\\`,
+      ),
+    )
   }
 
   const handleKeyDown = (e) => {
@@ -375,17 +413,33 @@ const TeacherAssignment = () => {
                 </span>
               </div>
             )}
+            <span className="text-primary text-sm px-2">
+              * \\ is for next line
+            </span>
             <div className="flex flex-row gap-5">
-              <Button onClick={handleAddFraction}>Add Fraction</Button>
-              <Button onClick={handleAddSquareRoot}>Square root</Button>
-              <Button onClick={handleAddNormalText}>Write normal text</Button>
+              <Button onClick={() => handleAddMath('fraction')}>
+                <i className="fa-solid fa-percent"></i>
+              </Button>
+              <Button onClick={() => handleAddMath('squareRoot')}>
+                <i className="fa-solid fa-square-root-variable"></i>
+              </Button>
+              <Button onClick={() => handleAddMath('pow')}>
+                <i className="fa-solid fa-superscript"></i>
+              </Button>
+              <Button onClick={() => handleAddMath('degree')}>°</Button>
+              <Button onClick={() => handleAddMath('sin')}>Sin</Button>
+              <Button onClick={() => handleAddMath('cos')}>Cos</Button>
+              <Button onClick={() => handleAddMath('tan')}>Tan</Button>
+              <Button onClick={() => handleAddMath('text')} className="text-sm">
+                Write normal text
+              </Button>
             </div>
+
             <textarea
               id="latex"
+              ref={mathLiveRef}
               className="outline-none focus:shadow-md duration-300 shadow-sm bg-gray-100 rounded-lg resize-none px-4 py-[0.5rem] h-36"
-              onChange={(e) => {
-                setQuestion(e.target.value)
-              }}
+              onChange={(e) => handleMathLiveChange(e)}
               onKeyDown={(e) => handleKeyDown(e)}
               value={question || ''}
               placeholder="Type your question"

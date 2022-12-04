@@ -125,7 +125,7 @@ const StudentDashboard = () => {
                           }}
                         ></div>
                       </div>
-                      <span className="text-sm text-primary">
+                      <span className="text-sm text-right w-[50px] text-primary">
                         {Math.floor(
                           (val.numberPassSkillOfTopic /
                             val.numberTotalSkillOfTopic) *
