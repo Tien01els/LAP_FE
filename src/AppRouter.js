@@ -21,7 +21,7 @@ const TeacherReviewAnswers = lazy(() => import('./pages/TeacherPages/TeacherRevi
 const StudentDashboard = lazy(() => import('./pages/StudentPages/StudentDashboard'));
 const StudentClass = lazy(() => import('./pages/StudentPages/StudentClass'));
 const AnswerQuestion = lazy(() => import('./pages/AnswerQuestion'));
-const AssignmentResult = lazy(() => import('./pages/StudentPages/AssignmentResult'));
+const AssignmentResult = lazy(() => import('./pages/AssignmentResult'));
 const StudentExams = lazy(() => import('./pages/StudentPages/StudentExams'));
 
 //admin
@@ -88,8 +88,16 @@ export default function AppRouter() {
                             element={<TeacherReviewAnswers />}
                         />
                         <Route
-                            path='/assignment/:assignmentId/student/:studentId/result'
-                            element={<AssignmentResult />}
+                            path='/assignment/:assignmentId/result'
+                            element={<AssignmentResult isTeacher />}
+                        />
+                        <Route
+                            path='/assignment/:assignmentId/question'
+                            element={<AnswerQuestion isTeacher />}
+                        />
+                        <Route
+                            path='/assignment/:assignmentId/question/:questionIndex'
+                            element={<AnswerQuestion isTeacher />}
                         />
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/test2' element={<Test />} />
@@ -102,13 +110,10 @@ export default function AppRouter() {
                 <>
                     <Route path='/' element={<StudentDashboard />} />
                     <Route path='/dashboard' element={<StudentDashboard />} />
-                    <Route
-                        path='/assignment/:assignmentId/question'
-                        element={<AnswerQuestion isStudent />}
-                    />
+                    <Route path='/assignment/:assignmentId/question' element={<AnswerQuestion />} />
                     <Route
                         path='/assignment/:assignmentId/question/:questionIndex'
-                        element={<AnswerQuestion isStudent />}
+                        element={<AnswerQuestion />}
                     />
                     <Route path='/class/:classId' element={<StudentClass />} />
                     <Route path='/assignment/:assignmentId/result' element={<AssignmentResult />} />

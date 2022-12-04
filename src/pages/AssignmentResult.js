@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
 
-import { API_URL } from '../../constant';
-import createAxiosJWT from '../../createAxiosJWT';
-import Result from '../../components/Student/Result';
+import { API_URL } from '../constant';
+import createAxiosJWT from '../createAxiosJWT';
+import Result from '../components/Student/Result';
 
 const axiosJWT = createAxiosJWT();
-const AssignmentResult = () => {
+const AssignmentResult = ({ isTeacher }) => {
     const { assignmentId } = useParams();
-    const [listQuestionOfStudent, setListQuestionOfStudent] = useState([]);
+    const [listQuestionOfRespondent, setListQuestionOfRespondent] = useState([]);
     const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([]);
     const [assignment, setAssignment] = useState({});
     const [numberOfCorrectAnswers, setNumberOfCorrectAnswers] = useState(0);
@@ -20,25 +20,25 @@ const AssignmentResult = () => {
         document.getElementById(elementId).scrollIntoView({ behavior: 'smooth' });
     };
 
-    const checkStudentAnswered = (questionOfAssignment) => {
+    const checkAnswered = (questionOfAssignment) => {
         const questionType = ['', 'multiChoice', 'trueFalse', 'input', 'multiSelect'];
-        const answerOfStudent = questionOfAssignment?.answerOfStudent?.answer;
+        const answerOfRespondent = questionOfAssignment?.answerOfRespondent?.answer;
         const typeOfquestion =
             questionOfAssignment?.questionTypeId &&
             questionType[questionOfAssignment?.questionTypeId];
-        if (answerOfStudent && typeOfquestion && answerOfStudent[typeOfquestion]) {
-            const resultOfStudent = answerOfStudent[typeOfquestion];
+        if (answerOfRespondent && typeOfquestion && answerOfRespondent[typeOfquestion]) {
+            const resultOfRespondent = answerOfRespondent[typeOfquestion];
             if (typeOfquestion === 'multiChoice')
-                for (let i = 0; i < resultOfStudent.length; i++)
-                    if (resultOfStudent[i].isTrue) return resultOfStudent[i].answer;
+                for (let i = 0; i < resultOfRespondent.length; i++)
+                    if (resultOfRespondent[i].isTrue) return resultOfRespondent[i].answer;
             if (typeOfquestion === 'trueFalse')
-                for (let i = 0; i < resultOfStudent.length; i++)
-                    if (resultOfStudent[i].isTrue) return resultOfStudent[i].answer;
-            if (typeOfquestion === 'input' && resultOfStudent[0].answer.length > 0)
-                return resultOfStudent[0].answer;
+                for (let i = 0; i < resultOfRespondent.length; i++)
+                    if (resultOfRespondent[i].isTrue) return resultOfRespondent[i].answer;
+            if (typeOfquestion === 'input' && resultOfRespondent[0].answer.length > 0)
+                return resultOfRespondent[0].answer;
             if (typeOfquestion === 'multiSelect')
-                for (let i = 0; i < resultOfStudent.length; i++)
-                    if (resultOfStudent[i].isTrue) return resultOfStudent[i].answer;
+                for (let i = 0; i < resultOfRespondent.length; i++)
+                    if (resultOfRespondent[i].isTrue) return resultOfRespondent[i].answer;
         }
         return false;
     };
@@ -67,27 +67,48 @@ const AssignmentResult = () => {
     };
 
     useEffect(() => {
-        axiosJWT.get(API_URL + `student-question/assignment/${assignmentId}`).then((res) => {
-            const questionsOfStudent = res.data;
-            for (let i = 0; i < questionsOfStudent.length; i++) questionsOfStudent[i].index = i;
-            if (questionsOfStudent && questionsOfStudent.length > 0) {
-                setListQuestionOfStudent(questionsOfStudent);
-                let countCorrect = 0;
-                let sumScore = 0;
-                for (let i = 0; i < questionsOfStudent.length; i++)
-                    if (questionsOfStudent[i]?.answerOfStudent?.isCorrect) {
-                        ++countCorrect;
-                        sumScore += questionsOfStudent[i].score;
-                    }
-                setNumberOfCorrectAnswers(countCorrect);
-                setScore(sumScore);
+        const getResultFromAnswer = async () => {
+            let res;
+            if (isTeacher)
+                res = await axiosJWT.get(
+                    API_URL + `teacher-question/teacher/assignment/${assignmentId}`
+                );
+            else
+                res = await axiosJWT.get(
+                    API_URL + `student-question/student/assignment/${assignmentId}`
+                );
+            if (res) {
+                const questionsOfRespondent = res.data;
+                for (let i = 0; i < questionsOfRespondent.length; i++)
+                    questionsOfRespondent[i].index = i;
+                if (questionsOfRespondent && questionsOfRespondent.length > 0) {
+                    setListQuestionOfRespondent(questionsOfRespondent);
+                    let countCorrect = 0;
+                    let sumScore = 0;
+                    for (let i = 0; i < questionsOfRespondent.length; i++)
+                        if (questionsOfRespondent[i]?.answerOfRespondent?.isCorrect) {
+                            ++countCorrect;
+                            sumScore += questionsOfRespondent[i].score;
+                        }
+                    console.log(questionsOfRespondent);
+                    setNumberOfCorrectAnswers(countCorrect);
+                    setScore(sumScore);
+                }
             }
-        });
-        axiosJWT
-            .get(API_URL + `student-assignment/student/assignment/${assignmentId}`)
-            .then((res) => {
-                console.log(res.data);
-            });
+        };
+        getResultFromAnswer();
+        if (isTeacher)
+            axiosJWT
+                .get(API_URL + `teacher-assignment/teacher/assignment/${assignmentId}`)
+                .then((res) => {
+                    console.log(res.data);
+                });
+        else
+            axiosJWT
+                .get(API_URL + `student-assignment/student/assignment/${assignmentId}`)
+                .then((res) => {
+                    console.log(res.data);
+                });
         axiosJWT.get(API_URL + `assignment/${assignmentId}`).then((res) => {
             setAssignment(res.data);
         });
@@ -117,7 +138,7 @@ const AssignmentResult = () => {
                     <div className='flex flex-col gap-3'>
                         <span className='text-xl font-base'>Your answers</span>
                         <div className='flex flex-wrap gap-5 px-2 py-3 rounded-xl items-center'>
-                            {listQuestionOfStudent.map((questionOfStudent, i) => {
+                            {listQuestionOfRespondent.map((questionOfRespondent, i) => {
                                 return (
                                     <div
                                         onClick={() => executeScroll(i)}
@@ -128,7 +149,7 @@ const AssignmentResult = () => {
                                             <span>{i + 1}</span>
                                         </div>
 
-                                        {questionOfStudent?.answerOfStudent?.isCorrect ? (
+                                        {questionOfRespondent?.answerOfRespondent?.isCorrect ? (
                                             <div className='text-white flex w-full h-full items-center justify-center bg-green-400'>
                                                 <i className='fas fa-check text-[8px]'></i>
                                             </div>
@@ -147,15 +168,15 @@ const AssignmentResult = () => {
             {/* right */}
             <div className='px-10 gap-5 h-[90vh] w-[60%] overflow-y-auto  items-center justify-center'>
                 <div className='flex flex-col gap-5 pb-5 '>
-                    {listQuestionOfStudent.map((questionOfStudent, i) => {
+                    {listQuestionOfRespondent.map((questionOfRespondent, i) => {
                         return (
                             <Result
-                                questionOfStudent={questionOfStudent}
+                                questionOfRespondent={questionOfRespondent}
                                 index={i}
                                 key={i}
                                 getCorrectAnswerOfQuestion={getCorrectAnswerOfQuestion}
                                 listQuestionOfAssignment={listQuestionOfAssignment}
-                                checkStudentAnswered={checkStudentAnswered}
+                                checkAnswered={checkAnswered}
                             />
                         );
                     })}

@@ -17,7 +17,7 @@ import ConfirmModal from '../components/Modals/ConfirmModal';
 import createAxiosJWT from '../createAxiosJWT';
 
 const axiosJWT = createAxiosJWT();
-const AnswerQuestion = ({ isStudent }) => {
+const AnswerQuestion = ({ isTeacher }) => {
     const navigate = useNavigate();
     const { assignmentId, questionIndex } = useParams();
     //   const [countdown, setCountdown] = useState()
@@ -54,44 +54,51 @@ const AnswerQuestion = ({ isStudent }) => {
     //     return hours + minutes + seconds;
     // };
 
-    const checkStudentAnswered = (questionOfAssignment) => {
+    const checkAnswered = (questionOfAssignment) => {
         const questionType = ['', 'multiChoice', 'trueFalse', 'input', 'multiSelect'];
-        const answerOfStudent = questionOfAssignment?.answerOfStudent?.answer;
+        const answerOfRespondent = questionOfAssignment?.answerOfRespondent?.answer;
         const typeOfquestion =
             questionOfAssignment?.questionTypeId &&
             questionType[questionOfAssignment?.questionTypeId];
-        if (answerOfStudent && typeOfquestion && answerOfStudent[typeOfquestion]) {
-            const resultOfStudent = answerOfStudent[typeOfquestion];
+        if (answerOfRespondent && typeOfquestion && answerOfRespondent[typeOfquestion]) {
+            const resultOfUser = answerOfRespondent[typeOfquestion];
             if (typeOfquestion === 'multiChoice')
-                for (let i = 0; i < resultOfStudent.length; i++)
-                    if (resultOfStudent[i].isTrue) return true;
+                for (let i = 0; i < resultOfUser.length; i++)
+                    if (resultOfUser[i].isTrue) return true;
             if (typeOfquestion === 'trueFalse')
-                for (let i = 0; i < resultOfStudent.length; i++)
-                    if (resultOfStudent[i].isTrue) return true;
-            if (typeOfquestion === 'input' && resultOfStudent[0].answer.length > 0) return true;
+                for (let i = 0; i < resultOfUser.length; i++)
+                    if (resultOfUser[i].isTrue) return true;
+            if (typeOfquestion === 'input' && resultOfUser[0].answer.length > 0) return true;
             if (typeOfquestion === 'multiSelect')
-                for (let i = 0; i < resultOfStudent.length; i++)
-                    if (resultOfStudent[i].isTrue) return true;
+                for (let i = 0; i < resultOfUser.length; i++)
+                    if (resultOfUser[i].isTrue) return true;
         }
         return false;
     };
 
     const handleSaveAnswer = async () => {
         try {
-            if (isStudent) {
+            if (isTeacher)
                 await axiosJWT.put(
                     API_URL +
-                        `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
+                        `teacher-question/${currentQuestion?.answerOfRespondent?.respondentQuestionId}`,
                     {
                         answer: answers,
                     }
                 );
-                if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
-                    handleQuestionOfAssignmentForStudent(currentQuestion?.index + 1);
-                else {
-                    handleQuestionOfAssignmentForStudent(currentQuestion?.index);
-                    setIsConfirm(true);
-                }
+            else
+                await axiosJWT.put(
+                    API_URL +
+                        `student-question/${currentQuestion?.answerOfRespondent?.respondentQuestionId}`,
+                    {
+                        answer: answers,
+                    }
+                );
+            if (currentQuestion?.index < listQuestionOfAssignment.length - 1)
+                handleQuestionOfAssignment(currentQuestion?.index + 1);
+            else {
+                handleQuestionOfAssignment(currentQuestion?.index);
+                setIsConfirm(true);
             }
         } catch (error) {
             console.log(error);
@@ -99,37 +106,46 @@ const AnswerQuestion = ({ isStudent }) => {
         }
     };
 
-    const handleQuestionOfAssignmentForStudent = useCallback(
+    const handleQuestionOfAssignment = useCallback(
         async (index) => {
             try {
                 const questionIdx = index || 0;
-                const res = await axiosJWT.get(
-                    API_URL + `student-question/assignment/${assignmentId}`
-                );
-                const questionsOfAssignment = res.data;
-                for (let i = 0; i < questionsOfAssignment.length; i++)
-                    questionsOfAssignment[i].index = i;
-                if (questionsOfAssignment && questionsOfAssignment.length > 0) {
-                    setListQuestionOfAssignment(questionsOfAssignment);
-                    setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
+                let res;
+                if (isTeacher)
+                    res = await axiosJWT.get(
+                        API_URL + `teacher-question/teacher/assignment/${assignmentId}`
+                    );
+                else
+                    res = await axiosJWT.get(
+                        API_URL + `student-question/student/assignment/${assignmentId}`
+                    );
+                if (res) {
+                    const questionsOfAssignment = res.data;
+                    for (let i = 0; i < questionsOfAssignment.length; i++)
+                        questionsOfAssignment[i].index = i;
+                    if (questionsOfAssignment && questionsOfAssignment.length > 0) {
+                        setListQuestionOfAssignment(questionsOfAssignment);
+                        setCurrentQuestionId(questionsOfAssignment[questionIdx]?.id);
+                    }
                 }
             } catch (error) {
                 console.log(error);
                 if (error.response.status === 401) setIsExpired(true);
             }
         },
-        [assignmentId]
+        [assignmentId, isTeacher]
     );
 
     const handleSubmitAssignment = async () => {
         try {
             await axiosJWT.put(
-                API_URL + `student-question/${currentQuestion?.answerOfStudent.studentQuestionId}`,
+                API_URL +
+                    `student-question/${currentQuestion?.answerOfRespondent?.respondentQuestionId}`,
                 {
                     answer: answers,
                 }
             );
-            handleQuestionOfAssignmentForStudent(currentQuestion?.index);
+            handleQuestionOfAssignment(currentQuestion?.index);
             setIsConfirm(true);
         } catch (error) {
             console.log(error);
@@ -139,16 +155,22 @@ const AnswerQuestion = ({ isStudent }) => {
 
     const handleConfirmSubmitAssignmet = useCallback(async () => {
         try {
-            !isSubmit &&
-                (await axiosJWT.put(
-                    API_URL + `student-assignment/student/assignment/${assignmentId}/submit`
-                ));
+            if (isTeacher)
+                !isSubmit &&
+                    (await axiosJWT.put(
+                        API_URL + `teacher-assignment/teacher/assignment/${assignmentId}/submit`
+                    ));
+            else
+                !isSubmit &&
+                    (await axiosJWT.put(
+                        API_URL + `student-assignment/student/assignment/${assignmentId}/submit`
+                    ));
             navigate(`/assignment/${assignmentId}/result`);
         } catch (error) {
             console.log(error);
             if (error.response.status === 401) setIsExpired(true);
         }
-    }, [assignmentId, navigate, isSubmit]);
+    }, [assignmentId, navigate, isSubmit, isTeacher]);
 
     useEffect(() => {
         if (timeDown && timeDown < 0) {
@@ -158,31 +180,39 @@ const AnswerQuestion = ({ isStudent }) => {
     }, [timeDown, handleConfirmSubmitAssignmet]);
 
     useEffect(() => {
-        handleQuestionOfAssignmentForStudent();
-    }, [handleQuestionOfAssignmentForStudent]);
+        handleQuestionOfAssignment();
+    }, [handleQuestionOfAssignment]);
 
     useEffect(() => {
         const countDownTime = async () => {
-            const res = await axiosJWT.get(
-                API_URL + `student-assignment/student/assignment/${assignmentId}/do-time`
-            );
-            const assignmentStudent = res.data;
-            setIsSubmit(!!assignmentStudent?.dateComplete);
-            if (!!assignmentStudent?.dateComplete) {
-                navigate(`/assignment/${assignmentId}/result`);
-                return;
+            let res;
+            if (isTeacher)
+                res = await axiosJWT.get(
+                    API_URL + `teacher-assignment/teacher/assignment/${assignmentId}/do-time`
+                );
+            else
+                res = await axiosJWT.get(
+                    API_URL + `student-assignment/student/assignment/${assignmentId}/do-time`
+                );
+            if (res) {
+                const assignmentTime = res.data;
+                setIsSubmit(!!assignmentTime?.dateComplete);
+                if (!!assignmentTime?.dateComplete) {
+                    navigate(`/assignment/${assignmentId}/result`);
+                    return;
+                }
+                const currentTimerId = setInterval(() => {
+                    const dateEnd = moment(assignmentTime?.dateEnd).diff(moment());
+                    const diff = moment(dateEnd).utcOffset(0).format('HH:mm:ss');
+                    setTimeDown(dateEnd);
+                    setDoTime(diff);
+                    console.log(dateEnd);
+                    console.log(diff);
+                }, 1000);
+                return () => {
+                    clearInterval(currentTimerId);
+                };
             }
-            const currentTimerId = setInterval(() => {
-                const dateEnd = moment(assignmentStudent?.dateEnd).diff(moment());
-                const diff = moment(dateEnd).utcOffset(0).format('HH:mm:ss');
-                setTimeDown(dateEnd);
-                setDoTime(diff);
-                console.log(dateEnd);
-                console.log(diff);
-            }, 1000);
-            return () => {
-                clearInterval(currentTimerId);
-            };
         };
         const clearTimer = countDownTime();
         return () => clearTimer.then((clearTimerId) => clearTimerId && clearTimerId());
@@ -198,53 +228,47 @@ const AnswerQuestion = ({ isStudent }) => {
     }, [currentQuestionId, listQuestionOfAssignment]);
 
     useEffect(() => {
-        if (currentQuestion)
-            setAnswers(
-                currentQuestion.answerOfStudent?.answer
-                    ? {
-                          multiChoice: currentQuestion.answerOfStudent?.answer?.multiChoice?.map(
-                              (multiChoice, i) => ({
-                                  isTrue: multiChoice?.isTrue,
-                                  answer: currentQuestion.contentQuestion?.multiChoice[i]?.answer,
-                              })
-                          ),
-                          multiSelect: currentQuestion.answerOfStudent?.answer?.multiSelect?.map(
-                              (multiSelect, i) => ({
-                                  isTrue: multiSelect?.isTrue,
-                                  answer: currentQuestion.contentQuestion?.multiSelect[i]?.answer,
-                              })
-                          ),
-                          input: currentQuestion.answerOfStudent?.answer?.input,
-                          trueFalse: currentQuestion.answerOfStudent?.answer?.trueFalse?.map(
-                              (trueFalse, i) => ({
-                                  isTrue: trueFalse?.isTrue,
-                                  answer: currentQuestion.contentQuestion?.trueFalse[i]?.answer,
-                              })
-                          ),
-                      }
-                    : {
-                          multiChoice: currentQuestion.contentQuestion?.multiChoice?.map(
-                              (multiChoice) => ({
-                                  isTrue: false,
-                                  answer: multiChoice.answer,
-                              })
-                          ),
-                          multiSelect: currentQuestion.contentQuestion?.multiSelect?.map(
-                              (multiSelect) => ({
-                                  isTrue: false,
-                                  answer: multiSelect.answer,
-                              })
-                          ),
-                          input: [{ answer: '' }],
-                          trueFalse: currentQuestion.contentQuestion?.trueFalse?.map(
-                              (trueFalse) => ({
-                                  isTrue: false,
-                                  answer: trueFalse.answer,
-                              })
-                          ),
-                      }
-            );
-    }, [currentQuestion]);
+        if (currentQuestion) {
+            const answerOfRespondent = {
+                multiChoice: currentQuestion.answerOfRespondent?.answer?.multiChoice?.map(
+                    (multiChoice, i) => ({
+                        isTrue: multiChoice?.isTrue,
+                        answer: currentQuestion.contentQuestion?.multiChoice[i]?.answer,
+                    })
+                ),
+                multiSelect: currentQuestion.answerOfRespondent?.answer?.multiSelect?.map(
+                    (multiSelect, i) => ({
+                        isTrue: multiSelect?.isTrue,
+                        answer: currentQuestion.contentQuestion?.multiSelect[i]?.answer,
+                    })
+                ),
+                input: currentQuestion.answerOfRespondent?.answer?.input,
+                trueFalse: currentQuestion.answerOfRespondent?.answer?.trueFalse?.map(
+                    (trueFalse, i) => ({
+                        isTrue: trueFalse?.isTrue,
+                        answer: currentQuestion.contentQuestion?.trueFalse[i]?.answer,
+                    })
+                ),
+            };
+
+            const newAnswer = {
+                multiChoice: currentQuestion.contentQuestion?.multiChoice?.map((multiChoice) => ({
+                    isTrue: false,
+                    answer: multiChoice.answer,
+                })),
+                multiSelect: currentQuestion.contentQuestion?.multiSelect?.map((multiSelect) => ({
+                    isTrue: false,
+                    answer: multiSelect.answer,
+                })),
+                input: [{ answer: '' }],
+                trueFalse: currentQuestion.contentQuestion?.trueFalse?.map((trueFalse) => ({
+                    isTrue: false,
+                    answer: trueFalse.answer,
+                })),
+            };
+            setAnswers(currentQuestion.answerOfRespondent?.answer ? answerOfRespondent : newAnswer);
+        }
+    }, [currentQuestion, isTeacher]);
 
     // useEffect(() => {
     //     listQuestionOfAssignment &&
@@ -348,7 +372,7 @@ const AnswerQuestion = ({ isStudent }) => {
                                             <div className='flex justify-center items-center'>
                                                 <span>{i + 1}</span>
                                             </div>
-                                            {checkStudentAnswered(questionOfAssignment) && (
+                                            {checkAnswered(questionOfAssignment) && (
                                                 <div className='text-white flex w-full h-full items-center justify-center bg-primary'></div>
                                             )}
                                         </div>
