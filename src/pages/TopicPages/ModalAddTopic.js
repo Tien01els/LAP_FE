@@ -47,7 +47,7 @@ const ModalAddTopic = ({
     try {
       const classTopic = {
         topicId: data.topicId,
-        isUnlock: data.isUnlock,
+        isUnlock: !data.isUnlock,
       }
       await axiosJWT.post(API_URL + `class-topic`, { ...classTopic, classId })
       getTopicOfClass()
