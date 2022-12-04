@@ -20,6 +20,9 @@ const MultiSelectAnswers = ({ answers, setAnswers, review }) => {
 
   return (
     <div className="flex flex-col items-center gap-5">
+      <div className="w-full">
+        <span className="text-yellow-400">Multi select question</span>
+      </div>
       {answers?.multiSelect?.map((item, i) => {
         return (
           <CustomCheckbox

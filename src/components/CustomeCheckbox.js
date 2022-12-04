@@ -15,7 +15,7 @@ const CustomCheckbox = ({ item, onClickCheckbox, review }) => {
 
   return (
     <div
-      className={`flex flex-row gap-5 w-[70%] rounded-lg justify-center select-none
+      className={`flex flex-row gap-5 w-full rounded-lg justify-center select-none
                     outline outline-[2px] outline-primary px-5 py-4 transition-all cursor-pointer ${
                       isChecked ? `bg-primary text-white` : `text-primary`
                     }`}
