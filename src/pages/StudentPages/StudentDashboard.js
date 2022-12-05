@@ -54,22 +54,29 @@ const StudentDashboard = () => {
   }
 
   useEffect(() => {
-    axiosJWT
-      .get(API_URL + 'student-assignment/student/deadline')
-      .then((res) => {
+    const getDeadline = async () => {
+      try {
+        const res = await axiosJWT.get(
+          API_URL + 'student-assignment/student/deadline',
+        )
         setAssignments(res.data)
         res.data?.length && handleDays(res.data)
-      })
-      .catch((err) => console.log(err))
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
-    axiosJWT
-      .get(API_URL + 'student-topic/percent-skill')
-      .then((res) => {
-        // setAssignments(res?.data)
-        // handleDays(res?.data)
+    const getPercentSkill = async () => {
+      try {
+        const res = await axiosJWT.get(API_URL + 'student-topic/percent-skill')
         setTopicsOfStudent(res.data)
-      })
-      .catch((err) => console.log(err))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getDeadline()
+    getPercentSkill()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
