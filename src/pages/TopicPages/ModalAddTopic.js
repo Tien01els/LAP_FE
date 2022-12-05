@@ -152,10 +152,12 @@ const ModalAddTopic = ({
         </div>
       </form>
       <ModalCreateTopic
+        handleCloseModalAddTopic={handleCloseModalAddTopic}
         handleCreateClassTopic={handleCreateClassTopic}
+        classId={classId}
         modalTopicIsOpen={modalTopicIsOpen}
         setTopicIsOpen={setTopicIsOpen}
-        getTopicOfGrade={getTopicOfGrade}
+        getTopicOfClass={getTopicOfClass}
       />
       <TokenExpire isOpen={isExpired} />
     </Modal>

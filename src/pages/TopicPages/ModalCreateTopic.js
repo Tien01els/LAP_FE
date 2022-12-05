@@ -6,13 +6,15 @@ import { API_URL } from '../../constant'
 import Button from '../../components/Button'
 import createAxiosJWT from '../../createAxiosJWT'
 import { toast } from 'react-toastify'
+import Select from 'react-select'
 
 const axiosJWT = createAxiosJWT()
 const ModalCreateTopic = ({
   modalTopicIsOpen,
   setTopicIsOpen,
-  getTopicOfGrade,
-  handleCreateClassTopic,
+  handleCloseModalAddTopic,
+  getTopicOfClass,
+  classId,
 }) => {
   const {
     register: registerCreate,
@@ -21,6 +23,7 @@ const ModalCreateTopic = ({
     formState: formStateCreate,
   } = useForm()
 
+  const [currentGrade, setCurrentGrade] = useState('')
   const [grades, setGrades] = useState([])
   const [prerequisiteTopicGrades, setPrerequisiteTopicGrades] = useState([])
 
@@ -28,10 +31,14 @@ const ModalCreateTopic = ({
     const res = await axiosJWT.get(API_URL + `grade`)
     setGrades(res.data)
   }
-  function getPrerequisiteTopicOfGrade() {
-    axiosJWT.get(API_URL + `topic/teacher/grade/1`).then((res) => {
-      setPrerequisiteTopicGrades(res.data)
-    })
+  const getPrerequisiteTopicOfGrade = async () => {
+    // const res = await axiosJWT.get(
+    //   API_URL + `topic/teacher/grade/${currentGrade}`,
+    // )
+    const res = await axiosJWT.get(
+      API_URL + `topic/teacher/grade/${currentGrade?.id}`,
+    )
+    setPrerequisiteTopicGrades(res.data)
   }
   function handleCloseModalCreateTopic() {
     setTopicIsOpen(false)
@@ -39,8 +46,13 @@ const ModalCreateTopic = ({
 
   useEffect(() => {
     getAllGrades()
-    getPrerequisiteTopicOfGrade()
+    // getPrerequisiteTopicOfGrade()
   }, [])
+
+  useEffect(() => {
+    getPrerequisiteTopicOfGrade()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentGrade])
 
   useEffect(() => {
     if (formStateCreate.isSubmitSuccessful) {
@@ -62,14 +74,19 @@ const ModalCreateTopic = ({
         teacherId: 1,
       }
       const res = await axiosJWT.post(API_URL + `topic`, topic)
-      if (res) {
-        console.log(res)
-        // handleCreateClassTopic()
+      if (res.data) {
+        await axiosJWT.post(API_URL + `class-topic`, {
+          topicId: res.data.topic?.id,
+          isUnlock: 0,
+          classId,
+        })
+        getTopicOfClass()
       }
-      getTopicOfGrade()
     } catch (err) {
+      console.log(err)
       toast('Create topic failed')
     }
+    handleCloseModalAddTopic()
   }
 
   const customStyles = {
@@ -135,9 +152,16 @@ const ModalCreateTopic = ({
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="grade">Grade</label>
-            <select
+            <Select
+              options={grades}
+              getOptionValue={(option) => option.id}
+              getOptionLabel={(option) => option.gradeName}
+              onChange={setCurrentGrade}
+            ></Select>
+            {/* <select
               name="grade"
               className="border border-gray-500 rounded px-2"
+              onChange={setCurrentGrade}
               defaultValue="-1"
               {...registerCreate('gradeId')}
             >
@@ -151,7 +175,7 @@ const ModalCreateTopic = ({
                   </option>
                 )
               })}
-            </select>
+            </select> */}
           </div>
 
           <div className="flex flex-col gap-2">

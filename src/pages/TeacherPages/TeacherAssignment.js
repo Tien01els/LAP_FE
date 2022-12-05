@@ -24,6 +24,8 @@ import ConfirmModal from '../../components/Modals/ConfirmModal'
 import { insertTextAtCurrentCursor } from '../../utils/utils'
 import { useRef } from 'react'
 
+let assignmentInfo = {}
+
 const axiosJWT = createAxiosJWT()
 const TeacherAssignment = () => {
   const teacherId = 1
@@ -34,6 +36,18 @@ const TeacherAssignment = () => {
     { value: 4, label: 'Multi Select' },
   ]
   const { skillId, classId, assignmentId } = useParams()
+
+  assignmentInfo.skillId = skillId
+  assignmentInfo.classId = classId
+  assignmentInfo.assignmentId = assignmentId
+
+  useEffect(() => {
+    axiosJWT.get(API_URL + `skill/${assignmentInfo?.skillId}`).then((res) => {
+      assignmentInfo.gradeId = res?.data?.gradeId
+      assignmentInfo.topicId = res?.data?.topicId
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skillId])
 
   const navigate = useNavigate()
   const [question, setQuestion] = useState('')
@@ -130,30 +144,9 @@ const TeacherAssignment = () => {
       input: [],
       trueFalse: [],
     })
-    setSelectedLevel('Easy')
+    setSelectedLevel(levelOption[0])
     forceUpdate()
   }
-
-  const handleReviewQuestion = (data) => {
-    setCurrentQid(data?.id)
-    setQuestion(data?.content)
-    if (data?.hint !== '') {
-      setEnableHint(true)
-      setHint(data?.hint)
-    } else {
-      setEnableHint(false)
-      setHint('')
-    }
-    setAnswers(data?.option)
-    setScore(data?.score)
-    setSelectedLevel(data?.level)
-    setSelectedOption(Selectoptions[data?.questionTypeId - 1])
-    setSelectedGrade(data?.gradeId)
-    setSelectedTopic(data?.topicId)
-    setSelectedSkills(data?.skillIds)
-  }
-
-  console.log(selectedSkills)
 
   const addQuestionItem = () => {
     if (questionList.find((item) => item.id === currentQid)) {
@@ -282,6 +275,26 @@ const TeacherAssignment = () => {
   const [listTopic, setListTopic] = useState([])
   const [listSkill, setListSkill] = useState([])
 
+  const handleReviewQuestion = (data) => {
+    setCurrentQid(data?.id)
+    setQuestion(data?.content)
+    if (data?.hint !== '') {
+      setEnableHint(true)
+      setHint(data?.hint)
+    } else {
+      setEnableHint(false)
+      setHint('')
+    }
+    setAnswers(data?.option)
+    setScore(data?.score)
+    setSelectedOption(Selectoptions[data?.questionTypeId - 1])
+    //
+    setSelectedLevel(levelOption.find((val) => val.label === data?.level))
+    setSelectedGrade(listGrade.find((val) => val.value === data?.gradeId))
+    setSelectedTopic(listTopic.find((val) => val.value === data?.topicId))
+    setSelectedSkills(listSkill.find((val) => val.value === data?.skillIds[0]))
+  }
+
   useEffect(() => {
     axiosJWT.get(API_URL + `grade/teacher`).then((res) => {
       const grades = res.data
@@ -318,15 +331,6 @@ const TeacherAssignment = () => {
           setListSkill(option)
         })
   }, [selectedTopic])
-
-  useEffect(() => {
-    skillId &&
-      axiosJWT.get(API_URL + `skill/${skillId}`).then((res) => {
-        setSelectedGrade(res.data.gradeId)
-        setSelectedTopic(res.data.topicId)
-        setSelectedSkills([res.data.id])
-      })
-  }, [skillId])
 
   useEffect(() => {
     axiosJWT
@@ -434,6 +438,7 @@ const TeacherAssignment = () => {
           <div className="flex flex-col gap-4">
             <div className="h-[88px]">
               <QuestionOption
+                assignmentInfo={assignmentInfo}
                 levelOption={levelOption}
                 listGrade={listGrade}
                 setListGrade={setListGrade}

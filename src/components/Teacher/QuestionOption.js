@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react'
 import Select from 'react-select'
+import { API_URL } from '../../constant'
+import createAxiosJWT from '../../createAxiosJWT'
+
+const axiosJWT = createAxiosJWT()
 
 const QuestionOption = ({
+  assignmentInfo,
+
   listSkill,
   selectedSkills,
   setSelectedSkills,
@@ -22,23 +28,34 @@ const QuestionOption = ({
   handleScore,
   score,
 }) => {
+  console.log(assignmentInfo)
   useEffect(() => {
-    if (listGrade.length > 0) {
-      setSelectedGrade(listGrade[0])
+    if (listGrade?.length > 0) {
+      setSelectedGrade(
+        listGrade.find((val) => val.value === assignmentInfo?.gradeId) ||
+          listGrade[0],
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listGrade])
 
   useEffect(() => {
-    if (listTopic.length > 0) {
-      setSelectedTopic(listTopic[0])
+    if (listTopic?.length > 0) {
+      setSelectedTopic(
+        listTopic.find((val) => val.value === assignmentInfo?.topicId) ||
+          listTopic[0],
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listTopic])
 
   useEffect(() => {
-    if (listSkill.length > 0) {
-      setSelectedSkills([listSkill[0]])
+    if (listSkill?.length > 0) {
+      setSelectedSkills([
+        listSkill.find(
+          (val) => val.value === parseInt(assignmentInfo?.skillId),
+        ) || listSkill[0],
+      ])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listSkill])
