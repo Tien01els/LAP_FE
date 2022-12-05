@@ -52,7 +52,7 @@ const TopicCard = ({
   }, [topicInfo])
 
   return (
-    <div className="w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
+    <>
       <ConfirmModal
         isOpen={isOpenModalRequest}
         noConfirm={handleRequestOpen}
@@ -62,71 +62,76 @@ const TopicCard = ({
       <ConfirmModal
         isOpen={isOpenConfirmDelete}
         noConfirm={toggleDeleteConfirm}
-        yesConfirm={deleteTopic}
+        yesConfirm={() => {
+          deleteTopic()
+          setIsOpenConfirmDelete(false)
+        }}
         message="Are you sure to remove this from class topic?"
       />
-      {!topicInfo?.isUnlock && !isTeacher && (
-        <div
-          onClick={() => handleRequestOpen()}
-          className={`w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 z-1 ${
-            isRequested ? '' : 'cursor-pointer'
-          }`}
-        >
-          <span className="text-white">
-            {isRequested
-              ? `Waiting for teacher response...`
-              : `Request to open topic`}
-          </span>
-        </div>
-      )}
-      <img
-        src={topicInfo?.topicImg || imgsrc}
-        alt={''}
-        className="object-cover h-32 w-36 rounded-lg "
-      />
-      <div className="flex flex-col justify-evenly w-full h-full">
-        <div className="flex flex-row items-center">
-          <span
-            onClick={() => {
-              setCurrentTopicId(topicInfo?.topicId)
-            }}
-            className="font-medium w-[225px] truncate cursor-pointer"
+      <div className="w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
+        {!topicInfo?.isUnlock && !isTeacher && (
+          <div
+            onClick={() => handleRequestOpen()}
+            className={`w-full absolute flex flex-row gap-4 items-center justify-center bg-gray-700 bg-opacity-70 rounded-[16px] h-[152px] -translate-x-3 z-1 ${
+              isRequested ? '' : 'cursor-pointer'
+            }`}
           >
-            {topicInfo?.topicName}
-          </span>
-          {isTeacher && (
-            <div className="flex flex-col">
-              <div
-                className={`rounded-full relative h-[24px] w-[24px] cursor-pointer select-none flex items-center justify-center bg-white hover:bg-gray-100`}
-                onClick={() => {
-                  setIsOpenConfirmDelete(true)
-                }}
-              >
-                <i className="fa-regular fa-trash-can text-sm text-red-400"></i>
+            <span className="text-white">
+              {isRequested
+                ? `Waiting for teacher response...`
+                : `Request to open topic`}
+            </span>
+          </div>
+        )}
+        <img
+          src={topicInfo?.topicImg || imgsrc}
+          alt={''}
+          className=" object-cover h-36 w-36 rounded-lg "
+        />
+        <div className="flex flex-col justify-evenly w-full h-full">
+          <div className="flex flex-row items-center">
+            <span
+              onClick={() => {
+                setCurrentTopicId(topicInfo?.topicId)
+              }}
+              className="font-medium w-[225px] truncate cursor-pointer"
+            >
+              {topicInfo?.topicName}
+            </span>
+            {isTeacher && (
+              <div className="flex flex-col">
+                <div
+                  className={`rounded-full relative h-[24px] w-[24px] cursor-pointer select-none flex items-center justify-center bg-white hover:bg-gray-100`}
+                  onClick={() => {
+                    setIsOpenConfirmDelete(true)
+                  }}
+                >
+                  <i className="fa-regular fa-trash-can text-sm text-red-400"></i>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-        <span className="text-xs w-[260px] h-[48px] whitespace-normal break-words line-clamp-3">
-          {topicInfo?.description}
-        </span>
-        <div className="flex flex-row justify-between items-center pr-4 text-xs">
-          <span>
-            Skills :{' '}
-            <span className="text-primary">{topicInfo?.numberSkills}</span>
+            )}
+          </div>
+          <span className="text-xs w-[260px] h-[48px] whitespace-normal break-words line-clamp-3">
+            {topicInfo?.description}
           </span>
-          <span
-            className="text-primary cursor-pointer"
-            // onClick={() => handleViewStudent()}
-            onClick={() => {
-              setCurrentTopicId(topicInfo?.topicId)
-            }}
-          >
-            View
-          </span>
+          <div className="flex flex-row justify-between items-center pr-4 text-xs">
+            <span>
+              Skills :{' '}
+              <span className="text-primary">{topicInfo?.numberSkills}</span>
+            </span>
+            <span
+              className="text-primary cursor-pointer"
+              // onClick={() => handleViewStudent()}
+              onClick={() => {
+                setCurrentTopicId(topicInfo?.topicId)
+              }}
+            >
+              View
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

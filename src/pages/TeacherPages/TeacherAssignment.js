@@ -153,6 +153,8 @@ const TeacherAssignment = () => {
     setSelectedSkills(data?.skillIds)
   }
 
+  console.log(selectedSkills)
+
   const addQuestionItem = () => {
     if (questionList.find((item) => item.id === currentQid)) {
       let index = questionList.findIndex((item) => item.id === currentQid)
@@ -161,8 +163,8 @@ const TeacherAssignment = () => {
         option: answers,
         hint: hint,
         score: score,
-        level: selectedLevel,
-        skillIds: [selectedSkills],
+        level: selectedLevel?.label,
+        skillIds: selectedSkills?.length && [selectedSkills[0]?.value],
         questionTypeId: selectedOption?.value,
         teacherId,
       }
@@ -193,8 +195,8 @@ const TeacherAssignment = () => {
       option: answers,
       hint: hint,
       score: score,
-      level: selectedLevel,
-      skillIds: [selectedSkills],
+      level: selectedLevel?.label,
+      skillIds: selectedSkills?.length && [selectedSkills[0]?.value],
       questionTypeId: selectedOption?.value,
       teacherId,
     }
