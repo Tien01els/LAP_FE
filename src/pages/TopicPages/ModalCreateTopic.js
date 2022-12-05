@@ -5,12 +5,14 @@ import Modal from 'react-modal'
 import { API_URL } from '../../constant'
 import Button from '../../components/Button'
 import createAxiosJWT from '../../createAxiosJWT'
+import { toast } from 'react-toastify'
 
 const axiosJWT = createAxiosJWT()
 const ModalCreateTopic = ({
   modalTopicIsOpen,
   setTopicIsOpen,
   getTopicOfGrade,
+  handleCreateClassTopic,
 }) => {
   const {
     register: registerCreate,
@@ -53,14 +55,21 @@ const ModalCreateTopic = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formStateCreate, resetCreate])
 
-  function handleCreateTopic(data) {
-    const topic = {
-      ...data,
-      teacherId: 1,
-    }
-    axiosJWT.post(API_URL + `topic`, topic).then((res) => {
+  const handleCreateTopic = async (data) => {
+    try {
+      const topic = {
+        ...data,
+        teacherId: 1,
+      }
+      const res = await axiosJWT.post(API_URL + `topic`, topic)
+      if (res) {
+        console.log(res)
+        // handleCreateClassTopic()
+      }
       getTopicOfGrade()
-    })
+    } catch (err) {
+      toast('Create topic failed')
+    }
   }
 
   const customStyles = {
