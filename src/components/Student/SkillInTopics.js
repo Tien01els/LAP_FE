@@ -59,7 +59,9 @@ const SkillInTopics = ({ val }) => {
                                 <Button
                                     className='text-xs'
                                     onClick={() => {
-                                        navigate(`/assignment/${assignmentOfSkill.id}/result`);
+                                        navigate(
+                                            `/assignment/${assignmentOfSkill.assignment.id}/result`
+                                        );
                                     }}
                                 >
                                     View Result
