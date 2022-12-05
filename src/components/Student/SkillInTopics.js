@@ -57,18 +57,16 @@ const SkillInTopics = ({ val }) => {
         {assignmentsOfSkill?.map((assignmentOfSkill, i) => {
           return (
             <div key={i} className="flex flex-row items-center justify-between">
-              <span
-                className="cursor-pointer"
-                onClick={() => {
-                  navigate(`/assignment-summary/${assignmentOfSkill.id}/`)
-                }}
-              >
-                {assignmentOfSkill?.assignment?.assignmentName}
-              </span>
+              <span>{assignmentOfSkill?.assignment?.assignmentName}</span>
               {assignmentOfSkill?.assignment?.studentAssignment[0]
                 ?.dateComplete ? (
-                <Button className="text-xs" onClick={() => {}}>
-                  View
+                <Button
+                  className="text-xs"
+                  onClick={() => {
+                    navigate(`/assignment/${assignmentOfSkill.id}/result`)
+                  }}
+                >
+                  View Result
                 </Button>
               ) : (
                 <Button
