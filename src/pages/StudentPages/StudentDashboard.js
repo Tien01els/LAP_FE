@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-
 import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
 import { Calendar } from '@hassanmojab/react-modern-calendar-datepicker';
+import jwtDecode from 'jwt-decode';
 
 import studentImage from '../../assets/image/students.webp';
 
@@ -24,11 +24,17 @@ import createAxiosJWT from '../../createAxiosJWT';
 const axiosJWT = createAxiosJWT();
 
 const StudentDashboard = () => {
+    const accessToken = localStorage.getItem('access_token');
+    const decodedToken = useMemo(() => {
+        return accessToken && jwtDecode(accessToken);
+    }, [accessToken]);
+
     const [selectedDay, setSelectedDay] = useState(null);
     const [assignments, setAssignments] = useState([]);
     const [assignmentDays, setAssignmentsDays] = useState([]);
     const [topicsOfStudent, setTopicsOfStudent] = useState([]);
     const [classInfo, setClassInfo] = useState();
+    const [achievement, setAchievement] = useState();
 
     const handleDays = async (assignments) => {
         const days = [];
@@ -81,13 +87,22 @@ const StudentDashboard = () => {
             }
         };
 
-        
+        const getAchievementOfStudent = async () => {
+            try {
+                const res = await axiosJWT.get(API_URL + 'student/achievement');
+                setAchievement(res.data);
+                console.log(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getAchievementOfStudent();
         getDeadline();
         getPercentSkill();
         getClassOfStudent();
     }, []);
 
-    const averageScore = 68;
     return (
         <div className='px-10 py-7 flex flex-row gap-5 h-[full] text-gray-800'>
             <div className='flex flex-col w-[70%] gap-7'>
@@ -95,7 +110,7 @@ const StudentDashboard = () => {
                 {/* welcome back */}
                 <div className='flex flex-row h-[150px] -z-50 bg-primary relative rounded-lg shadow-lg px-4 py-3'>
                     <div className='text-xl text-white w-[40%] flex flex-col pl-10 gap-5 self-center'>
-                        <span className='text-2xl'>Welcome back Nhat !</span>{' '}
+                        <span className='text-2xl'>Welcome back {decodedToken?.fullName}!</span>{' '}
                         <span className='text-base'>It is what it is</span>
                     </div>
                     {/* image */}
@@ -164,7 +179,7 @@ const StudentDashboard = () => {
                             <SwiperSlide>
                                 <div className='w-[200px] h-[200px]'>
                                     <CustomProgressBar
-                                        value={averageScore}
+                                        value={achievement?.avgScoreOfStudent || 0}
                                         circleRatio={0.75}
                                         initialAnimation={true}
                                         styles={buildStyles({
@@ -175,7 +190,7 @@ const StudentDashboard = () => {
                                     >
                                         <div className='flex flex-col items-center justify-center text-primary'>
                                             <span className='font-semibold text-4xl'>
-                                                {averageScore}
+                                                {achievement?.avgScoreOfStudent || 0}
                                             </span>
                                             <span className='font-semibold text-sm'>
                                                 Average Score
@@ -193,8 +208,10 @@ const StudentDashboard = () => {
                                         }}
                                     ></div>
                                     <div className='flex gap-3 items-center'>
-                                        <span className='text-primary text-2xl'>56</span> Topics
-                                        completed
+                                        <span className='text-primary text-2xl'>
+                                            {achievement?.topicsCompletedOfStudent || 0}
+                                        </span>{' '}
+                                        Topics completed
                                     </div>
                                 </div>
                             </SwiperSlide>
