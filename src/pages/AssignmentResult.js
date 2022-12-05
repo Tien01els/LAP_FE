@@ -139,8 +139,6 @@ const AssignmentResult = ({ isTeacher }) => {
       })
   }, [assignmentId])
 
-  console.log(assignment)
-
   return (
     <div className="px-10 py-7 flex flex-row">
       {/* left */}
