@@ -53,7 +53,7 @@ const StudentExams = () => {
                 />
             </div>
             <div className='flex flex-wrap gap-10'>
-                {exams?.length &&
+                {!!exams?.length &&
                     exams
                         .filter((val) => {
                             if (
