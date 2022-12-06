@@ -152,6 +152,7 @@ export default function AppRouter() {
       return (
         <>
           <Route path="/" element={<StudentDashboard />} />
+          <Route path="/dashboard" element={<StudentDashboard />} />
           <Route path="/class/:classId" element={<StudentClass isParent />} />
           <Route path="/exams" element={<StudentExams isParent />} />
         </>

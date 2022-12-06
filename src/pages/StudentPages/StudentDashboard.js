@@ -115,7 +115,7 @@ const StudentDashboard = () => {
             <span className="text-2xl">
               Welcome back {decodedToken?.fullName}!
             </span>{' '}
-            <span className="text-base">It is what it is</span>
+            <span className="text-base">Some quotes</span>
           </div>
           {/* image */}
           <div className="">

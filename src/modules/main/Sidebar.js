@@ -98,7 +98,7 @@ const Sidebar = () => {
       return <StudentMenu />
     }
     if (roleId === 4) {
-      return <StudentMenu />
+      return <StudentMenu isParent />
     }
     return <></>
   }
