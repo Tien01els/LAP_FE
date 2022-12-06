@@ -24,8 +24,6 @@ import ConfirmModal from '../../components/Modals/ConfirmModal'
 import { insertTextAtCurrentCursor } from '../../utils/utils'
 import { useRef } from 'react'
 
-let assignmentInfo = {}
-
 const axiosJWT = createAxiosJWT()
 const TeacherAssignment = () => {
   const Selectoptions = [
@@ -35,17 +33,25 @@ const TeacherAssignment = () => {
     { value: 4, label: 'Multi Select' },
   ]
   const { skillId, classId, assignmentId } = useParams()
-
-  assignmentInfo.skillId = skillId
-  assignmentInfo.classId = classId
-  assignmentInfo.assignmentId = assignmentId
+  const [assignmentInfo, setAssignmentInfo] = useState({})
 
   useEffect(() => {
-    axiosJWT.get(API_URL + `skill/${assignmentInfo?.skillId}`).then((res) => {
-      assignmentInfo.gradeId = res?.data?.gradeId
-      assignmentInfo.topicId = res?.data?.topicId
+    setAssignmentInfo((prev) => {
+      prev.skillId = skillId
+      prev.classId = classId
+      prev.assignmentId = assignmentId
+      return prev
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skillId, classId, assignmentId])
+
+  useEffect(() => {
+    axiosJWT.get(API_URL + `skill/${skillId}`).then((res) => {
+      setAssignmentInfo((prev) => {
+        prev.gradeId = res?.data?.gradeId
+        prev.topicId = res?.data?.topicId
+        return prev
+      })
+    })
   }, [skillId])
 
   const navigate = useNavigate()

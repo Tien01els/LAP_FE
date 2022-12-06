@@ -360,7 +360,7 @@ const QuestionBank = ({
               </div>
             )}
           </motion.div>
-          <div className="my-10">
+          <div className="h-[350px] overflow-y-auto">
             {selectedOptionType?.value === 1 ? (
               <MultiChoice
                 setAnswers={setOptionQuestionBank}
