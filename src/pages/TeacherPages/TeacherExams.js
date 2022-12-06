@@ -172,6 +172,7 @@ const TeacherExams = () => {
                     (val, i) => {
                       return (
                         <ExamQuestion
+                          index={i}
                           key={val.questionId}
                           question={val.question}
                         />

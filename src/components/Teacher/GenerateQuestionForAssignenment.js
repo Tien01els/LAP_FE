@@ -183,8 +183,7 @@ const GenerateQuestionForAssignenment = ({
             </h2>
           </div>
           <div className="flex flex-col gap-2">
-            <span className="text-xl flex">Level </span>
-
+            <span>Level </span>
             <Select
               placeholder="Select levels..."
               closeMenuOnSelect={false}
@@ -194,7 +193,7 @@ const GenerateQuestionForAssignenment = ({
             />
           </div>
           <div className="flex flex-col gap-2">
-            <span className="text-xl flex">Question type</span>
+            <span>Question type</span>
             <Select
               placeholder="Select question types..."
               closeMenuOnSelect={false}
@@ -204,24 +203,22 @@ const GenerateQuestionForAssignenment = ({
               className="w-full"
             />
           </div>
-          <div className="flex flex-row gap-2 ">
-            <span className="flex text-xl gap-2">Number of question</span>
-            <div className="flex font-normal">
-              <input
-                className="outline-none border-b-2 py-1 px-2 justify-center items-center text-right w-[60px] duration-300 transition-all"
-                value={numberQuestion}
-                onChange={(e) => {
-                  setNumberQuestion(() => {
-                    if (Number(e.target.value)) return Number(e.target.value)
-                    return 0
-                  })
-                }}
-              />
-            </div>
+          <div className="flex flex-row gap-2 items-center">
+            <span>Number of question</span>
+            <input
+              className="outline-none border-b-2 py-1 px-2 justify-center items-center text-right w-[60px] duration-300 transition-all"
+              value={numberQuestion}
+              onChange={(e) => {
+                setNumberQuestion(() => {
+                  if (Number(e.target.value)) return Number(e.target.value)
+                  return 0
+                })
+              }}
+            />
           </div>
           <div className="flex flex-row">
             <div className="flex flex-row items-center gap-2 w-[50%]">
-              <span className="flex text-xl">Grade</span>
+              <span className="mr-1">Grade</span>
               <Select
                 ref={selectGrade}
                 options={listGrade}
@@ -237,14 +234,14 @@ const GenerateQuestionForAssignenment = ({
               />
             </div>
             <div className="flex flex-row items-center gap-2 w-[50%]">
-              <span className="text-xl">Topic</span>
+              <span>Topic</span>
               <Select
                 ref={selectTopic}
                 options={listTopic}
                 styles={{
                   menuList: (base) => ({
                     ...base,
-                    height: '180px', // your desired height
+                    maxHeight: '180px', // your desired height
                   }),
                 }}
                 placeholder="Select topic..."
@@ -254,7 +251,7 @@ const GenerateQuestionForAssignenment = ({
             </div>
           </div>
           <div className="flex flex-row gap-6">
-            <span className="text-xl flex items-center">Skills</span>
+            <span className="flex items-center">Skills</span>
             <div>
               <Select
                 ref={selectSkill}
@@ -268,7 +265,7 @@ const GenerateQuestionForAssignenment = ({
             </div>
           </div>
           <div className="flex flex-row gap-2 items-center mb-5">
-            <span className="text-xl">Would you like a hint?</span>
+            <span>Would you like a hint?</span>
             <Select
               options={hintOption}
               defaultValue={hintOption[1]}
