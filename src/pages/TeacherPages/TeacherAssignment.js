@@ -28,7 +28,6 @@ let assignmentInfo = {}
 
 const axiosJWT = createAxiosJWT()
 const TeacherAssignment = () => {
-  const teacherId = 1
   const Selectoptions = [
     { value: 1, label: 'Multi Choice' },
     { value: 2, label: 'True False' },
@@ -159,7 +158,6 @@ const TeacherAssignment = () => {
         level: selectedLevel?.label,
         skillIds: selectedSkills?.length && [selectedSkills[0]?.value],
         questionTypeId: selectedOption?.value,
-        teacherId,
       }
       axiosJWT
         .put(API_URL + `question/${currentQid}`, questionUpdate)
@@ -191,7 +189,6 @@ const TeacherAssignment = () => {
       level: selectedLevel?.label,
       skillIds: selectedSkills?.length && [selectedSkills[0]?.value],
       questionTypeId: selectedOption?.value,
-      teacherId,
     }
     axiosJWT
       .post(API_URL + `question`, questionCreate)
