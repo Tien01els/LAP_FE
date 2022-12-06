@@ -151,10 +151,14 @@ export default function AppRouter() {
     if (roleID === 4) {
       return (
         <>
-          <Route path="/" element={<StudentDashboard />} />
-          <Route path="/dashboard" element={<StudentDashboard />} />
+          <Route path="/" element={<StudentDashboard isParent />} />
+          <Route path="/dashboard" element={<StudentDashboard isParent />} />
           <Route path="/class/:classId" element={<StudentClass isParent />} />
           <Route path="/exams" element={<StudentExams isParent />} />
+          <Route
+            path="/assignment/:assignmentId/result"
+            element={<AssignmentResult />}
+          />
         </>
       )
     }
