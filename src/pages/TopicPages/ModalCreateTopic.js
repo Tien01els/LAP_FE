@@ -102,6 +102,7 @@ const ModalCreateTopic = ({
             transform: 'translate(-50%, -50%)',
             border: 'none',
             borderRadius: '8px',
+            overflow: 'visible',
         },
     };
 
@@ -137,7 +138,7 @@ const ModalCreateTopic = ({
                 </button>
             </div>
             <form
-                className='flex flex-col w-[500px]'
+                className='flex flex-col w-[500px] '
                 onSubmit={handleSubmitCreate(handleCreateTopic)}
             >
                 <div className='flex flex-col gap-4'>
@@ -186,7 +187,7 @@ const ModalCreateTopic = ({
                                     styles={{
                                         menuList: (base) => ({
                                             ...base,
-                                            height: '100px', // your desired height
+                                            maxHeight: '100px', // your desired height
                                         }),
                                     }}
                                 ></Select>
@@ -209,10 +210,10 @@ const ModalCreateTopic = ({
                                         styles={{
                                             menuList: (base) => ({
                                                 ...base,
-                                                height: '200px', // your desired height
+                                                maxHeight: '160px', // your desired height
                                             }),
                                         }}
-                                        menuPlacement='top'
+                                        // menuPlacement='top'
                                     ></Select>
                                 )}
                             ></Controller>
