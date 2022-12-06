@@ -34,7 +34,7 @@ const TeacherDashBoard = () => {
     const [classes, setClasses] = useState([]);
     const [assignments, setAssignments] = useState([]);
     const [assignmentDays, setAssignmentsDays] = useState([]);
-    console.log(assignments);
+
     useEffect(() => {
         const getClassOfTeacher = async () => {
             const res = await axiosJWT.get(API_URL + `class/teacher`);
@@ -53,7 +53,7 @@ const TeacherDashBoard = () => {
         getAssignmentOfTeacher();
     }, []);
 
-    const handleDays = async (assignments) => {
+    const handleDays = (assignments) => {
         let days = [];
 
         // [
@@ -73,8 +73,7 @@ const TeacherDashBoard = () => {
                 className: 'deadline',
             });
         }
-
-        await setAssignmentsDays(days);
+        setAssignmentsDays(days);
     };
 
     const options = {
