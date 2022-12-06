@@ -81,21 +81,21 @@ const Sidebar = () => {
         rooms && socket?.emit('rooms', rooms);
     }, [socket, rooms]);
 
-    const returnMenu = (roleId) => {
-        if (roleId === 1) {
-            return <></>;
-        }
-        if (roleId === 2) {
-            return <TeacherMenu />;
-        } 
-        if (roleId === 3) {
-            return <StudentMenu />;
-        }
-        if (roleId === 4) {
-            return <StudentMenu />;
-        }
-        return <></>;
-    };
+  const returnMenu = (roleId) => {
+    if (roleId === 1) {
+      return <></>
+    }
+    if (roleId === 2) {
+      return <TeacherMenu />
+    }
+    if (roleId === 3) {
+      return <StudentMenu />
+    }
+    if (roleId === 4) {
+      return <StudentMenu isParent />
+    }
+    return <></>
+  }
 
     return (
         <div className='w-[240px] items-center h-full fixed top-0 left-0 bg-white shadow-sm flex flex-col p-5 gap-10 justify-between'>

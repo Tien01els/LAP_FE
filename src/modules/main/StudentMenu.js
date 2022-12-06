@@ -38,7 +38,7 @@ function useOutsideAlerter(ref, setIsOpenNoti) {
   }, [ref])
 }
 
-const StudentSidebar = () => {
+const StudentSidebar = ({ isParent }) => {
   const accessToken = localStorage.getItem('access_token')
   const decodedToken = useMemo(() => {
     return accessToken && jwtDecode(accessToken)
@@ -82,7 +82,6 @@ const StudentSidebar = () => {
           API_URL + `notification-content/receiver/${decodedToken.accountId}`,
         )
         setNotifications(res.data)
-        console.log('lay cai moi')
         if (res.data.some((e) => e.isSeen === false)) {
           setNewNoti(true)
         } else setNewNoti(false)
@@ -138,47 +137,53 @@ const StudentSidebar = () => {
         <span className="font-semibold ml-1 text-sm">Class</span>
       </NavLink>
 
-      <div className="relative" ref={wrapperRef}>
-        <ToastContainer />
-        <div
-          onClick={() => setIsOpenNoti(!isOpenNoti)}
-          className={
-            isOpenNoti
-              ? 'flex flex-row relative items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all select-none  text-gray-600 bg-[#e5ebee]'
-              : 'flex flex-row relative items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all select-none hover:bg-gray-100  text-gray-600'
-          }
-        >
-          <i className="fa-regular fa-bell text-xl"></i>
-          <span className="font-semibold ml-1 text-sm">Notification</span>
-          {newNoti && (
-            <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
-          )}
-        </div>
-        <div
-          className={`${
-            isOpenNoti ? `` : `hidden`
-          }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-screen wibu:h-screen translate-x-[215px] -translate-y-[365px] wibu:-translate-y-[365px] z-[1000px]`}
-        >
-          <div className="flex flex-row items-center justify-between px-3 py-3">
-            <span className="text-xl text-gray-600 font-[500] ">
-              Notifications
-            </span>
-            <span
-              onClick={seenAll}
-              className="text-xs text-primary cursor-pointer select-none"
-            >
-              Mark as read all
-            </span>
+      {!isParent && (
+        <div className="relative" ref={wrapperRef}>
+          <ToastContainer />
+          <div
+            onClick={() => setIsOpenNoti(!isOpenNoti)}
+            className={
+              isOpenNoti
+                ? 'flex flex-row relative items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all select-none  text-gray-600 bg-[#e5ebee]'
+                : 'flex flex-row relative items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all select-none hover:bg-gray-100  text-gray-600'
+            }
+          >
+            <i className="fa-regular fa-bell text-xl"></i>
+            <span className="font-semibold ml-1 text-sm">Notification</span>
+            {newNoti && (
+              <div className="absolute bg-red-500 w-[8px] h-[8px] translate-x-3 -translate-y-3 rounded-full"></div>
+            )}
           </div>
-          <div className="flex flex-col overflow-y-auto">
-            {notifications.map((val, i) => {
-              return (
-                <StudentNotification seenNoti={seenNoti} key={i} value={val} />
-              )
-            })}
+          <div
+            className={`${
+              isOpenNoti ? `` : `hidden`
+            }  absolute bg-white rounded-r-lg pr-1 pb-2 shadow flex flex-col w-[350px] h-screen wibu:h-screen translate-x-[215px] -translate-y-[365px] wibu:-translate-y-[365px] z-[1000px]`}
+          >
+            <div className="flex flex-row items-center justify-between px-3 py-3">
+              <span className="text-xl text-gray-600 font-[500] ">
+                Notifications
+              </span>
+              <span
+                onClick={seenAll}
+                className="text-xs text-primary cursor-pointer select-none"
+              >
+                Mark as read all
+              </span>
+            </div>
+            <div className="flex flex-col overflow-y-auto">
+              {notifications.map((val, i) => {
+                return (
+                  <StudentNotification
+                    seenNoti={seenNoti}
+                    key={i}
+                    value={val}
+                  />
+                )
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <NavLink
         to={'/exams'}

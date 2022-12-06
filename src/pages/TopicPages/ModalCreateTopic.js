@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
 import Modal from 'react-modal'
 
 import { API_URL } from '../../constant'
 import Button from '../../components/Button'
 import createAxiosJWT from '../../createAxiosJWT'
 import { toast } from 'react-toastify'
+import Select from 'react-select'
 
 const axiosJWT = createAxiosJWT()
 const ModalCreateTopic = ({
   modalTopicIsOpen,
   setTopicIsOpen,
-  getTopicOfGrade,
-  handleCreateClassTopic,
+  handleCloseModalAddTopic,
+  getTopicOfClass,
+  classId,
 }) => {
   const {
     register: registerCreate,
     handleSubmit: handleSubmitCreate,
     reset: resetCreate,
     formState: formStateCreate,
+    watch,
+    control,
   } = useForm()
 
   const [grades, setGrades] = useState([])
@@ -28,18 +32,14 @@ const ModalCreateTopic = ({
     const res = await axiosJWT.get(API_URL + `grade`)
     setGrades(res.data)
   }
-  function getPrerequisiteTopicOfGrade() {
-    axiosJWT.get(API_URL + `topic/teacher/grade/1`).then((res) => {
-      setPrerequisiteTopicGrades(res.data)
-    })
-  }
+
   function handleCloseModalCreateTopic() {
     setTopicIsOpen(false)
   }
 
   useEffect(() => {
     getAllGrades()
-    getPrerequisiteTopicOfGrade()
+    // getPrerequisiteTopicOfGrade()
   }, [])
 
   useEffect(() => {
@@ -57,19 +57,31 @@ const ModalCreateTopic = ({
 
   const handleCreateTopic = async (data) => {
     try {
+      const prerequisiteTopic = data.prerequisiteTopicId?.id
+        ? {
+            prerequisiteTopicId: data.prerequisiteTopicId.id,
+          }
+        : {}
       const topic = {
-        ...data,
-        teacherId: 1,
+        topicName: data.topicName,
+        description: data.description,
+        gradeId: data.gradeId.id,
+        ...prerequisiteTopic,
       }
       const res = await axiosJWT.post(API_URL + `topic`, topic)
-      if (res) {
-        console.log(res)
-        // handleCreateClassTopic()
+      if (res.data) {
+        await axiosJWT.post(API_URL + `class-topic`, {
+          topicId: res.data.topic?.id,
+          isUnlock: !data.isLock,
+          classId,
+        })
+        getTopicOfClass()
       }
-      getTopicOfGrade()
     } catch (err) {
+      console.log(err)
       toast('Create topic failed')
     }
+    handleCloseModalAddTopic()
   }
 
   const customStyles = {
@@ -93,6 +105,27 @@ const ModalCreateTopic = ({
     },
   }
 
+  let watchGrade = watch('gradeId')
+
+  const getPrerequisiteTopicOfGrade = async () => {
+    // const res = await axiosJWT.get(
+    //   API_URL + `topic/teacher/grade/${currentGrade}`,
+    // )
+    try {
+      const res = await axiosJWT.get(
+        API_URL + `topic/teacher/grade/${watchGrade?.id}`,
+      )
+      setPrerequisiteTopicGrades(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getPrerequisiteTopicOfGrade()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchGrade])
+
   return (
     <Modal
       isOpen={modalTopicIsOpen}
@@ -114,66 +147,85 @@ const ModalCreateTopic = ({
             <h2 className="text-2xl font-semibold">Create new topic</h2>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="topicName">Name</label>
+            <label htmlFor="topicName">Topic name</label>
             <input
               type="text"
               name="topicName"
               placeholder="Enter topic name"
-              className="outline-none border border-gray-500 px-2 py-1 rounded"
-              {...registerCreate('topicName')}
+              className="outline-none px-3 py-1 border-b-2  border-opacity-0 transition-all focus:border-primary"
+              {...registerCreate('topicName', { required: true })}
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Topic description</label>
             <textarea
               type="text"
               name="description"
               placeholder="Description"
-              className="resize-none outline-none border border-gray-500 px-2 py-1 rounded"
-              {...registerCreate('description')}
+              className="resize-none outline-none px-3 py-1 border-b-2  border-opacity-0 transition-all focus:border-primary"
+              {...registerCreate('description', { required: true })}
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="grade">Grade</label>
-            <select
-              name="grade"
-              className="border border-gray-500 rounded px-2"
-              defaultValue="-1"
-              {...registerCreate('gradeId')}
+          <div className="flex flex-row items-center gap-3">
+            <input
+              id="lockTopicCreate"
+              type="checkbox"
+              {...registerCreate('isLock')}
+            />
+            <label
+              htmlFor="lockTopicCreate"
+              className="select-none cursor-pointer"
             >
-              <option disabled value="-1">
-                -- Select a grade --
-              </option>
-              {grades.map((grade) => {
-                return (
-                  <option key={grade.id} value={grade.id}>
-                    {grade.gradeName}
-                  </option>
-                )
-              })}
-            </select>
+              Lock topic
+            </label>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="gradeId">Grade</label>
+            <Controller
+              name="gradeId"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  onChange={field.onChange}
+                  options={grades}
+                  getOptionValue={(option) => option.id}
+                  getOptionLabel={(option) => option.gradeName}
+                  styles={{
+                    menuList: (base) => ({
+                      ...base,
+                      height: '100px', // your desired height
+                    }),
+                  }}
+                ></Select>
+              )}
+            />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label htmlFor="prerequisiteTopic">Prerequisite topic</label>
-            <select
-              name="prerequisiteTopic"
-              className="border border-gray-500 rounded px-2"
-              defaultValue="-1"
-              {...registerCreate('prerequisiteTopicId')}
-            >
-              <option disabled value="-1">
-                -- Select a prerequisite topic --
-              </option>
-              {prerequisiteTopicGrades &&
-                prerequisiteTopicGrades.map((topic) => {
-                  return (
-                    <option key={topic.id} value={topic.id}>
-                      {topic.topicName}
-                    </option>
-                  )
-                })}
-            </select>
+            <label htmlFor="prerequisiteTopicId">Prerequisite topic</label>
+            {prerequisiteTopicGrades?.length > 0 && (
+              <Controller
+                name="prerequisiteTopicId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={prerequisiteTopicGrades}
+                    getOptionValue={(option) => option.id}
+                    getOptionLabel={(option) => option.topicName}
+                    styles={{
+                      menuList: (base) => ({
+                        ...base,
+                        height: '200px', // your desired height
+                      }),
+                    }}
+                    menuPlacement="top"
+                  ></Select>
+                )}
+              ></Controller>
+            )}
           </div>
         </div>
         <Button className="border-none bg-primary w-full mt-5">Create</Button>

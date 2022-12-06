@@ -86,10 +86,10 @@ const TopicCard = ({
         <img
           src={topicInfo?.topicImg || imgsrc}
           alt={''}
-          className=" object-cover h-36 w-36 rounded-lg "
+          className=" object-cover h-32 w-32 rounded-lg "
         />
         <div className="flex flex-col justify-evenly w-full h-full">
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center justify-between">
             <span
               onClick={() => {
                 setCurrentTopicId(topicInfo?.topicId)
@@ -99,22 +99,20 @@ const TopicCard = ({
               {topicInfo?.topicName}
             </span>
             {isTeacher && (
-              <div className="flex flex-col">
-                <div
-                  className={`rounded-full relative h-[24px] w-[24px] cursor-pointer select-none flex items-center justify-center bg-white hover:bg-gray-100`}
-                  onClick={() => {
-                    setIsOpenConfirmDelete(true)
-                  }}
-                >
-                  <i className="fa-regular fa-trash-can text-sm text-red-400"></i>
-                </div>
+              <div
+                className={`rounded-full relative h-[30px] w-[30px] cursor-pointer select-none flex items-center justify-center bg-white hover:bg-gray-100`}
+                onClick={() => {
+                  setIsOpenConfirmDelete(true)
+                }}
+              >
+                <i className="fa-regular fa-trash-can text-sm text-red-400"></i>
               </div>
             )}
           </div>
           <span className="text-xs w-[260px] h-[48px] whitespace-normal break-words line-clamp-3">
             {topicInfo?.description}
           </span>
-          <div className="flex flex-row justify-between items-center pr-4 text-xs">
+          <div className="flex flex-row justify-between items-center mr-2 text-xs">
             <span>
               Skills :{' '}
               <span className="text-primary">{topicInfo?.numberSkills}</span>
