@@ -23,11 +23,26 @@ import createAxiosJWT from '../../createAxiosJWT'
 
 const axiosJWT = createAxiosJWT()
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ isParent }) => {
   const accessToken = localStorage.getItem('access_token')
   const decodedToken = useMemo(() => {
     return accessToken && jwtDecode(accessToken)
   }, [accessToken])
+
+  useEffect(() => {
+    if (isParent) {
+      const test = async () => {
+        try {
+          const res = await axiosJWT.get(API_URL + 'parent/student')
+          console.log('test', res.data)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      test()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [selectedDay, setSelectedDay] = useState(null)
   const [assignments, setAssignments] = useState([])
