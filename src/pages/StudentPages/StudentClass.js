@@ -20,7 +20,7 @@ const axiosJWT = createAxiosJWT()
 
 const topicImage =
   'https://thumbs.dreamstime.com/b/letter-block-word-topic-wood-background-business-concept-170764857.jpg'
-const StudentClass = () => {
+const StudentClass = ({ isParent }) => {
   const socket = useContext(SocketContext)
   const accessToken = localStorage.getItem('access_token')
   const decodedToken = useMemo(() => {
