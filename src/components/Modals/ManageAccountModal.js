@@ -4,6 +4,7 @@ import Modal from 'react-modal'
 import Button from '../Button'
 import { Controller, useForm } from 'react-hook-form'
 import Select from 'react-select'
+import { useEffect } from 'react'
 
 const customStyles = {
   overlay: {
@@ -34,7 +35,26 @@ const options = [
 ]
 
 const ManageAccountModal = ({ isOpen, setIsOpen, edit }) => {
-  const { control, register, handleSubmit } = useForm()
+  const {
+    control,
+    register,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useForm()
+
+  const [isStudentRole, setIsStudentRole] = useState(false)
+
+  let watchRole = watch('role')
+  console.log(errors.email)
+
+  useEffect(() => {
+    if (watchRole?.value === '3') {
+      setIsStudentRole(true)
+    } else {
+      setIsStudentRole(false)
+    }
+  }, [watchRole])
 
   const createAccount = (data) => {
     console.log(data)
@@ -69,12 +89,39 @@ const ManageAccountModal = ({ isOpen, setIsOpen, edit }) => {
               )}
             />
           </div>
+          {isStudentRole && (
+            <div className="flex flex-col gap-2 px-2 w-full">
+              <span className="px-2">Parent id</span>
+              <input
+                {...register('parentId', { required: true })}
+                placeholder="Parent id"
+                className="outline-none px-3 py-1 border-b-2  border-opacity-0 transition-all focus:border-primary"
+              />
+            </div>
+          )}
           {/* class name */}
           <div className="flex flex-col gap-2 px-2 w-full">
-            <span className="px-2">Email</span>
+            <span className="px-2 flex flex-row justify-between items-center">
+              Email
+              {errors.email?.type === 'pattern' && (
+                <p
+                  role="alert"
+                  className="text-red-500 w-full text-right text-sm"
+                >
+                  Wrong email format
+                </p>
+              )}
+            </span>
+
             <input
               type="text"
-              {...register('email', { required: true })}
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                  message: 'Please enter valid Email',
+                },
+              })}
               placeholder="Type in email"
               className="outline-none px-3 py-1 border-b-2  border-opacity-0 transition-all focus:border-primary"
             />
