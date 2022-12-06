@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
+import Button from '../Button'
 
 const axiosJWT = createAxiosJWT()
 const GenerateQuestionForAssignenment = ({
@@ -174,49 +175,40 @@ const GenerateQuestionForAssignenment = ({
         className="fas fa-times text-2xl right-[8px] absolute cursor-pointer"
         onClick={onCloseModalGenerate}
       ></i>
-
       <div className="flex justify-center">
         <div className=" flex flex-col justify-between w-[720px] gap-4">
-          <div className="flex justify-center mb-8">
-            <h2 className="text-3xl font-semibold">
+          <div className="flex">
+            <h2 className="text-3xl font-[500]">
               Generate questions for assignment
             </h2>
           </div>
-          <div className="flex flex-row gap-2">
-            <span className="text-xl font-medium flex min-w-[60px] mr-[86px]">
-              Level:{' '}
-            </span>
+          <div className="flex flex-col gap-2">
+            <span className="text-xl flex">Level </span>
+
             <Select
               placeholder="Select levels..."
               closeMenuOnSelect={false}
               isMulti
               options={levelOptions}
               onChange={handleSelectLevels}
-              className="min-w-[332px] bg-gray"
             />
           </div>
-          <div className="flex flex-row gap-2">
-            <span className="text-xl font-medium flex min-w-[60px] mb-12 ">
-              Question type:{' '}
-            </span>
-            <div>
-              <Select
-                placeholder="Select question types..."
-                closeMenuOnSelect={false}
-                isMulti
-                options={selectOptions}
-                onChange={handleSelectQuestionTypes}
-                className="min-w-[332px] max-w-[332px]"
-              />
-            </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-xl flex">Question type</span>
+            <Select
+              placeholder="Select question types..."
+              closeMenuOnSelect={false}
+              isMulti
+              options={selectOptions}
+              onChange={handleSelectQuestionTypes}
+              className="w-full"
+            />
           </div>
           <div className="flex flex-row gap-2 ">
-            <span className="flex text-xl font-medium gap-2">
-              Number of question:
-            </span>
+            <span className="flex text-xl gap-2">Number of question</span>
             <div className="flex font-normal">
               <input
-                className="outline-none border-b-2 px-[10px] py-[3px] justify-center items-center text-right w-[60px] duration-300 transition-all"
+                className="outline-none border-b-2 py-1 px-2 justify-center items-center text-right w-[60px] duration-300 transition-all"
                 value={numberQuestion}
                 onChange={(e) => {
                   setNumberQuestion(() => {
@@ -227,28 +219,42 @@ const GenerateQuestionForAssignenment = ({
               />
             </div>
           </div>
-          <div className="flex flex-row gap-4">
-            <span className="flex text-xl font-medium gap-2 ">Grade:</span>
-            <Select
-              ref={selectGrade}
-              options={listGrade}
-              placeholder="Select grade..."
-              onChange={(e) => setGradeId(e.value)}
-              className="w-[180px]"
-            />
-            <span className="flex text-xl font-medium gap-2 ">Topic:</span>
-            <Select
-              ref={selectTopic}
-              options={listTopic}
-              placeholder="Select topic..."
-              onChange={(e) => setTopicId(e.value)}
-              className="w-[180px]"
-            />
+          <div className="flex flex-row">
+            <div className="flex flex-row items-center gap-2 w-[50%]">
+              <span className="flex text-xl">Grade</span>
+              <Select
+                ref={selectGrade}
+                options={listGrade}
+                placeholder="Select grade..."
+                styles={{
+                  menuList: (base) => ({
+                    ...base,
+                    maxHeight: '180px', // your desired height
+                  }),
+                }}
+                onChange={(e) => setGradeId(e.value)}
+                className="w-[180px]"
+              />
+            </div>
+            <div className="flex flex-row items-center gap-2 w-[50%]">
+              <span className="text-xl">Topic</span>
+              <Select
+                ref={selectTopic}
+                options={listTopic}
+                styles={{
+                  menuList: (base) => ({
+                    ...base,
+                    height: '180px', // your desired height
+                  }),
+                }}
+                placeholder="Select topic..."
+                onChange={(e) => setTopicId(e.value)}
+                className="w-full"
+              />
+            </div>
           </div>
-          <div className="flex flex-row gap-2">
-            <span className="text-xl font-medium flex min-w-[60px] mb-12 mr-4">
-              Skills:{' '}
-            </span>
+          <div className="flex flex-row gap-6">
+            <span className="text-xl flex items-center">Skills</span>
             <div>
               <Select
                 ref={selectSkill}
@@ -261,23 +267,23 @@ const GenerateQuestionForAssignenment = ({
               />
             </div>
           </div>
-          <div className="flex flex-row gap-2">
-            <span className="text-xl font-medium flex min-w-[60px]">
-              Would you like a hint?{' '}
-            </span>
+          <div className="flex flex-row gap-2 items-center mb-5">
+            <span className="text-xl">Would you like a hint?</span>
             <Select
               options={hintOption}
-              defaultValue={hintOption[0]}
+              defaultValue={hintOption[1]}
               onChange={(e) => setIsHint(e.value)}
               className="w-[180px]"
             />
           </div>
-          <button
-            className="btn btn-primary"
-            onClick={handleGenerateQuestionForAssignment}
-          >
-            Generate
-          </button>
+          <div className="flex items-center justify-center w-full">
+            <Button
+              className="btn btn-primary w-[50%]"
+              onClick={handleGenerateQuestionForAssignment}
+            >
+              Generate
+            </Button>
+          </div>
         </div>
       </div>
     </div>

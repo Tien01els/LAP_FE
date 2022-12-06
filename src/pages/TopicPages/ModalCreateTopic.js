@@ -192,6 +192,12 @@ const ModalCreateTopic = ({
                   options={grades}
                   getOptionValue={(option) => option.id}
                   getOptionLabel={(option) => option.gradeName}
+                  styles={{
+                    menuList: (base) => ({
+                      ...base,
+                      height: '100px', // your desired height
+                    }),
+                  }}
                 ></Select>
               )}
             />
@@ -209,6 +215,13 @@ const ModalCreateTopic = ({
                     options={prerequisiteTopicGrades}
                     getOptionValue={(option) => option.id}
                     getOptionLabel={(option) => option.topicName}
+                    styles={{
+                      menuList: (base) => ({
+                        ...base,
+                        height: '200px', // your desired height
+                      }),
+                    }}
+                    menuPlacement="top"
                   ></Select>
                 )}
               ></Controller>

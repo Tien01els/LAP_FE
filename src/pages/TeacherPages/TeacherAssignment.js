@@ -24,6 +24,27 @@ import ConfirmModal from '../../components/Modals/ConfirmModal'
 import { insertTextAtCurrentCursor } from '../../utils/utils'
 import { useRef } from 'react'
 
+const customStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(165, 165, 165, 0.6)',
+  },
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    border: 'none',
+    borderRadius: '8px',
+  },
+}
+
 const axiosJWT = createAxiosJWT()
 const TeacherAssignment = () => {
   const Selectoptions = [
@@ -676,14 +697,7 @@ const TeacherAssignment = () => {
 
               <Modal
                 isOpen={modalGenerateIsOpen}
-                style={{
-                  top: '0',
-                  left: '0',
-                  right: 'auto',
-                  bottom: 'auto',
-                  marginRight: '-50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
+                style={customStyles}
                 contentLabel="Example Modal"
                 ariaHideApp={false}
               >
