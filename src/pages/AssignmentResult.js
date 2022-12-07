@@ -126,10 +126,12 @@ const AssignmentResult = ({ isTeacher, isParent }) => {
               `parent/student/${studentInfo?.id}/assignment/${assignmentId}/result`,
           )
         }
-      } else
+      }
+      if (!isTeacher && !isParent) {
         res = await axiosJWT.get(
           API_URL + `student-question/student/assignment/${assignmentId}`,
         )
+      }
       if (res) {
         const questionsOfRespondent = res.data
         for (let i = 0; i < questionsOfRespondent.length; i++)
@@ -143,7 +145,6 @@ const AssignmentResult = ({ isTeacher, isParent }) => {
               ++countCorrect
               sumScore += questionsOfRespondent[i].score
             }
-          console.log(questionsOfRespondent)
           setNumberOfCorrectAnswers(countCorrect)
           setScore(sumScore)
         }
