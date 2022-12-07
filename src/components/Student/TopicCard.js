@@ -40,6 +40,9 @@ const TopicCard = ({
     if (topicInfo?.isUnlock) {
       setCurrentTopicId(topicInfo?.topicId)
     }
+    if (isTeacher) {
+      setCurrentTopicId(topicInfo?.topicId)
+    }
   }
 
   const handleSendRequestUnlock = async () => {
