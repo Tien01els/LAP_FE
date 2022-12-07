@@ -62,9 +62,14 @@ const AssignmentResult = ({ isTeacher, isParent }) => {
           if (resultOfRespondent[i].isTrue) return resultOfRespondent[i].answer
       if (typeOfquestion === 'input' && resultOfRespondent[0].answer.length > 0)
         return resultOfRespondent[0].answer
-      if (typeOfquestion === 'multiSelect')
+      if (typeOfquestion === 'multiSelect') {
+        let answers = []
         for (let i = 0; i < resultOfRespondent.length; i++)
-          if (resultOfRespondent[i].isTrue) return resultOfRespondent[i].answer
+          if (resultOfRespondent[i].isTrue) {
+            answers.push(resultOfRespondent[i].answer)
+          }
+        return answers.join(', ')
+      }
     }
     return false
   }
