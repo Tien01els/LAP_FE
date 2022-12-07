@@ -17,9 +17,12 @@ const SkillInTopics = ({ val, isParent, studentInfo }) => {
     try {
       let res
       if (isParent) {
-        res = await axiosJWT.get(
-          `parent/student/${studentInfo?.id}/skill/${val?.skill?.id}`,
-        )
+        if (studentInfo) {
+          res = await axiosJWT.get(
+            API_URL +
+              `parent/student/${studentInfo?.id}/skill/${val?.skill?.id}`,
+          )
+        }
       } else {
         res = await axiosJWT.get(
           API_URL + `skill-assignment/student/skill/${val?.skill?.id}`,

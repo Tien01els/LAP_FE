@@ -69,7 +69,7 @@ const ManageAccountModal = ({ isOpen, setIsOpen, edit }) => {
       ariaHideApp={false}
     >
       <div className="flex flex-col w-[500px] h-fit gap-5">
-        <span className="text-2xl">{edit ? `Edit` : `Create`} class</span>
+        <span className="text-2xl">Create account</span>
         <form
           className="flex flex-col gap-5"
           onSubmit={handleSubmit(createAccount)}
@@ -118,6 +118,7 @@ const ManageAccountModal = ({ isOpen, setIsOpen, edit }) => {
               {...register('email', {
                 required: 'Email is required',
                 pattern: {
+                  // eslint-disable-next-line no-useless-escape
                   value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
                   message: 'Please enter valid Email',
                 },

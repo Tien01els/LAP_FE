@@ -7,13 +7,29 @@ import createAxiosJWT from '../createAxiosJWT'
 import Result from '../components/Student/Result'
 
 const axiosJWT = createAxiosJWT()
-const AssignmentResult = ({ isTeacher }) => {
+const AssignmentResult = ({ isTeacher, isParent }) => {
   const { assignmentId } = useParams()
   const [listQuestionOfRespondent, setListQuestionOfRespondent] = useState([])
   const [listQuestionOfAssignment, setListQuestionOfAssignment] = useState([])
   const [assignment, setAssignment] = useState({})
   const [numberOfCorrectAnswers, setNumberOfCorrectAnswers] = useState(0)
   const [score, setScore] = useState(0)
+  const [studentInfo, setStudentInfo] = useState(null)
+
+  useEffect(() => {
+    if (isParent) {
+      const getStudentInfo = async () => {
+        try {
+          const res = await axiosJWT.get(API_URL + 'parent/student')
+          setStudentInfo(res.data)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      getStudentInfo()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const executeScroll = (id) => {
     let elementId = `question-${id}`
@@ -93,7 +109,14 @@ const AssignmentResult = ({ isTeacher }) => {
         res = await axiosJWT.get(
           API_URL + `teacher-question/teacher/assignment/${assignmentId}`,
         )
-      else
+      if (isParent) {
+        if (studentInfo) {
+          res = await axiosJWT.get(
+            API_URL +
+              `parent/student/${studentInfo?.id}/assignment/${assignmentId}/result`,
+          )
+        }
+      } else
         res = await axiosJWT.get(
           API_URL + `student-question/student/assignment/${assignmentId}`,
         )
@@ -137,7 +160,7 @@ const AssignmentResult = ({ isTeacher }) => {
       .then((res) => {
         setListQuestionOfAssignment(res.data)
       })
-  }, [assignmentId])
+  }, [assignmentId, isParent, isTeacher, studentInfo])
 
   return (
     <div className="px-10 py-7 flex flex-row">
