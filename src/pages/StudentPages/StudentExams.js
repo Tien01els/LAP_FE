@@ -46,7 +46,7 @@ const StudentExams = ({ isParent }) => {
     const getAllExamsOfStudent = async (classId) => {
       try {
         let res
-        if (isParent && studentInfo) {
+        if (isParent) {
           res = await axiosJWT.get(
             `parent/student/${studentInfo?.id}/class/${studentInfo?.classId}`,
           )

@@ -16,7 +16,7 @@ const SkillInTopics = ({ val, isParent, studentInfo }) => {
   const handleGetAssignmentsOfSkill = useCallback(async () => {
     try {
       let res
-      if (isParent && studentInfo) {
+      if (isParent) {
         res = await axiosJWT.get(
           `parent/student/${studentInfo?.id}/skill/${val?.skill?.id}`,
         )
