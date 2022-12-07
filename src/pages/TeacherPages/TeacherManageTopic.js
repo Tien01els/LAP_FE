@@ -167,7 +167,7 @@ const TeacherManageTopic = () => {
     const handleOpenModalCreateSkill = () => {
         setCreateSkillIsOpen(true);
     };
-    console.log(classInfo);
+
     return (
         <>
             {classInfo && (
@@ -189,7 +189,9 @@ const TeacherManageTopic = () => {
                 {/* left */}
                 <div className='w-[40%] flex flex-col px-5 py-5 gap-6'>
                     <div className='flex flex-col gap-3 px-4'>
-                        <span className='text-2xl font-medium truncate'>ClassName</span>
+                        <span className='text-2xl font-medium truncate'>
+                            {classInfo?.className}
+                        </span>
                         {/* search */}
                         <div className='flex flex-row justify-between items-center w-full'>
                             <input
