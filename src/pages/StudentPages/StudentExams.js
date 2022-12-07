@@ -57,7 +57,6 @@ const StudentExams = ({ isParent }) => {
           res = await axiosJWT.get(
             API_URL + `student-assignment/student/class/${classId}`,
           )
-          console.log(res)
         }
         setExams(res.data)
       } catch (error) {
