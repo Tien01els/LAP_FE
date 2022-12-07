@@ -12,6 +12,7 @@ const TopicCard = ({
   onDeleteTopic,
   isTeacher,
   setCurrentTopicId,
+  isParent,
 }) => {
   const socket = useContext(SocketContext)
 
@@ -24,7 +25,7 @@ const TopicCard = ({
     return accessToken && jwtDecode(accessToken)
   }, [accessToken])
   const handleRequestOpen = () => {
-    !isRequested && setIsOpenModalRequest(!isOpenModalRequest)
+    !isParent && !isRequested && setIsOpenModalRequest(!isOpenModalRequest)
   }
 
   const toggleDeleteConfirm = () => {
@@ -33,6 +34,12 @@ const TopicCard = ({
 
   const deleteTopic = () => {
     onDeleteTopic(topicInfo?.id)
+  }
+
+  const handleLockedOnClick = () => {
+    if (topicInfo?.isUnlock) {
+      setCurrentTopicId(topicInfo?.topicId)
+    }
   }
 
   const handleSendRequestUnlock = async () => {
@@ -68,7 +75,12 @@ const TopicCard = ({
         }}
         message="Are you sure to remove this from class topic?"
       />
-      <div className="w-full relative flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3">
+      <div
+        onClick={() => {
+          handleLockedOnClick()
+        }}
+        className="w-full relative cursor-pointer flex flex-row gap-4 bg-white rounded-[16px] items-center shadow-md hover:shadow-lg transition-all select-none px-3 py-3"
+      >
         {!topicInfo?.isUnlock && !isTeacher && (
           <div
             onClick={() => handleRequestOpen()}
@@ -79,6 +91,8 @@ const TopicCard = ({
             <span className="text-white">
               {isRequested
                 ? `Waiting for teacher response...`
+                : isParent
+                ? `Locked`
                 : `Request to open topic`}
             </span>
           </div>
@@ -90,12 +104,7 @@ const TopicCard = ({
         />
         <div className="flex flex-col justify-evenly w-full h-full">
           <div className="flex flex-row items-center justify-between">
-            <span
-              onClick={() => {
-                setCurrentTopicId(topicInfo?.topicId)
-              }}
-              className="font-medium w-[225px] truncate cursor-pointer"
-            >
+            <span className="font-medium w-[225px] truncate cursor-pointer">
               {topicInfo?.topicName}
             </span>
             {isTeacher && (
@@ -119,7 +128,6 @@ const TopicCard = ({
             </span>
             <span
               className="text-primary cursor-pointer"
-              // onClick={() => handleViewStudent()}
               onClick={() => {
                 setCurrentTopicId(topicInfo?.topicId)
               }}

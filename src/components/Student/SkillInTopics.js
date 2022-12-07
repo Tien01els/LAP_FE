@@ -8,22 +8,30 @@ import TokenExpire from '../Modals/TokenExpire'
 
 const axiosJWT = createAxiosJWT()
 
-const SkillInTopics = ({ val }) => {
+const SkillInTopics = ({ val, isParent, studentInfo }) => {
   const navigate = useNavigate()
   const [assignmentsOfSkill, setAssignmentsOfSkill] = useState([])
   const [isExpired, setIsExpired] = useState(false)
 
   const handleGetAssignmentsOfSkill = useCallback(async () => {
     try {
-      const res = await axiosJWT.get(
-        API_URL + `skill-assignment/student/skill/${val?.skill?.id}`,
-      )
+      let res
+      if (isParent && studentInfo) {
+        res = await axiosJWT.get(
+          `parent/student/${studentInfo?.id}/skill/${val?.skill?.id}`,
+        )
+      } else {
+        res = await axiosJWT.get(
+          API_URL + `skill-assignment/student/skill/${val?.skill?.id}`,
+        )
+      }
+
       setAssignmentsOfSkill(res.data)
     } catch (error) {
       console.log(error)
       if (error.response.status === 401) setIsExpired(true)
     }
-  }, [val?.skill?.id])
+  }, [val?.skill?.id, isParent, studentInfo])
 
   const handleDoAssignment = async (id, temp) => {
     try {
@@ -35,6 +43,55 @@ const SkillInTopics = ({ val }) => {
     } catch (error) {
       console.log(error)
       if (error.response.status === 401) setIsExpired(true)
+    }
+  }
+
+  const renderAssignmentButton = (assignmentOfSkill) => {
+    if (
+      isParent &&
+      assignmentOfSkill?.assignment?.studentAssignment[0]?.dateComplete
+    ) {
+      return (
+        <Button
+          className="text-xs"
+          onClick={() => {
+            navigate(`/assignment/${assignmentOfSkill.assignment.id}/result`)
+          }}
+        >
+          View Result
+        </Button>
+      )
+    }
+    if (!isParent) {
+      return assignmentOfSkill?.assignment?.studentAssignment[0]
+        ?.dateComplete ? (
+        <Button
+          className="text-xs"
+          onClick={() => {
+            navigate(`/assignment/${assignmentOfSkill.assignment.id}/result`)
+          }}
+        >
+          View Result
+        </Button>
+      ) : !assignmentOfSkill?.assignment?.studentAssignment[0]?.dateEnd ? (
+        <Button
+          className="text-xs"
+          onClick={() =>
+            handleDoAssignment(assignmentOfSkill.assignment.id, 'start')
+          }
+        >
+          Do Assignment
+        </Button>
+      ) : (
+        <Button
+          className="text-xs"
+          onClick={() =>
+            handleDoAssignment(assignmentOfSkill.assignment.id, 'continue')
+          }
+        >
+          Continue Assignment
+        </Button>
+      )
     }
   }
 
@@ -57,41 +114,7 @@ const SkillInTopics = ({ val }) => {
           return (
             <div key={i} className="flex flex-row items-center justify-between">
               <span>{assignmentOfSkill?.assignment?.assignmentName}</span>
-              {assignmentOfSkill?.assignment?.studentAssignment[0]
-                ?.dateComplete ? (
-                <Button
-                  className="text-xs"
-                  onClick={() => {
-                    navigate(
-                      `/assignment/${assignmentOfSkill.assignment.id}/result`,
-                    )
-                  }}
-                >
-                  View Result
-                </Button>
-              ) : !assignmentOfSkill?.assignment?.studentAssignment[0]
-                  ?.dateEnd ? (
-                <Button
-                  className="text-xs"
-                  onClick={() =>
-                    handleDoAssignment(assignmentOfSkill.assignment.id, 'start')
-                  }
-                >
-                  Do Assignment
-                </Button>
-              ) : (
-                <Button
-                  className="text-xs"
-                  onClick={() =>
-                    handleDoAssignment(
-                      assignmentOfSkill.assignment.id,
-                      'continue',
-                    )
-                  }
-                >
-                  Continue Assignment
-                </Button>
-              )}
+              {renderAssignmentButton(assignmentOfSkill)}
             </div>
           )
         })}

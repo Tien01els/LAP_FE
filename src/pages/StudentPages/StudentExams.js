@@ -21,25 +21,50 @@ const StudentExams = ({ isParent }) => {
   const [isExpired, setIsExpired] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [exams, setExams] = useState([])
+  const [studentInfo, setStudentInfo] = useState(null)
 
   const decodedToken = useMemo(() => {
     return accessToken && jwtDecode(accessToken)
   }, [accessToken])
-  console.log(exams)
+
+  useEffect(() => {
+    if (isParent) {
+      const getStudentInfo = async () => {
+        try {
+          const res = await axiosJWT.get(API_URL + 'parent/student')
+          setStudentInfo(res.data)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      getStudentInfo()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   useEffect(() => {
     const getAllExamsOfStudent = async (classId) => {
       try {
-        const res = await axiosJWT.get(
-          API_URL + `student-assignment/student/class/${classId}`,
-        )
+        let res
+        if (isParent && studentInfo) {
+          res = await axiosJWT.get(
+            `parent/student/${studentInfo?.id}/class/${studentInfo?.classId}`,
+          )
+          console.log(res)
+          console.log(studentInfo?.classId)
+        } else {
+          res = await axiosJWT.get(
+            API_URL + `student-assignment/student/class/${classId}`,
+          )
+          console.log(res)
+        }
         setExams(res.data)
       } catch (error) {
-        console.log(error)
         if (error.response.status === 401) setIsExpired(true)
       }
     }
     getAllExamsOfStudent(decodedToken?.classId)
-  }, [decodedToken?.classId])
+  }, [decodedToken?.classId, isParent, studentInfo])
 
   return (
     <div className="flex flex-col gap-5 px-10 py-5">
