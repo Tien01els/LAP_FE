@@ -66,6 +66,7 @@ const ModalCreateTopic = ({
                 topicName: data.topicName,
                 description: data.description,
                 gradeId: data.gradeId.id,
+                isUnlock: !data.isLock,
                 ...prerequisiteTopic,
             };
             const res = await axiosJWT.post(API_URL + `topic`, topic);
