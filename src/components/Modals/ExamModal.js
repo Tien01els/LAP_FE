@@ -39,6 +39,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
   const handleCancel = () => {
     setIsOpen(false)
   }
+
   const handleDoAssignment = async (assignmentId, temp) => {
     try {
       if (temp === 'start')
@@ -54,6 +55,9 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
   }
 
   const renderAssignmentButton = () => {
+    if (val?.numberQuestionOfAssignment === 0) {
+      return <></>
+    }
     if (isParent) {
       return val?.dateComplete ? (
         <Button
@@ -96,7 +100,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
       ariaHideApp={false}
     >
       <div className="flex flex-col gap-4 w-[500px] text-gray-500">
-        <span className="text-2xl font-medium text-primary">
+        <span className="text-2xl font-medium text-primary whitespace-normal break-words w-full">
           {val?.assignment.assignmentName}
         </span>
         <div className="flex flex-row ">
@@ -120,13 +124,16 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
             <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
               <i className="fa-solid fa-clipboard-question text-primary"></i>
             </div>
-            <span>30 question</span>
+            <span>{val?.numberQuestionOfAssignment} question</span>
           </div>
           <div className="flex flex-row gap-3 items-center">
             <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
               <i className="fa-regular fa-star text-primary"></i>
             </div>
-            <span>Pass score : {val?.assignment.passScore}/100 </span>
+            <span>
+              Pass score : {val?.assignment.passScore}/
+              {val?.assignment.totalScore}{' '}
+            </span>
           </div>
         </div>
 
