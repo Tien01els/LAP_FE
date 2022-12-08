@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { motion } from 'framer-motion'
 import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css'
 import { Calendar, utils } from '@hassanmojab/react-modern-calendar-datepicker'
 import jwtDecode from 'jwt-decode'

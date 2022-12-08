@@ -2,7 +2,7 @@ import React from 'react'
 import useCollapse from 'react-collapsed'
 import StudentSkill from './StudentSkill'
 
-const StudentTopic = () => {
+const StudentTopic = ({ topic }) => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
   return (
     <div className="flex flex-col gap-4">
@@ -25,7 +25,7 @@ const StudentTopic = () => {
       </div>
       <div {...getCollapseProps()} className="flex flex-col gap-4">
         {new Array(2).fill(0).map((val, i) => {
-          return <StudentSkill />
+          return <StudentSkill key={i} />
         })}
       </div>
     </div>

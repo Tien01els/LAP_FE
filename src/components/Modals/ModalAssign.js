@@ -141,7 +141,7 @@ const ModalAssign = ({
           </div>
           <div className="flex flex-row w-full gap-5">
             <div className="flex flex-col gap-2 w-[50%]">
-              <span>Time to do exams</span>
+              <span>Time to do exams (minute)</span>
               <input
                 type="number"
                 {...registerCreate('doTime', { required: true, min: 0 })}
@@ -196,7 +196,7 @@ const ModalAssign = ({
               />
             </div>
             <div className="flex flex-col gap-2 w-[50%]">
-              <span>Due time</span>
+              <span>Due time (hh:mm)</span>
               <div className="flex flex-row gap-5">
                 <input
                   type="number"

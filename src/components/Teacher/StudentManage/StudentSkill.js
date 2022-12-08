@@ -9,7 +9,7 @@ const StudentSkill = () => {
       </span>
       <div className="flex flex-col gap-3">
         {new Array(3).fill(0).map((val, i) => {
-          return <StudentAssignment />
+          return <StudentAssignment key={i} />
         })}
       </div>
     </div>
