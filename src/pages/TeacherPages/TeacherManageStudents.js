@@ -310,9 +310,9 @@ const TeacherManageStudents = () => {
               </span>
               <div className="flex flex-col gap-5">
                 {studentInfo &&
-                  studentInfo?.studentAssignment &&
-                  studentInfo?.studentAssignment.map((topic, i) => {
-                    return <StudentTopic topic={topic} key={i} />
+                  studentInfo?.studentTopic &&
+                  studentInfo?.studentTopic.map((topic, i) => {
+                    return <StudentTopic topicInfo={topic} key={i} />
                   })}
               </div>
             </div>
