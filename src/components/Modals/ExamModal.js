@@ -59,7 +59,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
       return <></>
     }
     if (isParent) {
-      return val?.dateComplete ? (
+      return val?.assignment?.studentAssignment[0]?.dateComplete ? (
         <Button
           onClick={() => {
             navigate(`/assignment/${val?.assignment.id}/result`)
@@ -71,7 +71,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
         <></>
       )
     }
-    return val?.dateComplete ? (
+    return val?.assignment?.studentAssignment[0]?.dateComplete ? (
       <Button
         onClick={() => {
           navigate(`/assignment/${val?.assignment.id}/result`)
@@ -79,7 +79,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
       >
         View Result
       </Button>
-    ) : !val?.dateEnd ? (
+    ) : !val?.assignment?.studentAssignment[0]?.dateEnd ? (
       <Button onClick={() => handleDoAssignment(val?.assignment.id, 'start')}>
         Do Assignment
       </Button>
@@ -90,6 +90,21 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
         Continue Assignment
       </Button>
     )
+  }
+
+  const renderStatus = () => {
+    if (val?.assignment?.studentAssignment[0]?.dateComplete) {
+      if (
+        val?.assignment?.studentAssignment[0]?.score >=
+        val?.assignment?.passScore
+      ) {
+        return `Passed`
+      }
+      return `Failed`
+    } else if (!val?.assignment?.studentAssignment[0]?.dateComplete) {
+      return `Not submitted`
+    }
+    return `Error`
   }
 
   return (
@@ -141,7 +156,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
           <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
             <i className="fa-brands fa-cloudsmith text-primary"></i>
           </div>
-          <span className=" text-gray-500"> status</span>
+          <span className=" text-gray-500">{renderStatus()}</span>
         </div>
       </div>
       <div className="flex flex-row-reverse mt-5 gap-5">

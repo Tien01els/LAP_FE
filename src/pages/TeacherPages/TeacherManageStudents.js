@@ -65,6 +65,8 @@ const TeacherManageStudents = () => {
     setAddStudentModal(!addStudentModal)
   }
 
+  console.log(studentInfo)
+
   const handleGetStudentOfClass = useCallback(async () => {
     try {
       const res = await axiosJWT.get(API_URL + `student/class/${classId}`)
