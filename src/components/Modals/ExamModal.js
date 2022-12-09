@@ -59,7 +59,8 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
       return <></>
     }
     if (isParent) {
-      return val?.assignment?.studentAssignment[0]?.dateComplete ? (
+      return val?.assignment?.studentAssignment?.length &&
+        val?.assignment?.studentAssignment[0]?.dateComplete ? (
         <Button
           onClick={() => {
             navigate(`/assignment/${val?.assignment.id}/result`)
@@ -71,7 +72,9 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
         <></>
       )
     }
-    return val?.assignment?.studentAssignment[0]?.dateComplete ? (
+    console.log(val)
+    return val?.assignment?.studentAssignment?.length &&
+      val?.assignment?.studentAssignment[0]?.dateComplete ? (
       <Button
         onClick={() => {
           navigate(`/assignment/${val?.assignment.id}/result`)
@@ -93,7 +96,10 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
   }
 
   const renderStatus = () => {
-    if (val?.assignment?.studentAssignment[0]?.dateComplete) {
+    if (
+      val?.assignment?.studentAssignment?.length &&
+      val?.assignment?.studentAssignment[0]?.dateComplete
+    ) {
       if (
         val?.assignment?.studentAssignment[0]?.score >=
         val?.assignment?.passScore
@@ -101,7 +107,10 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
         return `Passed`
       }
       return `Failed`
-    } else if (!val?.assignment?.studentAssignment[0]?.dateComplete) {
+    } else if (
+      val?.assignment?.studentAssignment?.length &&
+      !val?.assignment?.studentAssignment[0]?.dateComplete
+    ) {
       return `Not submitted`
     }
     return `Error`

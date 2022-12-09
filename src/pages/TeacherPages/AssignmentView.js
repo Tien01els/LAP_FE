@@ -58,8 +58,6 @@ const AssignmentView = () => {
     }
   }, [assignmentId])
 
-  console.log(students)
-
   return (
     <div className="px-10 py-10 flex flex-col gap-5">
       <div className="flex flex-col gap-4 w-full h-fit px-10 pb-10 pt-7 bg-white rounded-lg shadow">
@@ -233,26 +231,17 @@ const AssignmentView = () => {
                     />
                     <span className="truncate w-[125px]">{val?.fullName}</span>
                   </div>
-                  <span>{val?.studentAssignment[0]?.score}</span>
+                  <span>{val?.studentAssignment[0].score}</span>
                   {returnView(
                     val?.studentAssignment[0].score,
                     assignment?.passScore,
                   )}
                   <span className="text-gray-500">
-                    {val?.studentAssignment[0]?.dateComplete
-                      ? moment(val?.studentAssignment[0]?.dateComplete).format(
-                          'HH:mm:ss YYYY-MM-DD',
-                        )
-                      : `Not submitted`}
+                    {moment(val?.studentAssignment[0]?.dateComplete).format(
+                      'YYYY-MM-DD HH:mm:ss',
+                    )}
                   </span>
-                  <span className="text-gray-500">
-                    {val?.studentAssignment[0]?.dateComplete
-                      ? val?.studentAssignment[0]?.dateComplete >=
-                        val?.studentAssignment[0]?.dateDue
-                        ? `Late`
-                        : `On time`
-                      : ``}
-                  </span>
+                  <span className="text-gray-500">Late</span>
                   <span className="text-primary cursor-pointer select-none">
                     View Answers
                   </span>
