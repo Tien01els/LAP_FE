@@ -1,55 +1,58 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import moment from 'moment'
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import moment from 'moment';
 
-import { API_URL } from '../../constant'
-import createAxiosJWT from '../../createAxiosJWT'
+import { API_URL } from '../../constant';
+import createAxiosJWT from '../../createAxiosJWT';
 
-const axiosJWT = createAxiosJWT()
+const axiosJWT = createAxiosJWT();
 
 const testImg =
-  'https://thumbs.dreamstime.com/b/student-school-boy-studying-computer-online-lesson-education-vector-concept-student-school-boy-studying-computer-114522764.jpg'
+    'https://thumbs.dreamstime.com/b/student-school-boy-studying-computer-online-lesson-education-vector-concept-student-school-boy-studying-computer-114522764.jpg';
 
 const AssignmentView = () => {
-  //search
-  const { assignmentId } = useParams()
+    //search
+    const { assignmentId } = useParams();
 
-  const [assignment, setAssignment] = useState({})
-  const [searchTerm, setSearchTerm] = useState('')
-  const [students, setStudents] = useState([])
+    const [assignment, setAssignment] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
+    const [students, setStudents] = useState([]);
 
-  const returnView = (score, passScore) => {
-    if (score >= passScore) {
-      return (
-        <span className="bg-green-400 text-sm py-1 w-24 flex justify-center text-white px-2 rounded-full">
-          Passed
-        </span>
-      )
-    }
-    if (score < passScore) {
-      return (
-        <span className="bg-red-400 text-sm py-1 w-24 flex justify-center text-white px-2 rounded-full">
-          Failed
-        </span>
-      )
-    }
-    // return (
-    //     <span className='bg-primary text-sm py-1 w-24 flex justify-center text-white px-2 rounded-full'>
-    //         Good
-    //     </span>
-    // );
-  }
+    const returnView = (score, passScore) => {
+        if (score >= passScore) {
+            return (
+                <span className='bg-green-400 text-sm py-1 w-24 flex justify-center text-white px-2 rounded-full'>
+                    Passed
+                </span>
+            );
+        }
+        if (score < passScore) {
+            return (
+                <span className='bg-red-400 text-sm py-1 w-24 flex justify-center text-white px-2 rounded-full'>
+                    Failed
+                </span>
+            );
+        }
+        // return (
+        //     <span className='bg-primary text-sm py-1 w-24 flex justify-center text-white px-2 rounded-full'>
+        //         Good
+        //     </span>
+        // );
+    };
 
-  useEffect(() => {
-    try {
-      const getAssignmentSummary = async () => {
-        const res = await axiosJWT.get(
-          API_URL + `assignment/${assignmentId}/summary`,
-        )
-        if (res.data) {
-          console.log(res.data)
-          setAssignment(res.data)
-          setStudents(res.data.students)
+    useEffect(() => {
+        try {
+            const getAssignmentSummary = async () => {
+                const res = await axiosJWT.get(API_URL + `assignment/${assignmentId}/summary`);
+                if (res.data) {
+                    console.log(res.data);
+                    setAssignment(res.data);
+                    setStudents(res.data.students);
+                }
+            };
+            getAssignmentSummary();
+        } catch (error) {
+            console.log(error);
         }
     }, [assignmentId]);
 
@@ -237,9 +240,7 @@ const AssignmentView = () => {
                 </div>
             </div>
         </div>
-      </div>
-    </div>
-  )
-}
+    );
+};
 
-export default AssignmentView
+export default AssignmentView;
