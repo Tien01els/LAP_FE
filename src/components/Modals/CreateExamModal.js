@@ -127,12 +127,12 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
           </div>
           <div className="flex flex-row w-full gap-5">
             <div className="flex flex-col gap-2 w-[50%]">
-              <span>Time to do exams</span>
+              <span>Time to do exams (minute)</span>
               <input
                 type="number"
                 {...register('doTime', { required: true, min: 0 })}
                 placeholder="min(s)"
-                className="outline-none px-3  py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
+                className="outline-none px-3 w-full py-1 border-b-2 border-opacity-0 transition-all focus:border-primary"
               />
             </div>
             {/* redo */}
@@ -182,8 +182,8 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
               />
             </div>
             <div className="flex flex-col gap-2 w-[50%]">
-              <span>Due time</span>
-              <div className="flex flex-row gap-5">
+              <span>Due time (hh:mm)</span>
+              <div className="flex flex-row items-center gap-5">
                 <input
                   type="number"
                   placeholder="End hour"
@@ -194,7 +194,7 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
                   })}
                   className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"
                 />
-                h :
+                :
                 <input
                   type="number"
                   placeholder="End minute"
@@ -205,7 +205,6 @@ const CreateExamModal = ({ isOpen, setIsOpen, assignId, typeAssignment }) => {
                   })}
                   className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"
                 />
-                min
               </div>
             </div>
           </div>

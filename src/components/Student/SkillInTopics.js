@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
-import Button from '../Button'
-import ExamModal from '../Modals/ExamModal'
 import TokenExpire from '../Modals/TokenExpire'
 import AssignmentInSkill from './AssignmentInSkill'
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
 
@@ -6,6 +6,7 @@ import { API_URL } from '../constant'
 import Button from '../components/Button'
 //img
 import coverImg from '../assets/image/Login.jpg'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const {
@@ -13,6 +14,13 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token')
+
+    if (token) return navigate('/')
+  }, [navigate])
 
   const onSubmit = async (data) => {
     try {
