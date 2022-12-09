@@ -15,6 +15,7 @@ import createAxiosJWT from '../../createAxiosJWT'
 import { SocketContext } from '../../App'
 import jwtDecode from 'jwt-decode'
 import 'react-toastify/dist/ReactToastify.css'
+import AdminMenu from './AdminMenu'
 
 const axiosJWT = createAxiosJWT()
 const Sidebar = () => {
@@ -89,7 +90,7 @@ const Sidebar = () => {
 
   const returnMenu = (roleId) => {
     if (roleId === 1) {
-      return <></>
+      return <AdminMenu />
     }
     if (roleId === 2) {
       return <TeacherMenu />
