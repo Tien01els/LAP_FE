@@ -6,6 +6,7 @@ import ExamModal from '../Modals/ExamModal'
 const ExamCard = ({ val, isParent }) => {
   const [openExamModal, setOpenExamModal] = useState(false)
 
+  console.log(val)
   return (
     <>
       <ExamModal
@@ -32,7 +33,9 @@ const ExamCard = ({ val, isParent }) => {
               {moment(val?.assignment.dateDue).format('YYYY-MM-DD HH:mm:ss')}
             </span>
           </span>
-          <span className="text-xs text-gray-500"> status</span>
+          <span className="text-xs text-gray-500">
+            {val?.dateComplete ? `Submitted` : `Not submitted`}
+          </span>
         </div>
       </div>
     </>

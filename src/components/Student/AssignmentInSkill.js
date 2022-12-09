@@ -63,7 +63,7 @@ const AssignmentInSkill = ({
     }
   }
 
-  console.log(assignmentOfSkill)
+  console.log('test', assignmentOfSkill)
 
   return (
     <>
@@ -72,6 +72,7 @@ const AssignmentInSkill = ({
         setIsOpen={setOpenModal}
         val={assignmentOfSkill}
         isParent={isParent}
+        classPage={true}
       />
       <div className="flex flex-row items-center justify-between">
         <span

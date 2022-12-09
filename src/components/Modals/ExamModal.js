@@ -31,7 +31,7 @@ const customStyles = {
   },
 }
 
-const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
+const ExamModal = ({ isOpen, setIsOpen, val, isParent, classPage }) => {
   const navigate = useNavigate()
 
   const [isExpired, setIsExpired] = useState(false)
@@ -58,9 +58,42 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
     if (val?.numberQuestionOfAssignment === 0) {
       return <></>
     }
+    if (classPage) {
+      if (isParent) {
+        return val?.assignment?.studentAssignment[0]?.dateComplete ? (
+          <Button
+            onClick={() => {
+              navigate(`/assignment/${val?.assignment.id}/result`)
+            }}
+          >
+            View Result
+          </Button>
+        ) : (
+          <></>
+        )
+      }
+      return val?.assignment?.studentAssignment[0]?.dateComplete ? (
+        <Button
+          onClick={() => {
+            navigate(`/assignment/${val?.assignment.id}/result`)
+          }}
+        >
+          View Result
+        </Button>
+      ) : !val?.assignment?.studentAssignment[0]?.dateEnd ? (
+        <Button onClick={() => handleDoAssignment(val?.assignment.id, 'start')}>
+          Do Assignment
+        </Button>
+      ) : (
+        <Button
+          onClick={() => handleDoAssignment(val?.assignment.id, 'continue')}
+        >
+          Continue Assignment
+        </Button>
+      )
+    }
     if (isParent) {
-      return val?.assignment?.studentAssignment?.length &&
-        val?.assignment?.studentAssignment[0]?.dateComplete ? (
+      return val?.dateComplete ? (
         <Button
           onClick={() => {
             navigate(`/assignment/${val?.assignment.id}/result`)
@@ -72,9 +105,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
         <></>
       )
     }
-    console.log(val)
-    return val?.assignment?.studentAssignment?.length &&
-      val?.assignment?.studentAssignment[0]?.dateComplete ? (
+    return val?.dateComplete ? (
       <Button
         onClick={() => {
           navigate(`/assignment/${val?.assignment.id}/result`)
@@ -82,7 +113,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
       >
         View Result
       </Button>
-    ) : !val?.assignment?.studentAssignment[0]?.dateEnd ? (
+    ) : !val?.dateEnd ? (
       <Button onClick={() => handleDoAssignment(val?.assignment.id, 'start')}>
         Do Assignment
       </Button>
@@ -96,24 +127,22 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
   }
 
   const renderStatus = () => {
-    if (
-      val?.assignment?.studentAssignment?.length &&
-      val?.assignment?.studentAssignment[0]?.dateComplete
-    ) {
-      if (
-        val?.assignment?.studentAssignment[0]?.score >=
-        val?.assignment?.passScore
-      ) {
-        return `Passed`
+    if (classPage) {
+      if (val?.assignment?.studentAssignment[0]?.dateComplete) {
+        return `Submitted on ${moment(
+          val?.assignment?.studentAssignment[0]?.dateComplete,
+        ).format('hh:mm DD/MM/YYYY')}`
       }
-      return `Failed`
-    } else if (
-      val?.assignment?.studentAssignment?.length &&
-      !val?.assignment?.studentAssignment[0]?.dateComplete
-    ) {
       return `Not submitted`
     }
-    return `Error`
+    if (val?.dateComplete) {
+      return `Submitted on ${moment(val?.dateComplete).format(
+        'hh:mm DD/MM/YYYY',
+      )}`
+    }
+    if (!val?.dateComplete) {
+      return `Not submitted`
+    }
   }
 
   return (
@@ -139,7 +168,7 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent }) => {
               <i className="fa-regular fa-calendar text-primary"></i>{' '}
             </div>
             <span>
-              {moment(val?.assignment.dateDue).format('YYYY-MM-DD HH:mm:ss')}
+              {moment(val?.assignment.dateDue).format('HH:mm DD/MM/YYYY')}
             </span>
           </div>
         </div>

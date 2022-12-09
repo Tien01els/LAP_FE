@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import moment from 'moment'
 import ExamModal from '../Modals/ExamModal'
 
-const DeadlineItem = ({ item, selectedDay }) => {
+const DeadlineItem = ({ item, selectedDay, isParent }) => {
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false)
 
   return (
@@ -12,6 +12,7 @@ const DeadlineItem = ({ item, selectedDay }) => {
         isOpen={openAssignmentModal}
         setIsOpen={setOpenAssignmentModal}
         val={item}
+        isParent={isParent}
       />
       <motion.div
         animate={{ opacity: 1 }}

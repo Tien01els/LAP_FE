@@ -53,7 +53,8 @@ const StudentExams = ({ isParent }) => {
                 `parent/student/${studentInfo?.id}/class/${studentInfo?.classId}`,
             )
           }
-        } else {
+        }
+        if (!isParent) {
           res = await axiosJWT.get(
             API_URL + `student-assignment/student/class/${classId}`,
           )
