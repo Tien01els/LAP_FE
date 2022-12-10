@@ -6,8 +6,12 @@ const RoadMapItem = ({ val, children, className = '', isTeacher }) => {
       className={`flex flex-col gap-2 w-[400px] px-5 py-5 bg-white rounded-md shadow-md ${className}`}
     >
       {children}
-      <span className="text-xl font-[500] w-full truncate text-gray-600">
+      <span className="text-xl text-primary font-[500] w-full truncate">
         Topic name
+      </span>
+      <span className="text-xs text-gray-500 w-full truncate">
+        Prerequisite topic namePrerequisite topic namePrerequisite topic
+        namePrerequisite topic name
       </span>
       <span className="text-justify whitespace-normal break-words">
         Lorem Ipsum is simply dummy text of the printing and typesetting
