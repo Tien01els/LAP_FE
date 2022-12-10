@@ -33,21 +33,21 @@ const StudentExams = ({ isParent }) => {
                 try {
                     const res = await axiosJWT.get(API_URL + 'parent/student');
                     setStudentInfo(res.data);
-                } catch (err) {
-                    console.log(err);
+                } catch (error) {
+                    console.log(error);
+                    if (error.response.status === 401) setIsExpired(true);
                 }
             };
             getStudentInfo();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isParent]);
 
     useEffect(() => {
-        const getAllExamsOfStudent = async (classId) => {
+        const getAllExamsOfStudent = async (classId, studentInfo) => {
             try {
                 let res;
                 if (isParent) {
-                    if (studentInfo) {
+                    if (studentInfo?.classId) {
                         res = await axiosJWT.get(
                             API_URL +
                                 `parent/student/${studentInfo?.id}/class/${studentInfo?.classId}`
@@ -55,17 +55,19 @@ const StudentExams = ({ isParent }) => {
                     }
                 }
                 if (!isParent) {
-                    res = await axiosJWT.get(
-                        API_URL + `student-assignment/student/class/${classId}`
-                    );
+                    res =
+                        classId &&
+                        (await axiosJWT.get(
+                            API_URL + `student-assignment/student/class/${classId}`
+                        ));
                 }
-                setExams(res.data);
+                res && setExams(res.data);
             } catch (error) {
                 console.log(error);
                 if (error.response.status === 401) setIsExpired(true);
             }
         };
-        getAllExamsOfStudent(decodedToken?.classId);
+        getAllExamsOfStudent(decodedToken?.classId, studentInfo);
     }, [decodedToken?.classId, isParent, studentInfo]);
 
     return (

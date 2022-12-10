@@ -30,7 +30,7 @@ const TokenExpire = ({ isOpen }) => {
     const navigate = useNavigate();
     const handleLogOut = async () => {
         try {
-            await createAxiosJWT.delete(API_URL + 'account/logout');
+            await axiosJWT.delete(API_URL + 'account/logout');
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
             navigate('/');
