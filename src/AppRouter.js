@@ -28,6 +28,7 @@ const TeacherExams = lazy(() => import('./pages/TeacherPages/TeacherExams'))
 const TeacherReviewAnswers = lazy(() =>
   import('./pages/TeacherPages/TeacherReviewAnswers'),
 )
+const RoadMap = lazy(() => import('./pages/RoadMap'))
 
 // Students
 const StudentDashboard = lazy(() =>
@@ -123,6 +124,7 @@ export default function AppRouter() {
               element={<AnswerQuestion isTeacher />}
             />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/road-map" element={<RoadMap isTeacher />} />
             <Route path="/test2" element={<Test />} />
           </>
         </>
@@ -148,6 +150,7 @@ export default function AppRouter() {
           />
           <Route path="/profile" element={<Profile />} />
           <Route path="/exams" element={<StudentExams />} />
+          <Route path="/road-map" element={<RoadMap />} />
         </>
       )
     }
@@ -162,6 +165,7 @@ export default function AppRouter() {
             path="/assignment/:assignmentId/result"
             element={<AssignmentResult isParent />}
           />
+          <Route path="/road-map" element={<RoadMap />} />
         </>
       )
     }
