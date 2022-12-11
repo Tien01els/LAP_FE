@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
@@ -28,7 +28,7 @@ const QuestionOption = ({
   handleScore,
   score,
 }) => {
-  console.log(assignmentInfo)
+  const [skillSelected, setSkillSelected] = useState(selectedSkills[0] || {})
   useEffect(() => {
     if (listGrade?.length > 0) {
       setSelectedGrade(
@@ -38,6 +38,29 @@ const QuestionOption = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listGrade])
+
+  useEffect(() => {
+    if (
+      selectedSkills[0] &&
+      selectedSkills[0]?.value !== skillSelected?.value
+    ) {
+      setSkillSelected(
+        listSkill.find((val) => val.value === selectedSkills[0]?.value) ||
+          skillSelected,
+      )
+    }
+  }, [selectedSkills])
+
+  // console.log('Selected', {
+  //   selectedSkills: selectedSkills,
+  //   setSelectedGrade: setSelectedGrade,
+  //   selectedLevel: selectedLevel,
+  //   selectedTopic: selectedTopic,
+  // })
+
+  useEffect(() => {
+    setSelectedSkills([skillSelected])
+  }, [skillSelected, setSelectedSkills])
 
   useEffect(() => {
     if (listTopic?.length > 0) {
@@ -51,11 +74,11 @@ const QuestionOption = ({
 
   useEffect(() => {
     if (listSkill?.length > 0) {
-      setSelectedSkills([
+      setSkillSelected(
         listSkill.find(
           (val) => val.value === parseInt(assignmentInfo?.skillId),
         ) || listSkill[0],
-      ])
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listSkill])
@@ -161,8 +184,8 @@ const QuestionOption = ({
           )}
           {listSkill?.length > 0 && (
             <Select
-              value={selectedSkills}
-              onChange={setSelectedSkills}
+              value={skillSelected}
+              onChange={setSkillSelected}
               options={listSkill}
               placeholder="Skill"
               className="grow"

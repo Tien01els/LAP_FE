@@ -107,9 +107,7 @@ const TeacherAssignment = () => {
 
   const [selectedGrade, setSelectedGrade] = useState({})
   const [selectedTopic, setSelectedTopic] = useState({})
-  const [selectedSkills, setSelectedSkills] = useState(() =>
-    skillId ? [skillId] : [],
-  )
+  const [selectedSkills, setSelectedSkills] = useState([])
   const [selectedLevel, setSelectedLevel] = useState(levelOption[0])
 
   const [selectedAssignmentName, setSelectedAssignmentName] = useState('')
@@ -183,9 +181,10 @@ const TeacherAssignment = () => {
         hint: hint,
         score: score,
         level: selectedLevel?.label,
-        skillIds: selectedSkills?.length && [selectedSkills[0]?.value],
+        skillIds: [selectedSkills[0]?.value],
         questionTypeId: selectedOption?.value,
       }
+      console.log('Question update', questionUpdate)
       axiosJWT
         .put(API_URL + `question/${currentQid}`, questionUpdate)
         .then((res) => {
@@ -214,9 +213,10 @@ const TeacherAssignment = () => {
       hint: hint,
       score: score,
       level: selectedLevel?.label,
-      skillIds: selectedSkills?.length && [selectedSkills[0]?.value],
+      skillIds: [selectedSkills[0]?.value],
       questionTypeId: selectedOption?.value,
     }
+    console.log('Question Create', questionCreate)
     axiosJWT
       .post(API_URL + `question`, questionCreate)
       .then((res) => {
@@ -316,7 +316,9 @@ const TeacherAssignment = () => {
     setSelectedLevel(levelOption.find((val) => val.label === data?.level))
     setSelectedGrade(listGrade.find((val) => val.value === data?.gradeId))
     setSelectedTopic(listTopic.find((val) => val.value === data?.topicId))
-    setSelectedSkills(listSkill.find((val) => val.value === data?.skillIds[0]))
+    setSelectedSkills([
+      listSkill && listSkill.find((val) => val.value === data?.skillIds[0]),
+    ])
   }
 
   useEffect(() => {
