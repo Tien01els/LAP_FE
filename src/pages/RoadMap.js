@@ -18,22 +18,48 @@ const RoadMap = ({ isTeacher, isParent }) => {
             try {
                 let classId = null;
                 let gradeId = null;
+                let studentTopics = null;
                 if (isTeacher) {
                     gradeId = selectedGrade?.id;
                 } else {
                     if (isParent) {
-                        const res = await axiosJWT.get(API_URL + `parent/student`);
-                        classId = res.data?.classId;
+                        const studentInfo = await axiosJWT.get(API_URL + `parent/student`);
+                        classId = studentInfo.data?.classId;
+                        studentTopics =
+                            studentInfo.data?.id &&
+                            (await axiosJWT.get(
+                                API_URL +
+                                    `parent/student/${studentInfo.data?.id}/class/${classId}/topic`
+                            ));
                     } else {
-                        const res = await axiosJWT.get(API_URL + `student/class`);
-                        classId = res.data?.id;
+                        const classInfo = await axiosJWT.get(API_URL + `student/class`);
+                        classId = classInfo.data?.id;
+                        studentTopics =
+                            classInfo &&
+                            (await axiosJWT.get(
+                                API_URL + `student-topic/student/class/${classId}`
+                            ));
                     }
                     const grade =
                         classId && (await axiosJWT.get(API_URL + `grade/class/${classId}`));
-                    gradeId = grade.data?.id;
+                    gradeId = grade?.data?.id;
                 }
+
                 const res = gradeId && (await axiosJWT.get(API_URL + `grade/${gradeId}/road-map`));
-                res?.data && setTopicRoadMap(res.data);
+                if (res?.data?.length) {
+                    if (studentTopics?.data?.length) {
+                        for (let i = 0; i < res.data.length; ++i) {
+                            if (
+                                studentTopics.data.find(
+                                    (topic) => topic.isPass && topic.topicId === res.data[i].topicId
+                                )
+                            )
+                                res.data[i].statusTopicOfStudent = 'Passed';
+                            else res.data[i].statusTopicOfStudent = '';
+                        }
+                    }
+                    setTopicRoadMap(res.data);
+                }
             } catch (error) {
                 console.log(error);
                 if (error.response.status === 401) setIsExpired(true);

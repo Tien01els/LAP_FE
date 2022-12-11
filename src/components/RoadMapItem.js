@@ -18,6 +18,9 @@ const RoadMapItem = ({ val, children, className = '', isTeacher }) => {
                 <span className='text-gray-500 text-sm'>
                     Quantity of skills: {val.numberSkills}
                 </span>
+                {!isTeacher && (
+                    <span className='text-sm text-green-400'>{val.statusTopicOfStudent}</span>
+                )}
             </div>
         </div>
     );
