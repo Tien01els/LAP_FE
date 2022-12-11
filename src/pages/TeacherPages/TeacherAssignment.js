@@ -80,6 +80,7 @@ const TeacherAssignment = () => {
   const [questionList, setQuestionList] = useState([])
   const [score, setScore] = useState(0)
   const [selectedOption, setSelectedOption] = useState(Selectoptions[0])
+  const [disable, setDisable] = useState(false)
 
   //save
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false)
@@ -173,6 +174,50 @@ const TeacherAssignment = () => {
   }
 
   const addQuestionItem = () => {
+    if (selectedOption?.value === 1) {
+      let filteredArr = answers.multiChoice.reduce((acc, current) => {
+        const x = acc.find((item) => item.answer === current.answer)
+        if (!x) {
+          return acc.concat([current])
+        } else {
+          return acc
+        }
+      }, [])
+      if (
+        filteredArr.length !== answers.multiChoice.length ||
+        answers.multiChoice.some((val) => val.answer === '')
+      ) {
+        return setDisable(true)
+      }
+
+      if (!answers.multiChoice.some((val) => val.isTrue === true)) {
+        return setDisable(true)
+      }
+    }
+
+    if (selectedOption?.value === 4) {
+      let filteredArr = answers.multiSelect.reduce((acc, current) => {
+        const x = acc.find((item) => item.answer === current.answer)
+        if (!x) {
+          return acc.concat([current])
+        } else {
+          return acc
+        }
+      }, [])
+      if (
+        filteredArr.length !== answers.multiSelect.length ||
+        answers.multiSelect.some((val) => val.answer === '')
+      ) {
+        return setDisable(true)
+      }
+
+      if (!answers.multiChoice.some((val) => val.isTrue === true)) {
+        return setDisable(true)
+      }
+    }
+
+    setDisable(false)
+
     if (questionList.find((item) => item.id === currentQid)) {
       let index = questionList.findIndex((item) => item.id === currentQid)
       const questionUpdate = {
@@ -216,7 +261,6 @@ const TeacherAssignment = () => {
       skillIds: [selectedSkills[0]?.value],
       questionTypeId: selectedOption?.value,
     }
-    console.log('Question Create', questionCreate)
     axiosJWT
       .post(API_URL + `question`, questionCreate)
       .then((res) => {
@@ -238,6 +282,7 @@ const TeacherAssignment = () => {
       })
       .catch((err) => console.log(err))
   }
+
   const removeQuestionItem = (id) => {
     const newList = questionList.filter((item) => item.id !== id)
     setQuestionList(newList)
@@ -619,9 +664,14 @@ const TeacherAssignment = () => {
             )}
           </div>
 
+          {disable && (
+            <span className="text-red-500 self-end">* Invalid answers</span>
+          )}
+
           <div className="flex flex-row-reverse">
             <Button
               className="border-none shadow-lg"
+              disabled={question === ''}
               onClick={() => {
                 addQuestionItem()
               }}
