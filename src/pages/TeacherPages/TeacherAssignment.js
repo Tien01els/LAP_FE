@@ -68,8 +68,8 @@ const TeacherAssignment = () => {
   useEffect(() => {
     axiosJWT.get(API_URL + `skill/${skillId}`).then((res) => {
       setAssignmentInfo((prev) => {
-        prev.gradeId = res?.data?.gradeId
-        prev.topicId = res?.data?.topicId
+        prev.gradeId = res.data?.gradeId
+        prev.topicId = res.data?.topicId
         return prev
       })
     })
