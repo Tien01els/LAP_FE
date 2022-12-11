@@ -28,7 +28,7 @@ const QuestionOption = ({
   handleScore,
   score,
 }) => {
-  const [skillSelected, setSkillSelected] = useState(selectedSkills[0] || {})
+  // const [skillSelected, setSkillSelected] = useState({})
   useEffect(() => {
     if (listGrade?.length > 0) {
       setSelectedGrade(
@@ -39,18 +39,6 @@ const QuestionOption = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listGrade])
 
-  useEffect(() => {
-    if (
-      selectedSkills[0] &&
-      selectedSkills[0]?.value !== skillSelected?.value
-    ) {
-      setSkillSelected(
-        listSkill.find((val) => val.value === selectedSkills[0]?.value) ||
-          skillSelected,
-      )
-    }
-  }, [selectedSkills])
-
   // console.log('Selected', {
   //   selectedSkills: selectedSkills,
   //   setSelectedGrade: setSelectedGrade,
@@ -58,9 +46,9 @@ const QuestionOption = ({
   //   selectedTopic: selectedTopic,
   // })
 
-  useEffect(() => {
-    setSelectedSkills([skillSelected])
-  }, [skillSelected, setSelectedSkills])
+  // useEffect(() => {
+  //   setSelectedSkills([skillSelected])
+  // }, [skillSelected, setSelectedSkills])
 
   useEffect(() => {
     if (listTopic?.length > 0) {
@@ -74,12 +62,13 @@ const QuestionOption = ({
 
   useEffect(() => {
     if (listSkill?.length > 0) {
-      setSkillSelected(
+      setSelectedSkills([
         listSkill.find(
           (val) => val.value === parseInt(assignmentInfo?.skillId),
         ) || listSkill[0],
-      )
+      ])
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listSkill])
 
@@ -142,6 +131,10 @@ const QuestionOption = ({
   //     }
   //   }, [selectedSkills, listSkill])
 
+  const handleChangeSkill = (e) => {
+    setSelectedSkills([e])
+  }
+
   return (
     <>
       <div className="flex flex-col justify-between items-center gap-3">
@@ -184,8 +177,8 @@ const QuestionOption = ({
           )}
           {listSkill?.length > 0 && (
             <Select
-              value={skillSelected}
-              onChange={setSkillSelected}
+              value={selectedSkills[0]}
+              onChange={handleChangeSkill}
               options={listSkill}
               placeholder="Skill"
               className="grow"
