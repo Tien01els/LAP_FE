@@ -195,6 +195,18 @@ const TeacherAssignment = () => {
       }
     }
 
+    if (selectedOption?.value === 2) {
+      if (!answers.trueFalse.some((val) => val.isTrue === true)) {
+        return setDisable(true)
+      }
+    }
+
+    if (selectedOption?.value === 3) {
+      if (!answers.input[0]) {
+        return setDisable(true)
+      }
+    }
+
     if (selectedOption?.value === 4) {
       let filteredArr = answers.multiSelect.reduce((acc, current) => {
         const x = acc.find((item) => item.answer === current.answer)
