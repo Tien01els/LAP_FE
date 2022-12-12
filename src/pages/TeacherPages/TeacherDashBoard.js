@@ -34,6 +34,7 @@ const TeacherDashBoard = () => {
     const [classes, setClasses] = useState([]);
     const [assignments, setAssignments] = useState([]);
     const [assignmentDays, setAssignmentsDays] = useState([]);
+    const [averageScoreClasses, setAverageScoreClasses] = useState([]);
 
     useEffect(() => {
         const getClassOfTeacher = async () => {
@@ -49,8 +50,14 @@ const TeacherDashBoard = () => {
             handleDays(res.data);
         };
 
+        const getAverageScore = async () => {
+            const res = await axiosJWT.get(API_URL + `class/teacher/average-score`);
+            setAverageScoreClasses(res.data);
+        };
+
         getClassOfTeacher();
         getAssignmentOfTeacher();
+        getAverageScore();
     }, []);
 
     const handleDays = (assignments) => {
@@ -101,14 +108,16 @@ const TeacherDashBoard = () => {
         },
     };
     // classes
-    const labels = ['MATH_333', 'MATH_33323', 'MATH_113', 'MATH_44', 'MATH_AB32'];
-
-    const data = {
+    const labels = averageScoreClasses.map((averageScoreClass) => averageScoreClass.className);
+    console.log(averageScoreClasses);
+    const dataAverageScore = {
         labels,
         datasets: [
             {
                 label: 'Dataset 1',
-                data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+                data: averageScoreClasses.map(
+                    (averageScoreClass) => averageScoreClass.averageScore
+                ),
                 borderColor: 'rgb(117,185,204)',
                 backgroundColor: 'rgb(117,185,204, 0.5)',
             },
@@ -126,7 +135,7 @@ const TeacherDashBoard = () => {
                             width={400}
                             className='chartJS'
                             options={options}
-                            data={data}
+                            data={dataAverageScore}
                         />
                     </div>
                     <div className='flex min-w-[90%] mt-10 gap-10 mb-8'>
