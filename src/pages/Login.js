@@ -7,6 +7,7 @@ import Button from '../components/Button'
 //img
 import coverImg from '../assets/image/Login.jpg'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const Login = () => {
   const {
@@ -15,6 +16,7 @@ const Login = () => {
     formState: { errors },
   } = useForm()
   const navigate = useNavigate()
+  const [loginError, setLoginError] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
@@ -35,73 +37,81 @@ const Login = () => {
         window.location.reload()
       }
     } catch (err) {
-      console.log(err)
+      if (err.response.status === 401) setLoginError(true)
+      console.log('Invalid username or password')
     }
   }
 
   return (
-    <div className="flex flex-row w-full h-screen">
-      {/* left */}
-      <div className="w-[50%]">
-        <img src={coverImg} alt="" className="h-full" />
-      </div>
-      {/* right - login form*/}
-      <div className="w-[50%] flex">
-        <div className="flex flex-col bg-primary justify-center items-center w-full">
-          <form
-            className="flex flex-col gap-6 bg-white px-16 pb-24 pt-14 items-center rounded-lg justify-center"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <span className="text-xl text-primary">
-              Welcome to{' '}
-              <span className="font-semibold text-2xl">E-learning</span>
-            </span>
-            <div className="flex flex-col w-full gap-2">
-              {errors.email && (
+    <>
+      <div className="flex flex-row w-full h-screen">
+        {/* left */}
+        <div className="w-[50%]">
+          <img src={coverImg} alt="" className="h-full" />
+        </div>
+        {/* right - login form*/}
+        <div className="w-[50%] flex">
+          <div className="flex flex-col bg-primary justify-center items-center w-full">
+            <form
+              className="flex flex-col gap-6 bg-white px-16 pb-24 pt-14 items-center rounded-lg justify-center"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <span className="text-xl text-primary">
+                Welcome to{' '}
+                <span className="font-semibold text-2xl">E-learning</span>
+              </span>
+              <div className="flex flex-col w-full gap-2">
+                {errors.email && (
+                  <span className="text-xs px-2 text-red-400">
+                    {errors.email.message}
+                  </span>
+                )}
+                <input
+                  placeholder="Email"
+                  className={`outline-primary border transition-all border-primary rounded-lg px-3 py-2 ${
+                    errors.email ? 'outline-red-500' : 'outline-primary'
+                  } `}
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      // value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                      message: 'Please enter valid Email',
+                    },
+                  })}
+                />
+              </div>
+              <div className="flex flex-col w-full gap-2">
+                {errors.password && (
+                  <span className="text-xs px-2 text-red-400">
+                    {errors.password.message}
+                  </span>
+                )}
+                <input
+                  placeholder="Password"
+                  type="password"
+                  className="outline-primary border  transition-all border-primary rounded-lg px-3 py-2"
+                  {...register('password', {
+                    required: 'Password is required',
+                    pattern: {
+                      // value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+                      message: 'Please enter at least 8 letters and 1 number.',
+                    },
+                  })}
+                />
+              </div>
+              {loginError && (
                 <span className="text-xs px-2 text-red-400">
-                  {errors.email.message}
+                  Invalid username or password
                 </span>
               )}
-              <input
-                placeholder="Email"
-                className={`outline-primary border transition-all border-primary rounded-lg px-3 py-2 ${
-                  errors.email ? 'outline-red-500' : 'outline-primary'
-                } `}
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    // value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                    message: 'Please enter valid Email',
-                  },
-                })}
-              />
-            </div>
-            <div className="flex flex-col w-full gap-2">
-              {errors.password && (
-                <span className="text-xs px-2 text-red-400">
-                  {errors.password.message}
-                </span>
-              )}
-              <input
-                placeholder="Password"
-                type="password"
-                className="outline-primary border  transition-all border-primary rounded-lg px-3 py-2"
-                {...register('password', {
-                  required: 'Password is required',
-                  pattern: {
-                    // value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                    message: 'Please enter at least 8 letters and 1 number.',
-                  },
-                })}
-              />
-            </div>
-            <Button type="submit" className="w-full ">
-              Login
-            </Button>
-          </form>
+              <Button type="submit" className="w-full ">
+                Login
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
