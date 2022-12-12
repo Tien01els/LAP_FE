@@ -18,5 +18,6 @@ export const customStyles = {
     transform: 'translate(-50%, -50%)',
     border: 'none',
     borderRadius: '8px',
+    overflow: 'visible',
   },
 }

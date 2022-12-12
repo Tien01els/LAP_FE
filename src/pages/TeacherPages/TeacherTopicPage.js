@@ -8,12 +8,10 @@ import Button from '../../components/Button'
 // import GrowingInput from '../../components/GrowingInput'
 import TopicCard from '../../components/Student/TopicCard'
 import GrowingTextArea from './GrowingTextArea'
-import ModalAddTopic from '../TopicPages/ModalAddTopic'
-import ModalCreateSkill from '../SkillPages/ModalCreateSkill'
-// import ModalAssign from '../../components/Modals/ModalAssign';
 import TokenExpire from '../../components/Modals/TokenExpire'
 import createAxiosJWT from '../../createAxiosJWT'
 import TeacherSkillInTopics from '../../components/Teacher/TeacherSkillInTopics'
+import ModalCreateGradeTopic from '../../components/Modals/ModalCreateGradeTopic'
 
 const axiosJWT = createAxiosJWT()
 
@@ -26,6 +24,7 @@ const TeacherTopicPage = () => {
   ])
   const [selectedGrade, setSelectedGrade] = useState({})
   const [topicList, setTopicList] = useState([])
+  const [openCreateTopic, setOpenCreateTopic] = useState(false)
 
   //Search
   const [searchTerm, setSearchTerm] = useState('')
@@ -54,7 +53,7 @@ const TeacherTopicPage = () => {
 
   useEffect(() => {
     setCurrentTopic(topicList.find((val) => val.id === currentTopicId))
-  }, [currentTopicId])
+  }, [currentTopicId, topicList])
 
   useEffect(() => {
     setTopicName(currentTopic?.topicName)
@@ -202,21 +201,10 @@ const TeacherTopicPage = () => {
 
   return (
     <>
-      {/* {classInfo && (
-        <ModalAddTopic
-          gradeId={classInfo.gradeId}
-          classId={classId}
-          modalIsOpen={openAddTopic}
-          setIsOpen={setOpenAddTopic}
-          getTopicOfClass={getTopicOfClass}
-        />
-      )} */}
-      {/* <ModalCreateSkill
-        modalCreateSkillIsOpen={modalCreateSkillIsOpen}
-        setCreateSkillIsOpen={setCreateSkillIsOpen}
-        topicId={currentTopicId}
-        getTopicOfClass={getTopicOfClass}
-      /> */}
+      <ModalCreateGradeTopic
+        isOpen={openCreateTopic}
+        setIsOpen={setOpenCreateTopic}
+      />
       <div className="flex flex-row h-screen">
         {/* left */}
         <div className="w-[40%] flex flex-col px-5 py-5 gap-6">
@@ -244,7 +232,7 @@ const TeacherTopicPage = () => {
               <Button
                 className="border-none"
                 onClick={() => {
-                  setOpenAddTopic(!openAddTopic)
+                  setOpenCreateTopic(true)
                 }}
               >
                 Add a Topic
