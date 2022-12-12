@@ -29,7 +29,7 @@ const ModalCreateTopic = ({
     const [prerequisiteTopicGrades, setPrerequisiteTopicGrades] = useState([]);
 
     const getAllGrades = async () => {
-        const res = await axiosJWT.get(API_URL + `grade`);
+        const res = await axiosJWT.get(API_URL + `grade/teacher`);
         setGrades(res.data);
     };
 

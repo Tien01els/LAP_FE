@@ -13,6 +13,7 @@ const ModalCreateSkill = ({
     setCreateSkillIsOpen,
     topicId,
     getTopicOfClass,
+    getTopicOfGrade
 }) => {
     const customStyles = {
         overlay: {
@@ -55,7 +56,8 @@ const ModalCreateSkill = ({
                 topicId,
             };
             await axiosJWT.post(API_URL + `skill`, skill);
-            getTopicOfClass();
+            getTopicOfClass && getTopicOfClass();
+            getTopicOfGrade && getTopicOfGrade();
         } catch (error) {
             console.log(error);
             if (error.response.status === 401) setIsExpired(true);
