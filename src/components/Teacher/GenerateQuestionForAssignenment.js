@@ -17,7 +17,7 @@ const GenerateQuestionForAssignenment = ({
 }) => {
   const { assignmentId } = useParams()
 
-  const [isHint, setIsHint] = useState(true)
+  const [isHint, setIsHint] = useState(false)
   const [levels, setLevels] = useState([])
   const [questionTypes, setQuestionTypes] = useState([])
   const [gradeId, setGradeId] = useState()
@@ -46,8 +46,8 @@ const GenerateQuestionForAssignenment = ({
     { value: 4, label: 'Multi Select' },
   ]
   const hintOption = [
-    { value: true, label: 'Yes' },
     { value: false, label: 'No' },
+    { value: true, label: 'Yes' },
   ]
 
   const convertResToOption = (value, label) => {
@@ -204,7 +204,7 @@ const GenerateQuestionForAssignenment = ({
             />
           </div>
           <div className="flex flex-row gap-2 items-center">
-            <span>Number of question</span>
+            <span>Quantity of question</span>
             <input
               className="outline-none border-b-2 py-1 px-2 justify-center items-center text-right w-[60px] duration-300 transition-all"
               value={numberQuestion}
@@ -268,7 +268,7 @@ const GenerateQuestionForAssignenment = ({
             <span>Would you like a hint?</span>
             <Select
               options={hintOption}
-              defaultValue={hintOption[1]}
+              defaultValue={hintOption[0]}
               onChange={(e) => setIsHint(e.value)}
               className="w-[180px]"
             />
