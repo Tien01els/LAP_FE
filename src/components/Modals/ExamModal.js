@@ -40,6 +40,8 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent, classPage }) => {
     setIsOpen(false)
   }
 
+  console.log('Teacher', val)
+
   const handleDoAssignment = async (assignmentId, temp) => {
     try {
       if (temp === 'start')
@@ -173,12 +175,14 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent, classPage }) => {
           </div>
         </div>
         <div className="flex flex-row ">
-          <div className="flex flex-row gap-3 items-center w-[50%]">
-            <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
-              <i className="fa-solid fa-clipboard-question text-primary"></i>
+          {val?.numberQuestionOfAssignment && (
+            <div className="flex flex-row gap-3 items-center w-[50%]">
+              <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
+                <i className="fa-solid fa-clipboard-question text-primary"></i>
+              </div>
+              <span>{val?.numberQuestionOfAssignment} question</span>
             </div>
-            <span>{val?.numberQuestionOfAssignment} question</span>
-          </div>
+          )}
           <div className="flex flex-row gap-3 items-center">
             <div className="bg-gray-100 flex items-center h-[30px] w-[30px] rounded-lg justify-center">
               <i className="fa-regular fa-star text-primary"></i>

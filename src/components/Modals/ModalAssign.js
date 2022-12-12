@@ -214,7 +214,7 @@ const ModalAssign = ({
                   placeholder="End minute"
                   {...registerCreate('minute', {
                     required: true,
-                    min: 1,
+                    min: 0,
                     max: 60,
                   })}
                   className="outline-none px-3 py-1 w-[50%] border-b-2 border-opacity-0 transition-all focus:border-primary"

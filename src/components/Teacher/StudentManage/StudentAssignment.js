@@ -13,6 +13,7 @@ const StudentAssignment = ({ assignmentInfo }) => {
         setIsOpen={setOpenExamModal}
         val={assignmentInfo}
         isParent
+        classPage
       />
       <div
         onClick={() => setOpenExamModal(true)}
