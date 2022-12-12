@@ -194,6 +194,18 @@ const TeacherMenu = () => {
       </div>
 
       <NavLink
+        to={'/manage-topic'}
+        className={({ isActive }) =>
+          isActive
+            ? 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all  text-gray-600 bg-[#f9fbfc]'
+            : 'flex flex-row items-center gap-5 cursor-pointer px-8 py-2 rounded-lg transition-all hover:bg-gray-100 text-gray-600'
+        }
+      >
+        <i className="fa-solid fa-person-chalkboard py-2"></i>
+        <span className="font-semibold text-sm">Topics</span>
+      </NavLink>
+
+      <NavLink
         to={'/road-map'}
         className={({ isActive }) =>
           isActive

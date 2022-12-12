@@ -13,6 +13,7 @@ const TopicCard = ({
   isTeacher,
   setCurrentTopicId,
   isParent,
+  gradeTopic,
 }) => {
   const socket = useContext(SocketContext)
 
@@ -41,6 +42,9 @@ const TopicCard = ({
       setCurrentTopicId(topicInfo?.topicId)
     }
     if (isTeacher) {
+      if (gradeTopic) {
+        return setCurrentTopicId(topicInfo?.id)
+      }
       setCurrentTopicId(topicInfo?.topicId)
     }
   }
