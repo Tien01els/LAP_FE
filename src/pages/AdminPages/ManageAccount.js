@@ -7,7 +7,80 @@ import TokenExpire from '../../components/Modals/TokenExpire'
 import ReactPaginate from 'react-paginate'
 import ConfirmModal from '../../components/Modals/ConfirmModal'
 
-const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+const items = [
+  {
+    email: 'jhuriche0@indiegogo.com',
+    fullName: 'Jarrett Huriche',
+    active: false,
+    role: 'Parent',
+  },
+  {
+    email: 'cturle1@independent.co.uk',
+    fullName: 'Chick Turle',
+    active: false,
+    role: 'Admin',
+  },
+  {
+    email: 'apeniman2@miitbeian.gov.cn',
+    fullName: 'Abba Peniman',
+    active: true,
+    role: 'Student',
+  },
+  {
+    email: 'mwitherup3@latimes.com',
+    fullName: 'Mirabella Witherup',
+    active: true,
+    role: 'Admin',
+  },
+  {
+    email: 'imacvicar4@toplist.cz',
+    fullName: 'Iormina MacVicar',
+    active: true,
+    role: 'Parent',
+  },
+  {
+    email: 'blere5@google.ca',
+    fullName: 'Brittaney Lere',
+    active: false,
+    role: 'Student',
+  },
+  {
+    email: 'lsmeal6@1688.com',
+    fullName: 'Liva Smeal',
+    active: false,
+    role: 'Parent',
+  },
+  {
+    email: 'nbrambley7@arstechnica.com',
+    fullName: 'Neal Brambley',
+    active: true,
+    role: 'Teacher',
+  },
+  {
+    email: 'lhemms8@usda.gov',
+    fullName: 'Liva Hemms',
+    active: true,
+    role: 'Student',
+  },
+  {
+    email: 'mketch9@columbia.edu',
+    fullName: 'Matt Ketch',
+    active: false,
+    role: 'Student',
+  },
+  {
+    email: 'drysdalea@surveymonkey.com',
+    fullName: 'Dianne Rysdale',
+    active: true,
+    role: 'Teacher',
+  },
+  {
+    email: 'leskellb@nsw.gov.au',
+    fullName: 'Lilias Eskell',
+    active: false,
+    role: 'Student',
+  },
+]
 
 const axiosJWT = createAxiosJWT()
 const ManageAccount = () => {
@@ -94,18 +167,24 @@ const ManageAccount = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((val) => {
+              {currentItems.map((val, i) => {
                 return (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" className="py-4 px-6">
-                      1
+                      {i + 1}
                     </th>
                     <th className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Apple MacBook Pro 17"
+                      {val?.email}
                     </th>
-                    <td className="py-4 px-6">Sliver</td>
-                    <td className="py-4 px-6">Laptop</td>
-                    <td className="py-4 px-6">$2999</td>
+                    <td className="py-4 px-6">{val?.fullName}</td>
+                    <td
+                      className={`py-4 px-6 ${
+                        val?.active ? `text-green-500` : `text-red-500`
+                      }`}
+                    >
+                      {val?.active ? `Active` : `Banned`}
+                    </td>
+                    <td className="py-4 px-6">{val?.role}</td>
                     <td className="py-4 px-6 text-right flex flex-row justify-between select-none">
                       <span
                         onClick={() => {
@@ -114,7 +193,7 @@ const ManageAccount = () => {
                         }}
                         className="font-medium text-orange-500 dark:text-blue-500 hover:cursor-pointer"
                       >
-                        Ban
+                        {val?.active ? `Ban` : `Unban`}
                       </span>
                       <span
                         onClick={() => {

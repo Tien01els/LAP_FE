@@ -57,6 +57,7 @@ const TopicCard = ({
       tableHandle: 'Student_Topic',
       idTableHandle: topicInfo.id,
     })
+    console.log(socket)
     setIsOpenModalRequest(!isOpenModalRequest)
     setIsRequested(true)
   }

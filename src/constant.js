@@ -1,5 +1,8 @@
 export const API_URL = 'http://localhost:8080/api/'
+export const SOCKET_API_URL = 'http://localhost:8080/'
 // export const API_URL = 'http://54.160.194.254:8080/api/';
+// export const SOCKET_API_URL = 'http://54.160.194.254:8080/';
+
 export const customStyles = {
   overlay: {
     position: 'fixed',
