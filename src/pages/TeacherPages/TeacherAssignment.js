@@ -514,6 +514,26 @@ const TeacherAssignment = () => {
     }
   }
 
+  const [invalid, setInvalid] = useState(false)
+
+  useEffect(() => {
+    if (
+      questionList.reduce((sum, a) => sum + a.score, 0) > selectedTotalScore
+    ) {
+      setSelectedTotalScore(questionList.reduce((sum, a) => sum + a.score, 0))
+      setInvalid(false)
+    }
+    if (
+      questionList.reduce((sum, a) => sum + a.score, 0) ===
+      parseInt(selectedTotalScore)
+    ) {
+      setInvalid(false)
+    } else {
+      setInvalid(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionList, selectedTotalScore])
+
   return (
     <div className="flex flex-col items-center gap-7 justify-center h-full">
       <div className="flex flex-row gap-7 justify-center w-full h-fit">
@@ -783,10 +803,11 @@ const TeacherAssignment = () => {
                   noConfirm={() => handleSaveAssignment({ isTrial: false })}
                 />
                 <Button
-                  className="w-[80%] border-none shadow-lg"
+                  className="w-[80%] border-none shadow-lg disabled:bg-gray-500"
                   onClick={() => setOpenSaveConfirm(!openSaveConfirm)}
+                  disabled={invalid}
                 >
-                  Save
+                  {invalid ? `Invalid Total score` : `Save`}
                 </Button>
               </div>
             </div>

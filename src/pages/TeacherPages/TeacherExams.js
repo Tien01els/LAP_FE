@@ -157,16 +157,32 @@ const TeacherExams = () => {
               <div className="flex flex-col h-full gap-5 ">
                 <div className="flex flex-row items-base justify-between">
                   <span className="font-[500]">Questions</span>
-                  <Button
-                    onClick={() =>
-                      navigate(
-                        `/class/${classId}/assignment/${currentAssignment?.assignment?.id}`,
-                      )
-                    }
-                    className="text-sm flex gap-3 items-center"
+                  <div
+                    className="flex flex-row gap-5 items-center
+                  "
                   >
-                    <i className="fa-solid fa-pen-to-square"></i> Edit questions
-                  </Button>
+                    <Button
+                      onClick={() =>
+                        navigate(
+                          `/assignment-summary/${currentAssignment?.assignment?.id}`,
+                        )
+                      }
+                      className="text-sm"
+                    >
+                      View Result
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        navigate(
+                          `/class/${classId}/assignment/${currentAssignment?.assignment?.id}`,
+                        )
+                      }
+                      className="text-sm flex gap-3 items-center"
+                    >
+                      <i className="fa-solid fa-pen-to-square"></i> Edit
+                      questions
+                    </Button>
+                  </div>
                 </div>
                 <div className="flex flex-col h-[380px] py-3 px-2 gap-4 overflow-y-auto">
                   {currentAssignment?.assignment?.assignmentQuestion &&

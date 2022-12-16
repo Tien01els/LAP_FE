@@ -34,7 +34,7 @@ const ExamQuestion = ({ question, index }) => {
               width: '70%',
             }}
           ></math-field>
-          <div className="flex flex-row items-center w-[150px] gap-4">
+          <div className="flex flex-row items-center w-fit gap-4">
             <span className="bg-primary text-white rounded-full h-fit px-3 py-1 text-xs flex items-center">
               {(question.questionTypeId === 1 && 'Multi Choice') ||
                 (question.questionTypeId === 2 && 'True False') ||
