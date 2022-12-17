@@ -78,7 +78,7 @@ const TeacherAssignment = () => {
   const navigate = useNavigate()
   const [question, setQuestion] = useState('')
   const [questionList, setQuestionList] = useState([])
-  const [score, setScore] = useState(0)
+  const [score, setScore] = useState(10)
   const [selectedOption, setSelectedOption] = useState(Selectoptions[0])
   const [disable, setDisable] = useState(false)
 
@@ -153,7 +153,7 @@ const TeacherAssignment = () => {
   }
   const resetValue = () => {
     setCurrentQid('')
-    setScore(0)
+    setScore(10)
     setQuestion('')
     setHint('')
     setEnableHint(false)
@@ -807,7 +807,7 @@ const TeacherAssignment = () => {
                   onClick={() => setOpenSaveConfirm(!openSaveConfirm)}
                   disabled={invalid}
                 >
-                  {invalid ? `Invalid Total score` : `Save`}
+                  {invalid ? `Invalid total score` : `Save`}
                 </Button>
               </div>
             </div>
