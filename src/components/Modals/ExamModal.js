@@ -7,6 +7,8 @@ import { API_URL } from '../../constant'
 import createAxiosJWT from '../../createAxiosJWT'
 import TokenExpire from './TokenExpire'
 import Button from '../Button'
+import { StudentContext } from '../../Context/StudentContext'
+import { useContext } from 'react'
 
 const axiosJWT = createAxiosJWT()
 const customStyles = {
@@ -31,16 +33,23 @@ const customStyles = {
   },
 }
 
-const ExamModal = ({ isOpen, setIsOpen, val, isParent, classPage }) => {
+const ExamModal = ({
+  isOpen,
+  setIsOpen,
+  val,
+  isParent,
+  classPage,
+  viewStudentResult,
+}) => {
   const navigate = useNavigate()
+  const studentContext = useContext(StudentContext)
 
   const [isExpired, setIsExpired] = useState(false)
 
   const handleCancel = () => {
     setIsOpen(false)
   }
-
-  console.log('Teacher', val)
+  console.log(viewStudentResult)
 
   const handleDoAssignment = async (assignmentId, temp) => {
     try {
@@ -92,6 +101,21 @@ const ExamModal = ({ isOpen, setIsOpen, val, isParent, classPage }) => {
         >
           Continue Assignment
         </Button>
+      )
+    }
+    if (viewStudentResult) {
+      return val?.assignment?.studentAssignment[0]?.dateComplete ? (
+        <Button
+          onClick={() => {
+            navigate(
+              `/assignment/${val?.assignment.id}/student/${studentContext?.studentInfo?.id}`,
+            )
+          }}
+        >
+          View Result
+        </Button>
+      ) : (
+        <></>
       )
     }
     if (isParent) {

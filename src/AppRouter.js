@@ -119,6 +119,10 @@ export default function AppRouter() {
               element={<AssignmentResult isTeacher />}
             />
             <Route
+              path="/assignment/:assignmentId/student/:studentId"
+              element={<AssignmentResult viewStudentResult />}
+            />
+            <Route
               path="/assignment/:assignmentId/question"
               element={<AnswerQuestion isTeacher />}
             />

@@ -20,9 +20,11 @@ import moment from 'moment'
 import Modal from 'react-modal'
 import createAxiosJWT from '../../createAxiosJWT'
 import StudentTopic from '../../components/Teacher/StudentManage/StudentTopic'
+import { StudentContext } from '../../Context/StudentContext'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useContext } from 'react'
 
 const axiosJWT = createAxiosJWT()
 const customStyles = {
@@ -49,6 +51,7 @@ const customStyles = {
 const TeacherManageStudents = () => {
   // const accessToken = localStorage.getItem('access_token');
   // const decodedToken = accessToken && jwtDecode(accessToken);
+  const studentContext = useContext(StudentContext)
 
   const [averageScore, setAverageScore] = useState(0)
   const [filterStudent, setFilterStudent] = useState('All')
@@ -65,8 +68,6 @@ const TeacherManageStudents = () => {
     setAddStudentModal(!addStudentModal)
   }
 
-  console.log(studentInfo)
-
   const handleGetStudentOfClass = useCallback(async () => {
     try {
       const res = await axiosJWT.get(API_URL + `student/class/${classId}`)
@@ -77,8 +78,6 @@ const TeacherManageStudents = () => {
       console.log(error)
     }
   }, [classId])
-
-  console.log(studentInfo)
 
   const handleScoreFilter = (filterStudent) => {
     if (filterStudent === 'All') {
@@ -130,7 +129,8 @@ const TeacherManageStudents = () => {
 
   useEffect(() => {
     setAverageScore(studentInfo?.averageScore)
-  }, [studentInfo])
+    studentContext.setStudentInfo(studentInfo)
+  }, [studentInfo, studentContext])
 
   return (
     <div className="flex flex-row h-screen">
@@ -310,6 +310,7 @@ const TeacherManageStudents = () => {
               <span className="text-2xl font-medium text-primary select-none">
                 Topics
               </span>
+
               <div className="flex flex-col gap-5">
                 {studentInfo &&
                   studentInfo?.studentTopic &&

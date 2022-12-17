@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import moment from 'moment'
 
 import { API_URL } from '../../constant'
@@ -13,6 +13,7 @@ const testImg =
 const AssignmentView = () => {
   //search
   const { assignmentId } = useParams()
+  const navigate = useNavigate()
 
   const [assignment, setAssignment] = useState({})
   const [searchTerm, setSearchTerm] = useState('')
@@ -61,7 +62,7 @@ const AssignmentView = () => {
   console.log(students)
 
   return (
-    <div className="px-10 py-10 flex flex-col gap-5">
+    <div className="px-10 py-5 pb-7 flex flex-col gap-5">
       <div className="flex flex-col gap-4 w-full h-fit px-10 pb-10 pt-7 bg-white rounded-lg shadow">
         <div className="flex flex-row justify-between">
           <div className="flex flex-col gap-3 text-gray-500">
@@ -221,7 +222,7 @@ const AssignmentView = () => {
                   key={i}
                   className="flex flex-row gap-28 items-center rounded-md shadow-md bg-white px-5 py-4 w-full h-fit"
                 >
-                  <div className="flex flex-row gap-4 items-center w-[170px]">
+                  <div className="flex flex-row gap-4 items-center w-[150px]">
                     <img
                       src={val?.account.avatarImg || testImg}
                       className="w-[40px] h-[40px] rounded-full"
@@ -231,21 +232,23 @@ const AssignmentView = () => {
                         currentTarget.src = testImg
                       }}
                     />
-                    <span className="truncate w-[125px]">{val?.fullName}</span>
+                    <span className="truncate w-[120px]">{val?.fullName}</span>
                   </div>
-                  <span>{val?.studentAssignment[0].score}</span>
+                  <span className="w-[20px]">
+                    {val?.studentAssignment[0].score}
+                  </span>
                   {returnView(
                     val?.studentAssignment[0].score,
                     assignment?.passScore,
                   )}
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 w-[120px]">
                     {val?.studentAssignment[0]?.dateComplete
                       ? moment(val?.studentAssignment[0]?.dateComplete).format(
-                          'HH:mm DD-MMM-YYYY',
+                          'HH:mm DD-MMM',
                         )
                       : `Not submitted`}
                   </span>
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 w-[120px]">
                     {val?.studentAssignment[0]?.dateComplete
                       ? moment(val?.studentAssignment[0]?.dateComplete) >
                         moment(val?.studentAssignment[0]?.dateDue)
@@ -253,7 +256,12 @@ const AssignmentView = () => {
                         : `On time`
                       : `Not submitted`}
                   </span>
-                  <span className="text-primary cursor-pointer select-none">
+                  <span
+                    onClick={() =>
+                      navigate(`/assignment/${assignmentId}/student/${val?.id}`)
+                    }
+                    className="text-primary text-sm cursor-pointer select-none"
+                  >
                     View Answers
                   </span>
                 </div>

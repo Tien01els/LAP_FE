@@ -4,7 +4,7 @@ import ExamModal from '../../Modals/ExamModal'
 const StudentAssignment = ({ assignmentInfo }) => {
   const [openExamModal, setOpenExamModal] = useState(false)
 
-  const { studentAssignment } = assignmentInfo
+  const { studentAssignment } = assignmentInfo?.assignment
 
   return (
     <>
@@ -12,8 +12,7 @@ const StudentAssignment = ({ assignmentInfo }) => {
         isOpen={openExamModal}
         setIsOpen={setOpenExamModal}
         val={assignmentInfo}
-        isParent
-        classPage
+        viewStudentResult
       />
       <div
         onClick={() => setOpenExamModal(true)}

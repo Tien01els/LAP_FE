@@ -2,6 +2,7 @@ import React, { Suspense, useState, useEffect, createContext } from 'react'
 import { io } from 'socket.io-client'
 import AppRouter from './AppRouter'
 import { SOCKET_API_URL } from './constant'
+import { StudentProvider } from './Context/StudentContext'
 
 export const SocketContext = createContext()
 
@@ -14,9 +15,11 @@ function App() {
 
   return (
     <SocketContext.Provider value={socket}>
-      <Suspense fallback={<></>}>
-        <AppRouter />
-      </Suspense>
+      <StudentProvider>
+        <Suspense fallback={<></>}>
+          <AppRouter />
+        </Suspense>
+      </StudentProvider>
     </SocketContext.Provider>
   )
 }
