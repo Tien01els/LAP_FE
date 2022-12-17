@@ -4,7 +4,6 @@ import StudentSkill from './StudentSkill';
 
 const StudentTopic = ({ topicInfo }) => {
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
-    console.log(topicInfo);
     return (
         <div className='flex flex-col gap-4'>
             <div
