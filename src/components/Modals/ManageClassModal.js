@@ -46,7 +46,7 @@ const ManageClassModal = ({
   const { register, handleSubmit } = useForm()
   const [isExpired, setIsExpired] = useState(false)
   const [grades, setGrades] = useState([])
-  const [image, setImage] = React.useState([])
+  const [image, setImage] = useState([])
   const [gradeId, setGradeId] = useState()
   const notify = (message) => toast(message)
 
