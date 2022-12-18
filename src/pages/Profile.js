@@ -11,6 +11,7 @@ import moment from 'moment'
 import { API_URL } from '../constant'
 import createAxiosJWT from '../createAxiosJWT'
 import TokenExpire from '../components/Modals/TokenExpire'
+import ImageUploading from 'react-images-uploading'
 
 const axiosJWT = createAxiosJWT()
 
@@ -34,6 +35,7 @@ const Profile = () => {
   const [fullName, setFullName] = useState('')
   const [isEditingName, setIsEditingName] = useState(false)
   const [profile, setProfile] = useState({})
+  const [image, setImage] = useState([])
 
   //birthday
   const [selectedDay, setSelectedDay] = useState(null)
@@ -90,19 +92,48 @@ const Profile = () => {
     getProfile()
   }, [])
 
+  useEffect(() => {
+    setImage([{ data_url: profile?.classImg }])
+  }, [profile])
+
+  const onChange = (imageList) => {
+    setImage(imageList)
+  }
+
   return (
     <div className="px-20 py-10 flex flex-col bg-white h-screen gap-7 items-center">
       {/* image */}
-      <div className="relative flex flex-col">
-        <img
-          src={test}
-          alt=""
-          className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5"
-        />
-        <div className="absolute z-1 w-full select-none flex items-center hover:text-white text-transparent justify-center rounded-full cursor-pointer transition-all hover:bg-gray-500 hover:bg-opacity-90 min-h-[200px]">
-          <span>Change image</span>
-        </div>
-      </div>
+      <ImageUploading value={image} onChange={onChange} dataURLKey="data_url">
+        {({ imageList, onImageUpload, onImageUpdate, dragProps }) => (
+          <div
+            className="relative flex flex-col"
+            onClick={
+              !imageList?.length ? onImageUpload : () => onImageUpdate(0)
+            }
+            {...dragProps}
+          >
+            <img
+              src={(imageList?.length && imageList[0]?.data_url) || test}
+              alt=""
+              className="w-[200px] h-[200px] rounded-full border-4 border-white shadow-2xl mb-5"
+            />
+            <label
+              htmlFor="profileImage"
+              className="absolute z-1 w-full select-none flex items-center hover:text-white text-transparent justify-center rounded-full cursor-pointer transition-all hover:bg-gray-500 hover:bg-opacity-90 min-h-[200px]"
+            >
+              <span>Change image</span>
+              <input
+                id="profileImage"
+                type="file"
+                name="image"
+                accept="image/*"
+                className="hidden"
+              />
+            </label>
+          </div>
+        )}
+      </ImageUploading>
+
       {/* information */}
       <div className="flex flex-row gap-5 items-center">
         <input
