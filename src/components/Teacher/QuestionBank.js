@@ -109,18 +109,21 @@ const QuestionBank = ({
   const [searchParam, setSearchParam] = useState('')
   const handleOpenConfirmQuestion = () => {
     const questionChecked = questionBank.map((question) => {
-      return {
-        id: question.id,
-        content: question.content,
-        skills: question.skillName,
-        topic: question.topicName,
-        grade: question.gradeName,
-        score: question.score,
-      }
-    })
-    setQuestionsConfirm(questionChecked)
-    setConfirmQuestionIsOpen(true)
-  }
+        const valueQuestion = valueQuestionBank.find(
+            (valueOfQuestion) => valueOfQuestion.id === question.id
+        );
+        return {
+            id: valueQuestion.id,
+            content: valueQuestion.content,
+            skills: valueQuestion.skillName,
+            topic: valueQuestion.topicName,
+            grade: valueQuestion.gradeName,
+            score: valueQuestion.score,
+        };
+    });
+    setQuestionsConfirm(questionChecked);
+    setConfirmQuestionIsOpen(true);
+};
 
   const handleCloseConfirmQuestion = () => {
     setQuestionsConfirm([])

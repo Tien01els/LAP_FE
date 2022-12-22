@@ -208,24 +208,23 @@ const TeacherAssignment = () => {
         }
 
         if (selectedOption?.value === 4) {
-            let filteredArr = answers.multiSelect.reduce((acc, current) => {
-                const x = acc.find((item) => item.answer === current.answer);
-                if (!x) {
-                    return acc.concat([current]);
-                } else {
-                    return acc;
-                }
-            }, []);
-            if (
-                filteredArr.length !== answers.multiSelect.length ||
-                answers.multiSelect.some((val) => val.answer === '')
-            ) {
-                return setDisable(true);
-            }
-
-            if (!answers.multiChoice.some((val) => val.isTrue === true)) {
-                return setDisable(true);
-            }
+            // let filteredArr = answers.multiSelect.reduce((acc, current) => {
+            //     const x = acc.find((item) => item.answer === current.answer);
+            //     if (!x) {
+            //         return acc.concat([current]);
+            //     } else {
+            //         return acc;
+            //     }
+            // }, []);
+            // if (
+            //     filteredArr.length !== answers.multiSelect.length ||
+            //     answers.multiSelect.some((val) => val.answer === '')
+            // ) {
+            //     return setDisable(true);
+            // }
+            // if (!answers.multiChoice.some((val) => val.isTrue === true)) {
+            //     return setDisable(true);
+            // }
         }
 
         setDisable(false);
