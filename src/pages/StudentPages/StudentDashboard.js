@@ -254,8 +254,11 @@ const StudentDashboard = ({ isParent }) => {
                                         >
                                             <div className='flex flex-col items-center justify-center text-primary'>
                                                 <span className='font-semibold text-4xl'>
-                                                    {Math.round(achievement?.avgScoreOfStudent) ||
-                                                        0}
+                                                    {Math.round(
+                                                        (achievement?.avgScoreOfStudent +
+                                                            Number.EPSILON) *
+                                                            10
+                                                    ) / 10 || 0}
                                                 </span>
                                                 <span className='font-semibold text-sm'>
                                                     Average Score
